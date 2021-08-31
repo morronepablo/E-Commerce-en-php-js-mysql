@@ -35,7 +35,7 @@ $(document).ready(function() {
         })
         if(data.ok) {
             let response = await data.text();
-            //conselo.log(response);
+            //console.log(response);
             try {
                 let producto = JSON.parse(response);
                 console.log(producto);
