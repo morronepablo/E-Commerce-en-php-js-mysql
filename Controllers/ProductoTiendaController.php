@@ -5,11 +5,13 @@ include_once '../Models/Resena.php';
 include_once '../Models/Imagen.php';
 include_once '../Models/Tienda.php';
 include_once '../Models/Caracteristicas.php';
+include_once '../Models/Pregunta.php';
 $producto_tienda = new ProductoTienda();
 $resena = new Resena();
 $img = new Imagen();
 $tnd = new Tienda();
 $caracteristica = new Caracteristicas();
+$pregunta = new Pregunta();
 session_start();
 
 if($_POST['funcion']=='llenar_productos'){
