@@ -131,6 +131,8 @@ if($_POST['funcion']=='verificar_producto'){
             // No puedo responder ni hacer preguntas
             $bandera = '0';
         }
+        $pregunta->read($id_producto_tienda);
+        
         $json = array(
             'id'                           => $id_producto_tienda,
             'producto'                     => $producto,
