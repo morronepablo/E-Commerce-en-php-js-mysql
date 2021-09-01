@@ -167,7 +167,8 @@ if($_POST['funcion']=='verificar_producto'){
             'avatar_sesion'                => $avatar_sesion,
             'imagenes'                     => $imagenes,
             'caracteristicas'              => $caracteristicas,
-            'resenas'                      => $resenas
+            'resenas'                      => $resenas,
+            'preguntas'                    => $preguntas
         );
         //se debe codificar a un string el json
         $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro
