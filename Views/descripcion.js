@@ -152,6 +152,27 @@ $(document).ready(function() {
                 });
                 
                 $('#resenas').html(template4);
+                let template5 = '';
+                if(producto.bandera == '2') {
+                    template5 += `
+                    <div class="card-footer">
+                        <form action="#" method="post">
+                            <div class="input-group">
+                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/user_default.png" alt="Message User Image">
+                                <input type="text" name="message" placeholder="Escribir pregunta..." class="form-control">
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    `;
+                }
+                template5 += `
+                    <div class="direct-chat-messages direct-chat-success preguntas">`;
+                tenplate5 += `
+                    </div>`;
+                $('#product-pre').html(template5);
             } catch (error) {
                 console.error(error);
                 console.log(response);

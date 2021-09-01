@@ -104,9 +104,13 @@ if($_POST['funcion']=='verificar_producto'){
             );
         }
         $id_usuario_sesion = 0;
+        $usuario_sesion = '';
+        $avatar_sesion = '';
         $bandera = '0';
         if(!empty($_SESSION['id'])){
             $id_usuario_sesion = 1;
+            $usuario_sesion = $_SESSION['id'];
+            $avatar_sesion = $_SESSION['avatar'];
         }
         if($id_usuario_sesion == 1) {
             if($id_usuario == $_SESSION['id']) {
@@ -142,6 +146,11 @@ if($_POST['funcion']=='verificar_producto'){
             'promedio_calificacion_tienda' => number_format($promedio_calificacion_tienda),
             'tienda'                       => $tienda,
             'bandera'                      => $bandera,
+            'id_usuario'                   => $id_usuario,
+            'username'                     => $username,
+            'avatar'                       => $avatar,
+            'usuario_sesion'               => $usuario_sesion,
+            'avatar_sesion'                => $avatar_sesion,
             'imagenes'                     => $imagenes,
             'caracteristicas'              => $caracteristicas,
             'resenas'                      => $resenas
