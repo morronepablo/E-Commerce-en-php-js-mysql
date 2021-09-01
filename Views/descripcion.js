@@ -170,7 +170,10 @@ $(document).ready(function() {
                 }
                 template5 += `
                     <div class="direct-chat-messages direct-chat-success preguntas">`;
-                tenplate5 += `
+                    producto.preguntas.forEach(pregunta => {
+                        console.log(pregunta);
+                    });
+                template5 += `
                     </div>`;
                 $('#product-pre').html(template5);
             } catch (error) {
