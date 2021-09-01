@@ -132,7 +132,17 @@ if($_POST['funcion']=='verificar_producto'){
             $bandera = '0';
         }
         $pregunta->read($id_producto_tienda);
-        
+        $preguntas = array();
+        foreach ($pregunta->objetos as $objeto) {
+            $preguntas[] = array(
+                'id'               => $objeto->id,
+                'contenido'        => $objeto->contenido,
+                'fecha_creacion'   => $objeto->fecha_creacion,
+                'estado_respuesta' => $objeto->estado_respuesta,
+                'username'         => $objeto->username,
+                'avatar'           => $objeto->avatar,
+            );
+        }
         $json = array(
             'id'                           => $id_producto_tienda,
             'producto'                     => $producto,
