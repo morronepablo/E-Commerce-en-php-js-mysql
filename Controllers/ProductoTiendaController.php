@@ -6,12 +6,14 @@ include_once '../Models/Imagen.php';
 include_once '../Models/Tienda.php';
 include_once '../Models/Caracteristicas.php';
 include_once '../Models/Pregunta.php';
+include_once '../Models/Respuesta.php';
 $producto_tienda = new ProductoTienda();
 $resena = new Resena();
 $img = new Imagen();
 $tnd = new Tienda();
 $caracteristica = new Caracteristicas();
 $pregunta = new Pregunta();
+$respuesta = new Respuesta();
 session_start();
 
 if($_POST['funcion']=='llenar_productos'){
@@ -134,6 +136,18 @@ if($_POST['funcion']=='verificar_producto'){
         $pregunta->read($id_producto_tienda);
         $preguntas = array();
         foreach ($pregunta->objetos as $objeto) {
+            $respuesta->read($objeto->id);
+            $rpst = array();
+            // Esto es por si no hay una respuesta a la pregunta
+            if(!empty($respuesta)) {
+                foreach ($respuesta->objetos as $objeto1) {
+                    $rpst = array(
+                        'id' => $objeto1->id,
+                        'contenido' => $objeto1->contenido,
+                        'fecha_creacion' => $objeto1->fecha_creacion,
+                    );
+                }
+            }
             $preguntas[] = array(
                 'id'               => $objeto->id,
                 'contenido'        => $objeto->contenido,
@@ -141,6 +155,7 @@ if($_POST['funcion']=='verificar_producto'){
                 'estado_respuesta' => $objeto->estado_respuesta,
                 'username'         => $objeto->username,
                 'avatar'           => $objeto->avatar,
+                'respuesta'        => $rpst
             );
         }
         $json = array(

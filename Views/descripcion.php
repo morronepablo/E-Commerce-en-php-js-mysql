@@ -161,17 +161,6 @@ if (!empty($_GET['id']) && $_GET['name']) {
                                         You better believe it!
                                     </div>
                                 </div>
-
-
-
-
-
-                                
-
-
-
-
-
                             </div>
                         </div>
                         <div class="tab-pane fade show" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab">

@@ -171,7 +171,52 @@ $(document).ready(function() {
                 template5 += `
                     <div class="direct-chat-messages direct-chat-success preguntas">`;
                     producto.preguntas.forEach(pregunta => {
-                        console.log(pregunta);
+                        template5 += `
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">${pregunta.username}</span>
+                                <span class="direct-chat-timestamp float-right">${pregunta.fecha_creacion}</span>
+                            </div>
+                            <img class="direct-chat-img" src="../Util/Img/Users/${pregunta.avatar}" alt="Message User Image">
+                            <div class="direct-chat-text">
+                                ${pregunta.contenido}
+                            </div>`;
+                            if(pregunta.estado_respuesta == '0') {
+                                // No tiene respuesta la pregunta
+                                if(producto.bandera == '1') {
+                                    // Si el usuario logueado es el dueño puede responder pregunta  
+                                    template5 += `
+                                    <div class="card-footer">
+                                        <form action="#" method="post">
+                                            <div class="input-group">
+                                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
+                                                <input type="text" name="message" placeholder="Responder pregunta..." class="form-control">
+                                                <span class="input-group-append">
+                                                    <button type="submit" class="btn btn-success">Enviar</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div> 
+                                    `;
+                                }
+                            } else {
+                                // La pregunta tiene respuesta
+                                template5 += `
+                                <div class="direct-chat-msg right">
+                                    <div class="direct-chat-infos clearfix">
+                                        <span class="direct-chat-name float-right">${producto.username}</span>
+                                        <span class="direct-chat-timestamp float-left">${pregunta.respuesta.fecha_creacion}</span>
+                                    </div>
+                                    <img class="direct-chat-img" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
+                                    <div class="direct-chat-text">
+                                        ${pregunta.respuesta.contenido}
+                                    </div>
+                                </div>
+                                `;
+                            }
+                        template5 += `
+                        </div>
+                        `;
                     });
                 template5 += `
                     </div>`;
