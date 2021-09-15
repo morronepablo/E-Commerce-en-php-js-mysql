@@ -26,6 +26,17 @@
             return $this->objetos;
             
         }
+        function create($pgt, $id_producto_tienda, $id_usuario) {
+            $sql = "INSERT INTO pregunta(contenido, id_producto_tienda, id_usuario)
+                    VALUES(:pgt, :id_producto_tienda, :id_usuario)";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':pgt'                => $pgt,
+                ':id_producto_tienda' => $id_producto_tienda,
+                ':id_usuario'         => $id_usuario
+            );
+            $query->execute($variables);
+        }
     }
 
 ?>

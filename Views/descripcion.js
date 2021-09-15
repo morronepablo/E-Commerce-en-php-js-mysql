@@ -156,10 +156,10 @@ $(document).ready(function() {
                 if(producto.bandera == '2') {
                     template5 += `
                     <div class="card-footer">
-                        <form action="#" method="post">
+                        <form id="form_pregunta">
                             <div class="input-group">
-                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/user_default.png" alt="Message User Image">
-                                <input type="text" name="message" placeholder="Escribir pregunta..." class="form-control">
+                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar_sesion}" alt="Message User Image">
+                                <input type="text" id="pregunta" placeholder="Escribir pregunta..." class="form-control" required>
                                 <span class="input-group-append">
                                     <button type="submit" class="btn btn-primary">Enviar</button>
                                 </span>
@@ -240,5 +240,61 @@ $(document).ready(function() {
         let elemento = $(this)[0].activeElement;
         let img = $(elemento).attr('prod_img');
         $('#imagen_principal').attr('src', '../Util/Img/producto/' + img);
+    })
+
+
+
+
+
+
+
+
+
+
+
+    async function realizar_pregunta(pregunta) {
+        funcion = "realizar_pregunta";
+        let data = await fetch('../Controllers/PreguntaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&pregunta=' + pregunta
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                console.log(respuesta);
+                verificar_producto();
+                $('#form_pregunta').trigger('reset');
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    $(document).on('submit', '#form_pregunta', (e) => {
+        let pregunta = $('#pregunta').val();
+        realizar_pregunta(pregunta);
+        e.preventDefault();
     })
 })
