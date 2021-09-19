@@ -242,6 +242,7 @@ $(document).ready(function() {
                     $('#provincia').val('').trigger('change');
                     llenar_direcciones();
                     llenar_historial();
+                    location.reload();
                 })
             } else {
                 Swal.fire({
@@ -288,6 +289,7 @@ $(document).ready(function() {
                             verificar_sesion();
                             obtener_datos();
                             llenar_historial();
+                            location.reload();
                         })
                     } else if(response == 'danger'){
                         Swal.fire({
@@ -392,6 +394,7 @@ $(document).ready(function() {
                     }).then(function() {
                         $('#form-contra').trigger('reset');
                         llenar_historial();
+                        location.reload();
                     })
                 } else if(response === 'error') {
                     Swal.fire({
