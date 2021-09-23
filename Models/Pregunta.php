@@ -37,6 +37,17 @@
             );
             $query->execute($variables);
         }
+        function read_propietario_pregunta($id_pregunta) {
+            $sql = "SELECT p.id_usuario as id
+                    FROM pregunta p
+                    WHERE p.id=:id_pregunta
+                    AND p.estado='A'";
+            $query = $this->acceso->prepare($sql);
+            $query->execute(array(':id_pregunta'=>$id_pregunta));
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+            
+        }
     }
 
 ?>
