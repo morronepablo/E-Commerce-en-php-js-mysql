@@ -12,7 +12,7 @@ if($_POST['funcion']=='read_notificaciones'){
         $json = array();
         foreach ($notificacion->objetos as $objeto) {
             $json[] = array(
-                'id'             => $objeto->id,
+                'id'             => openssl_encrypt($objeto->id, CODE, KEY),
                 'titulo'         => $objeto->titulo,
                 'asunto'         => $objeto->asunto,
                 'contenido'      => $objeto->contenido,

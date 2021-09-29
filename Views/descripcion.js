@@ -10,11 +10,6 @@ $(document).ready(function() {
     verificar_sesion();
     verificar_producto();
 
-
-
-
-
-
     async function read_notificaciones(id_usuario) {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
@@ -47,7 +42,7 @@ $(document).ready(function() {
                 notificaciones.forEach(notificacion => {
                     template += `
                     <div class="dropdown-divider"></div>
-                        <a href="../${notificacion.url_1}" class="dropdown-item">
+                        <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
                             <div class="media">
                                 <img src="../Util/Img/producto/${notificacion.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
@@ -94,8 +89,10 @@ $(document).ready(function() {
                 $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#usuario_menu').text(sesion.user);
                 read_notificaciones(sesion.id);
+                $('#notificacion').show();
             } else {
                 $('#nav_usuario').hide();
+                $('#notificacion').hide();
             }
         })
     }
@@ -112,6 +109,9 @@ $(document).ready(function() {
             try {
                 let producto = JSON.parse(response);
                 console.log(producto);
+                if(producto.usuario_sesion != '    ') {
+                    read_notificaciones(producto.usuario_sesion);
+                }
                 let template = '';
                 if(producto.imagenes.length > 0) {
                     template += `

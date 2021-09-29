@@ -194,6 +194,74 @@ $(document).ready(function() {
             $('#localidad').val('').trigger('change');
         })
     });
+    async function read_notificaciones(id_usuario) {
+        funcion = "read_notificaciones";
+        let data = await fetch('../Controllers/NotificacionController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id_usuario=' + id_usuario
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let notificaciones = JSON.parse(response);
+                console.log(notificaciones);
+                let template1 = '';
+                if(notificaciones.length == 0) {
+                    template1 += `
+                        <i class="far fa-bell"></i>
+                    `;
+                } else {
+                    template1 += `
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">${notificaciones.length}</span>
+                    `;
+                }
+                $('#numero_notificacion').html(template1);
+                let template = '';
+                template += `
+                    <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
+                `;
+                notificaciones.forEach(notificacion => {
+                    template += `
+                    <div class="dropdown-divider"></div>
+                        <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
+                            <div class="media">
+                                <img src="../Util/Img/producto/${notificacion.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <div class="media-body">
+                                    <h3 class="dropdown-item-title">
+                                        ${notificacion.titulo}
+                                    </h3>
+                                    <p class="text-sm">${notificacion.asunto}</p>
+                                    <p class="text-sm text-muted">${notificacion.contenido}</p>
+                                    <span class="float-right text-muted text-sm">${notificacion.fecha_creacion}</span>
+                                </div>
+                            </div>
+                        </a>
+                    <div class="dropdown-divider"></div>
+                    `;
+                });
+                template += `
+                    <a href="#" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                `;
+                $('#notificaciones').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
@@ -205,6 +273,8 @@ $(document).ready(function() {
                 $('#avatar_nav').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#usuario_menu').text(sesion.user);
+                read_notificaciones(sesion.id);
+                $('#notificacion').show();
             } else {
                 $('#nav_usuario').hide();
                 location.href = 'login.php';
