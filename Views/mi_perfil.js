@@ -208,17 +208,25 @@ $(document).ready(function() {
                 let notificaciones = JSON.parse(response);
                 console.log(notificaciones);
                 let template1 = '';
+                let template2 = '';
                 if(notificaciones.length == 0) {
                     template1 += `
                         <i class="far fa-bell"></i>
+                    `;
+                    template2 += `
+                        Notificaciones
                     `;
                 } else {
                     template1 += `
                         <i class="far fa-bell"></i>
                         <span class="badge badge-warning navbar-badge">${notificaciones.length}</span>
                     `;
+                    template2 += `
+                        Notificaciones <span class="badge badge-warning right">${notificaciones.length}</span>
+                    `;
                 }
                 $('#numero_notificacion').html(template1);
+                $('#nav_cont_noti').html(template2);
                 let template = '';
                 template += `
                     <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
@@ -243,7 +251,7 @@ $(document).ready(function() {
                     `;
                 });
                 template += `
-                    <a href="#" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                <a href="../Views/notificaciones.php" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
                 `;
                 $('#notificaciones').html(template);
             } catch (error) {
@@ -275,8 +283,11 @@ $(document).ready(function() {
                 $('#usuario_menu').text(sesion.user);
                 read_notificaciones(sesion.id);
                 $('#notificacion').show();
+                $('#nav_notificaciones').show();
             } else {
                 $('#nav_usuario').hide();
+                $('#notificacion').hide();
+                $('#nav_notificaciones').hide();
                 location.href = 'login.php';
             }
         })
