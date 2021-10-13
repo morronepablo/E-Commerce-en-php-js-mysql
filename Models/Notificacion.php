@@ -55,5 +55,16 @@
             return $this->objetos;
             
         }
+        function update_remove($id_notificacion) {
+            $sql = "UPDATE notificacion
+                    SET estado=:estado
+                    WHERE id=:id_notificacion";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_notificacion' => $id_notificacion,
+                ':estado'          => 'I'
+            );
+            $query->execute($variables);
+        }
     }
 

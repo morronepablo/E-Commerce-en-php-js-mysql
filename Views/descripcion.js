@@ -10,12 +10,12 @@ $(document).ready(function() {
     verificar_sesion();
     verificar_producto();
 
-    async function read_notificaciones(id_usuario) {
+    async function read_notificaciones() {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id_usuario=' + id_usuario
+            body: 'funcion=' + funcion
         })
         if(data.ok) {
             let response = await data.text();
@@ -96,7 +96,7 @@ $(document).ready(function() {
                 $('#avatar_nav').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#usuario_menu').text(sesion.user);
-                read_notificaciones(sesion.id);
+                read_notificaciones();
                 $('#notificacion').show();
                 $('#nav_notificaciones').show();
             } else {
@@ -119,8 +119,8 @@ $(document).ready(function() {
             try {
                 let producto = JSON.parse(response);
                 console.log(producto);
-                if(producto.usuario_sesion != '    ') {
-                    read_notificaciones(producto.usuario_sesion);
+                if(producto.usuario_sesion != '') {
+                    read_notificaciones();
                 }
                 let template = '';
                 if(producto.imagenes.length > 0) {

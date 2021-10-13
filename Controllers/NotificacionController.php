@@ -1,12 +1,14 @@
 <?php
 include_once '../Util/Config/config.php';
 include_once '../Models/Notificacion.php';
+include_once '../Models/Historial.php';
 $notificacion = new Notificacion();
+$historial = new Historial();
 session_start();
 
 if($_POST['funcion']=='read_notificaciones'){
     if(!empty($_SESSION['id'])) {
-        $id_usuario = $_POST['id_usuario'];
+        $id_usuario = $_SESSION['id'];
         $notificacion->read($id_usuario);
         //var_dump($notificacion);
         $json = array();
@@ -29,7 +31,7 @@ if($_POST['funcion']=='read_notificaciones'){
 }
 if($_POST['funcion']=='read_all_notificaciones'){
     if(!empty($_SESSION['id'])) {
-        $id_usuario = $_POST['id_usuario'];
+        $id_usuario = $_SESSION['id'];
         $notificacion->read_all_notificaciones($id_usuario);
         //var_dump($notificacion);
         $json = array();
@@ -45,6 +47,30 @@ if($_POST['funcion']=='read_all_notificaciones'){
                 'estado_abierto' => $objeto->estado_abierto
             );
         }
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error, el usuario no está en sesión';
+    }
+}
+if($_POST['funcion']=='eliminar_notificacion'){
+    if(!empty($_SESSION['id'])) {
+        $id_usuario = $_SESSION['id'];
+        $id_notificacion_encryted = $_POST['id_notificacion'];
+        $formateado = str_replace(" ","+",$id_notificacion_encryted);
+        $id_notificacion = openssl_decrypt($formateado, CODE, KEY);
+        $mensaje = '';
+        if(is_numeric($id_notificacion)) {
+            $notificacion->update_remove($id_notificacion);
+            $descripcion = 'Eliminaste una notificación.';
+            $historial->crear_historial($descripcion, 3, 4, $id_usuario);
+            $mensaje = 'notificacion eliminada';
+        } else {
+            $mensaje = 'error al eliminar';
+        }
+        $json = array(
+            'mensaje1' => $mensaje,
+        );
         $jsonstring = json_encode($json);
         echo $jsonstring;
     } else {
