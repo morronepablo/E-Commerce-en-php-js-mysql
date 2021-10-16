@@ -8,6 +8,7 @@ include_once '../Models/Caracteristicas.php';
 include_once '../Models/Pregunta.php';
 include_once '../Models/Respuesta.php';
 include_once '../Models/Notificacion.php';
+include_once '../Models/Favorito.php';
 $producto_tienda = new ProductoTienda();
 $resena = new Resena();
 $img = new Imagen();
@@ -16,6 +17,7 @@ $caracteristica = new Caracteristicas();
 $pregunta = new Pregunta();
 $respuesta = new Respuesta();
 $notificacion = new Notificacion();
+$favorito = new Favorito();
 session_start();
 
 if($_POST['funcion']=='llenar_productos'){
@@ -146,28 +148,59 @@ if($_POST['funcion']=='verificar_producto'){
         }
         $pregunta->read($id_producto_tienda);
         $preguntas = array();
+        $bandera1 = '';
+        $bandera2 = '';
         foreach ($pregunta->objetos as $objeto) {
             $respuesta->read($objeto->id);
             $rpst = array();
             // Esto es por si no hay una respuesta a la pregunta
             if(!empty($respuesta)) {
                 foreach ($respuesta->objetos as $objeto1) {
+                    $fecha_hora = date_create($objeto1->fecha_creacion);
+                    $hora = $fecha_hora->format('H:i');
+                    $fecha = date_format($fecha_hora, 'd-m-Y');
+                    if($fecha_actual == $fecha) {
+                        $bandera2 = '1';
+                    } else {
+                        $bandera2 = '0';
+                    }
                     $rpst = array(
                         'id' => $objeto1->id,
                         'contenido' => $objeto1->contenido,
                         'fecha_creacion' => $objeto1->fecha_creacion,
+                        'fecha' => $fecha,
+                        'hora' => $hora,
+                        'hoy' => $bandera2,
                     );
                 }
+            }
+            $fecha_hora = date_create($objeto->fecha_creacion);
+            $hora = $fecha_hora->format('H:i');
+            $fecha = date_format($fecha_hora, 'd-m-Y');
+            if($fecha_actual == $fecha) {
+                $bandera1 = '1';
+            } else {
+                $bandera1 = '0';
             }
             $preguntas[] = array(
                 'id'               => $objeto->id,
                 'contenido'        => $objeto->contenido,
                 'fecha_creacion'   => $objeto->fecha_creacion,
                 'estado_respuesta' => $objeto->estado_respuesta,
+                'fecha'            => $fecha,
+                'hora'             => $hora,
+                'hoy'              => $bandera1,
                 'username'         => $objeto->username,
                 'avatar'           => $objeto->avatar,
                 'respuesta'        => $rpst
             );
+        }
+        $favorito->read_favorito_usuario_protienda($usuario_sesion, $id_producto_tienda);
+        $id_favorito = '';
+        $estado_favorito = '';
+        if(count($favorito->objetos) > 0) {
+            $id_favorito = openssl_encrypt($favorito->objetos[0]->id, CODE, KEY);
+            $estado_favorito = $favorito->objetos[0]->estado;
         }
         $json = array(
             'id'                           => $id_producto_tienda,
@@ -194,7 +227,9 @@ if($_POST['funcion']=='verificar_producto'){
             'imagenes'                     => $imagenes,
             'caracteristicas'              => $caracteristicas,
             'resenas'                      => $resenas,
-            'preguntas'                    => $preguntas
+            'preguntas'                    => $preguntas,
+            'id_favorito'                  => $id_favorito,
+            'estado_favorito'              => $estado_favorito
         );
         //se debe codificar a un string el json
         $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro

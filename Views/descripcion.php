@@ -101,11 +101,6 @@ if (!empty($_GET['id']) && $_GET['name']) {
                                     <i class="fas fa-cart-plus fa-lg mr-2"></i>
                                     Agregar al carrito
                                 </div>
-
-                                <div class="btn btn-default btn-flat ml-2 rounded-pill">
-                                    <i class="fas fa-heart fa-lg mr-2 text-danger"></i>
-                                    Agregar a favoritos
-                                </div>
                             </div>
                         </div>
                     </div>

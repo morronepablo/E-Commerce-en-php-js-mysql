@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-08-2021 a las 09:37:43
+-- Tiempo de generación: 13-10-2021 a las 20:57:09
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -122,7 +122,26 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (16, 'Ha cambiado su contraseña.', '2021-08-20 10:42:27', 1, 1, 1),
 (17, 'Ha cambiado su contraseña.', '2021-08-20 10:42:46', 1, 1, 1),
 (18, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia Elvira a Natalia, su apellido cambio de Oduber Andara a Oduber, ', '2021-08-20 11:12:55', 1, 1, 1),
-(19, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-08-20 12:12:21', 1, 1, 1);
+(19, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-08-20 12:12:21', 1, 1, 1),
+(20, 'Ha editado sus datos personales, ha echo los siguientes cambios: su D.N.I. cambio de 94654750 a 73737373, ', '2021-08-21 16:58:00', 1, 1, 1),
+(21, 'Ha editado sus datos personales, ha echo los siguientes cambios: su D.N.I. cambio de 73737373 a 94654750, ', '2021-08-22 13:27:43', 1, 1, 1),
+(22, 'Ha creado una nueva dirección: El Arreo 250', '2021-08-22 13:29:00', 2, 1, 1),
+(23, 'Ha cambiado su contraseña.', '2021-09-18 11:55:38', 1, 1, 1),
+(24, 'Ha cambiado su contraseña.', '2021-09-18 11:56:35', 1, 1, 1),
+(25, 'Ha cambiado su contraseña.', '2021-09-18 12:05:38', 1, 1, 1),
+(26, 'Ha cambiado su contraseña.', '2021-09-18 12:06:07', 1, 1, 1),
+(27, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-09-18 12:15:49', 1, 1, 1),
+(28, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-09-18 12:20:04', 1, 1, 1),
+(29, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-09-18 12:20:39', 1, 1, 1),
+(30, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-09-18 12:20:59', 1, 1, 1),
+(31, 'Ha creado una nueva dirección: Pergamino 424', '2021-09-18 22:53:01', 2, 1, 5),
+(32, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2021-09-18 22:54:45', 1, 1, 2),
+(33, 'Ha realizado una pregunta: Queda en stock de color blanco ?. | en el producto: Samsung Galaxy A21S', '2021-10-09 11:59:25', 2, 3, 2),
+(34, 'Ha respondido una pregunta: Si hay stock podes ofertar. | en el producto: Samsung Galaxy A21S', '2021-10-09 12:10:16', 2, 3, 1),
+(35, 'Ha realizado una pregunta: Quisiera saber cuanto tiempo tiene de garantía ?. | en el producto: Samsung Galaxy A21S', '2021-10-13 14:17:12', 2, 3, 2),
+(36, 'Eliminaste una notificación.', '2021-10-13 15:28:32', 3, 4, 1),
+(37, 'Eliminaste una notificación.', '2021-10-13 15:42:42', 3, 4, 1),
+(38, 'Ha respondido una pregunta: Este producto tiene 3 años de garantía. . | en el producto: Samsung Galaxy A21S', '2021-10-13 15:52:38', 2, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -2592,7 +2611,88 @@ CREATE TABLE `modulo` (
 
 INSERT INTO `modulo` (`id`, `nombre`, `icono`, `estado`) VALUES
 (1, 'Mi perfil', '<i class=\"fas fa-user bg-info\"></i>', 'A'),
-(2, 'Mis compras', '<i class=\"fas fa-shopping-cart bg-success\"></i>', 'A');
+(2, 'Mis compras', '<i class=\"fas fa-shopping-cart bg-success\"></i>', 'A'),
+(3, 'Producto', '<i class=\"fas fa-box bg-primary\"></i>', 'A'),
+(4, 'Notificaciones', '<i class=\"far fa-bell bg-warning\"></i>', 'A');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notificacion`
+--
+
+CREATE TABLE `notificacion` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(500) NOT NULL,
+  `asunto` varchar(500) NOT NULL,
+  `contenido` varchar(1000) NOT NULL,
+  `imagen` varchar(500) NOT NULL,
+  `url_1` varchar(1000) DEFAULT NULL,
+  `url_2` varchar(1000) DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `estado_abierto` int(10) NOT NULL DEFAULT 0,
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `notificacion`
+--
+
+INSERT INTO `notificacion` (`id`, `titulo`, `asunto`, `contenido`, `imagen`, `url_1`, `url_2`, `fecha_creacion`, `estado_abierto`, `estado`, `id_usuario`) VALUES
+(1, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Quedan en stock de color blanco ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-09-23 00:11:00', 1, 'A', 1),
+(2, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Si tengo stock aun quedan 10 unidades', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-09-23 00:34:18', 1, 'A', 5),
+(3, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Podrían enviar el producto por medio de Uber ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-09-25 12:39:34', 1, 'A', 1),
+(4, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Ningún problema lo podemos enviar por ese medio', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-09-29 14:00:57', 1, 'A', 5),
+(5, 'iPhone 11', 'Alguien realizó una pregunta en tu producto', 'Queda en stock disponible en color negro?', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-09-29 15:31:29', 1, 'A', 1),
+(6, 'iPhone 11', 'El vendedor te respondió tu pregunta', 'si tenemos en stock. Podes realizar la compra', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-09-29 15:32:47', 1, 'A', 5),
+(7, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Pondrían enviar mi pedido por Uber ? ', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-02 12:39:02', 1, 'A', 1),
+(8, 'iPhone 11', 'Alguien realizó una pregunta en tu producto', 'Quisiera saber si queda en stock ?', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-10-08 16:31:18', 1, 'A', 1),
+(9, 'iPhone 11', 'El vendedor te respondió tu pregunta', 'Si tenemos en stock, podes ofertar', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-10-08 16:34:01', 1, 'A', 2),
+(10, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Queda en stock en color Rojo ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-08 16:55:56', 1, 'I', 1),
+(11, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'si te lo podemos enviar por Uber', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-08 16:58:25', 1, 'A', 2),
+(12, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Si teneos en stock podes ofertar', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-08 16:58:55', 1, 'A', 2),
+(13, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Queda en stock de color blanco ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-09 11:59:25', 1, 'I', 1),
+(14, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Si hay stock podes ofertar', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-09 12:10:16', 1, 'A', 2),
+(15, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Quisiera saber cuanto tiempo tiene de garantía ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-13 14:17:12', 1, 'A', 1),
+(16, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Este producto tiene 3 años de garantía. ', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-13 15:52:38', 1, 'A', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pregunta`
+--
+
+CREATE TABLE `pregunta` (
+  `id` int(11) NOT NULL,
+  `contenido` varchar(1000) NOT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `respuesta` int(10) NOT NULL DEFAULT 0,
+  `id_producto_tienda` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `pregunta`
+--
+
+INSERT INTO `pregunta` (`id`, `contenido`, `fecha_creacion`, `estado`, `respuesta`, `id_producto_tienda`, `id_usuario`) VALUES
+(1, 'Este producto es nuevo ?', '2021-08-28 13:44:32', 'A', 1, 1, 5),
+(2, 'Quisiera saber el coste del envío del producto ?', '2021-08-28 13:44:34', 'A', 1, 1, 5),
+(3, 'Cuanto tiempo demora en llegar el producto a destino ?', '2021-09-04 23:22:21', 'A', 1, 1, 5),
+(4, 'Hay algún descuento en este producto ?', '2021-09-15 16:40:53', 'A', 1, 1, 5),
+(5, 'Cuanto tiempo de garantía tiene este producto ?', '2021-09-15 16:44:16', 'A', 1, 1, 5),
+(6, 'Quisiera saber si lo pueden enviar por mercado envió ?', '2021-09-18 22:48:09', 'A', 1, 2, 5),
+(7, 'Hay en stock en este momento ?', '2021-09-18 22:56:12', 'A', 1, 1, 2),
+(8, 'Quedan en stock de color blanco ?', '2021-09-23 00:11:00', 'A', 1, 1, 5),
+(9, 'Podrían enviar el producto por medio de Uber ?', '2021-09-25 12:39:34', 'A', 1, 1, 5),
+(10, 'Queda en stock disponible en color negro?', '2021-09-29 15:31:29', 'A', 1, 2, 5),
+(11, 'Pondrían enviar mi pedido por Uber ? ', '2021-10-02 12:39:02', 'A', 1, 1, 2),
+(12, 'Quisiera saber si queda en stock ?', '2021-10-08 16:31:18', 'A', 1, 2, 2),
+(13, 'Queda en stock en color Rojo ?', '2021-10-08 16:55:56', 'A', 1, 1, 2),
+(14, 'Queda en stock de color blanco ?', '2021-10-09 11:59:25', 'A', 1, 1, 2),
+(15, 'Quisiera saber cuanto tiempo tiene de garantía ?', '2021-10-13 14:17:12', 'A', 1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -2617,8 +2717,8 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id`, `nombre`, `SKU`, `detalles`, `imagen_principal`, `fecha_creacion`, `fecha_edicion`, `estado`, `id_marca`) VALUES
-(1, 'Samsung Galaxy A21S', '2fgdsg5-GFrt', 'El procesamiento rápido y amplio almacenamiento de Galaxy A21s te permiten concentrarte en el ahora. Un procesador Octa-core avanzado y 4 GB de RAM brindan un rendimiento suave y eficiente. Además, podés descargar más y eliminar menos con el almacenamiento interno de 128 GB. Y agregá aún más con una tarjeta microSD de 512 GB.', 'producto_default.png', '2021-08-20 13:33:28', '2021-08-20 13:33:28', 'A', 1),
-(2, 'iPhone 11', 'aewrKL-llkp', 'El Apple iPhone 11 es el sucesor del iPhone Xr para el 2019. Este año el iPhone 11 llega con una pantalla de 6.1 pulgadas con resolución Liquid Retina y potenciado por un procesador Apple A13 Bionic con 64GB, 128GB o 256GB de almacenamiento interno. La cámara posterior del iPhone 11 ahora es dual, con un lente regular de 12 MP y otro gran angular de 12 MP, mientras que su cámara frontal es de 12 MP. El iPhone 11 cuenta con una batería de 3110 mAh con carga rápida, parlantes stereo con sonido Dolby Atmos, carga inalámbrica y utiliza reconocimiento de rostro Face ID para seguridad.', 'producto_default.png', '2021-08-20 13:33:28', '2021-08-20 13:33:28', 'A', 2);
+(1, 'Samsung Galaxy A21S', '2fgdsg5-GFrt', 'El procesamiento rápido y amplio almacenamiento de Galaxy A21s te permiten concentrarte en el ahora. Un procesador Octa-core avanzado y 4 GB de RAM brindan un rendimiento suave y eficiente. Además, podés descargar más y eliminar menos con el almacenamiento interno de 128 GB. Y agregá aún más con una tarjeta microSD de 512 GB.', 'a21s-principal.png', '2021-08-20 13:33:28', '2021-08-20 13:33:28', 'A', 1),
+(2, 'iPhone 11', 'aewrKL-llkp', 'El Apple iPhone 11 es el sucesor del iPhone Xr para el 2019. Este año el iPhone 11 llega con una pantalla de 6.1 pulgadas con resolución Liquid Retina y potenciado por un procesador Apple A13 Bionic con 64GB, 128GB o 256GB de almacenamiento interno. La cámara posterior del iPhone 11 ahora es dual, con un lente regular de 12 MP y otro gran angular de 12 MP, mientras que su cámara frontal es de 12 MP. El iPhone 11 cuenta con una batería de 3110 mAh con carga rápida, parlantes stereo con sonido Dolby Atmos, carga inalámbrica y utiliza reconocimiento de rostro Face ID para seguridad.', 'iPhone11-principal.png', '2021-08-20 13:33:28', '2021-08-20 13:33:28', 'A', 2);
 
 -- --------------------------------------------------------
 
@@ -2738,7 +2838,44 @@ CREATE TABLE `resena` (
 INSERT INTO `resena` (`id`, `calificacion`, `descripcion`, `fecha_creacion`, `fecha_edicion`, `estado`, `id_producto_tienda`, `id_usuario`) VALUES
 (1, 5, 'Buen producto, llego en perfecto estado, recomiendo esta tienda.', '2021-08-20 14:33:53', '2021-08-20 14:33:53', 'A', 1, 5),
 (2, 4, 'Buen producto, llegó casi a tiempo. El vendedor se preocupo por la venta.', '2021-08-20 14:33:53', '2021-08-20 14:33:53', 'A', 2, 5),
-(3, 3, 'Llego el empaque malogrado.', '2021-08-20 14:33:53', '2021-08-20 14:33:53', 'A', 1, 5);
+(3, 3, 'Llego el empaque malogrado.', '2021-08-20 14:33:53', '2021-08-20 14:33:53', 'A', 1, 5),
+(4, 4, 'Excelente vendedor, se preocupó demasiado por la venta.', '2021-08-22 00:21:06', '2021-08-22 00:21:06', 'A', 1, 1),
+(5, 5, 'Buen producto', '2021-08-22 00:50:52', '2021-08-22 00:50:52', 'A', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `respuesta`
+--
+
+CREATE TABLE `respuesta` (
+  `id` int(11) NOT NULL,
+  `contenido` varchar(1000) NOT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `id_pregunta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `respuesta`
+--
+
+INSERT INTO `respuesta` (`id`, `contenido`, `fecha_creacion`, `estado`, `id_pregunta`) VALUES
+(1, 'Si el producto es nuevo y viene con caja totalmente cerrada.', '2021-08-28 13:47:18', 'A', 1),
+(2, 'Depende del destino donde valla.', '2021-09-04 23:26:00', 'A', 2),
+(3, 'Tiene 2 años de garantía.', '2021-09-18 21:39:05', 'A', 5),
+(4, 'Ya el producto esta en oferta!!!!!', '2021-09-18 21:42:15', 'A', 4),
+(5, 'El tiempo en la semana es de 24hs. máximo', '2021-09-18 21:42:59', 'A', 3),
+(6, 'Tenemos en stock disponible', '2021-09-18 23:16:16', 'A', 7),
+(7, 'Si. Lo podemos enviar por mercado envió', '2021-09-18 23:17:33', 'A', 6),
+(8, 'Si tengo stock aun quedan 10 unidades', '2021-09-23 00:34:18', 'A', 8),
+(9, 'Ningún problema lo podemos enviar por ese medio', '2021-09-29 14:00:57', 'A', 9),
+(10, 'si tenemos en stock. Podes realizar la compra', '2021-09-29 15:32:47', 'A', 10),
+(11, 'Si tenemos en stock, podes ofertar', '2021-10-08 16:34:01', 'A', 12),
+(12, 'si te lo podemos enviar por Uber', '2021-10-08 16:58:25', 'A', 11),
+(13, 'Si teneos en stock podes ofertar', '2021-10-08 16:58:55', 'A', 13),
+(14, 'Si hay stock podes ofertar', '2021-10-09 12:10:16', 'A', 14),
+(15, 'Este producto tiene 3 años de garantía. ', '2021-10-13 15:52:38', 'A', 15);
 
 -- --------------------------------------------------------
 
@@ -2860,8 +2997,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`, `referencia`, `dni`, `email`, `telefono`, `avatar`, `estado`, `id_tipo`) VALUES
-(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '611fc655433a4-91435524-c622-4855-a569-efd05c0622b0.jpg', 'A', 2),
-(2, 'morronepablo', '12345', 'Pablo Martin', 'Morrone', NULL, NULL, 22362590, 'morronepablo@gmail.com', 1138669097, 'user_default.png', 'A', 2),
+(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '614603db7a781-91435524-c622-4855-a569-efd05c0622b0.jpg', 'A', 2),
+(2, 'morronepablo', '7l03cuwx4PrLgLWv40ymSg==', 'Pablo Martin', 'Morrone', NULL, NULL, 22362590, 'morronepablo@gmail.com', 1138669097, '61469865cedca-pablo.jpg', 'A', 2),
 (3, 'codewaruser', '12345', 'Juan', 'Cosme', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
 (4, 'Warpiceuser', '12345', 'juan', 'diego', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
 (5, 'martintrinidad', '7l03cuwx4PrLgLWv40ymSg==', 'Martin', 'Trinidad', NULL, NULL, 20123334, 'martin@gmail.com', 1165332389, 'user_default.png', 'A', 2);
@@ -2888,7 +3025,9 @@ CREATE TABLE `usuario_provincia` (
 INSERT INTO `usuario_provincia` (`id`, `direccion`, `referencia`, `estado`, `id_localidad`, `id_usuario`) VALUES
 (1, 'El Arreo 220', 'entre cortejarena y garcia lorca, porton negro', 'A', 200, 1),
 (2, 'Arrecifes 455', 'Casa Hermana Pablo', 'A', 164, 1),
-(3, 'Garcia Lorca 789 - La Reja - Bs. As.', 'Casa Vecino', 'I', 200, 1);
+(3, 'Garcia Lorca 789 - La Reja - Bs. As.', 'Casa Vecino', 'I', 200, 1),
+(4, 'El Arreo 250', 'Vecino del frente', 'A', 200, 1),
+(5, 'Pergamino 424', 'Casa de la madre', 'A', 164, 5);
 
 --
 -- Índices para tablas volcadas
@@ -2943,6 +3082,21 @@ ALTER TABLE `modulo`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_producto_tienda` (`id_producto_tienda`,`id_usuario`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -2978,6 +3132,13 @@ ALTER TABLE `resena`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_producto_tienda` (`id_producto_tienda`,`id_usuario`),
   ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_pregunta` (`id_pregunta`);
 
 --
 -- Indices de la tabla `subcategoria`
@@ -3041,7 +3202,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3065,7 +3226,19 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `modulo`
 --
 ALTER TABLE `modulo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT de la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -3095,7 +3268,13 @@ ALTER TABLE `provincias`
 -- AUTO_INCREMENT de la tabla `resena`
 --
 ALTER TABLE `resena`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `subcategoria`
@@ -3131,7 +3310,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `usuario_provincia`
 --
 ALTER TABLE `usuario_provincia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
@@ -3164,6 +3343,19 @@ ALTER TABLE `localidades`
   ADD CONSTRAINT `localidades_ibfk_1` FOREIGN KEY (`id_provincia`) REFERENCES `provincias` (`id`);
 
 --
+-- Filtros para la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  ADD CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  ADD CONSTRAINT `pregunta_ibfk_1` FOREIGN KEY (`id_producto_tienda`) REFERENCES `producto_tienda` (`id`),
+  ADD CONSTRAINT `pregunta_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
+
+--
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -3189,6 +3381,12 @@ ALTER TABLE `producto_tienda`
 ALTER TABLE `resena`
   ADD CONSTRAINT `resena_ibfk_1` FOREIGN KEY (`id_producto_tienda`) REFERENCES `producto_tienda` (`id`),
   ADD CONSTRAINT `resena_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `respuesta`
+--
+ALTER TABLE `respuesta`
+  ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
 
 --
 -- Filtros para la tabla `subcategoria`
