@@ -22,7 +22,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                // console.log(notificaciones);
                 let template1 = '';
                 let template2 = '';
                 if(notificaciones.length == 0) {
@@ -118,7 +118,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let producto = JSON.parse(response);
-                console.log(producto);
+                // console.log(producto);
                 if(producto.usuario_sesion != '') {
                     read_notificaciones();
                 }
@@ -417,11 +417,39 @@ $(document).ready(function() {
         }
         e.preventDefault();
     })
+    async function cambiar_estado_favorito(id_favorito, estado_favorito) {
+        funcion = "cambiar_estado_favorito";
+        let data = await fetch('../Controllers/FavoritoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id_favorito=' + id_favorito + '&&estado_favorito=' + estado_favorito
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                console.log(respuesta);
+                verificar_producto();
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
     $(document).on('click', '.bandera_favorito', (e) => {
         let elemento = $(this)[0].activeElement;
         let id_favorito = $(elemento).attr('id_favorito');
         let estado_favorito = $(elemento).attr('estado_fav');
-        console.log(id_favorito);
-        console.log(estado_favorito);
+        cambiar_estado_favorito(id_favorito, estado_favorito)
     })
 })
