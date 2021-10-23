@@ -27,7 +27,7 @@
 
 <script src="Util/Js/bootstrap.min.js"></script>
 <script src="Util/Js/sweetalert2.min.js"></script>
-
+<script src="Util/Js/moment.min.js"></script>
 
 </body>
 </html>

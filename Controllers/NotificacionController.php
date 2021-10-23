@@ -13,6 +13,9 @@ if($_POST['funcion']=='read_notificaciones'){
         //var_dump($notificacion);
         $json = array();
         foreach ($notificacion->objetos as $objeto) {
+            $fecha_hora = date_create($objeto->fecha_creacion);
+            $hora = $fecha_hora->format('H:i');
+            $fecha = date_format($fecha_hora, 'd-m-Y');
             $json[] = array(
                 'id'             => openssl_encrypt($objeto->id, CODE, KEY),
                 'titulo'         => $objeto->titulo,
@@ -20,7 +23,9 @@ if($_POST['funcion']=='read_notificaciones'){
                 'contenido'      => $objeto->contenido,
                 'imagen'         => $objeto->imagen,
                 'url_1'          => $objeto->url_1,
-                'fecha_creacion' =>$objeto->fecha_creacion
+                'fecha'          => $fecha,
+                'hora'           => $hora,
+                'fecha_creacion' => $objeto->fecha_creacion
             );
         }
         $jsonstring = json_encode($json);
@@ -36,6 +41,9 @@ if($_POST['funcion']=='read_all_notificaciones'){
         //var_dump($notificacion);
         $json = array();
         foreach ($notificacion->objetos as $objeto) {
+            $fecha_hora = date_create($objeto->fecha_creacion);
+            $hora = $fecha_hora->format('H:i');
+            $fecha = date_format($fecha_hora, 'd-m-Y');
             $json[] = array(
                 'id'             => openssl_encrypt($objeto->id, CODE, KEY),
                 'titulo'         => $objeto->titulo,
@@ -43,6 +51,8 @@ if($_POST['funcion']=='read_all_notificaciones'){
                 'contenido'      => $objeto->contenido,
                 'imagen'         => $objeto->imagen,
                 'url_1'          => $objeto->url_1,
+                'fecha'          => $fecha,
+                'hora'           => $hora,
                 'fecha_creacion' => $objeto->fecha_creacion,
                 'estado_abierto' => $objeto->estado_abierto
             );

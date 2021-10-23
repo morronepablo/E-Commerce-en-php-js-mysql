@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    moment.locale('es');
     // Formato numeros a Moneda Local
     function formatNumber(number) {
         return new Intl.NumberFormat( "ES-AR", {
@@ -49,6 +50,14 @@ $(document).ready(function() {
                     <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
                 `;
                 notificaciones.forEach(notificacion => {
+                    let fecha = moment(notificacion.fecha + ' ' + notificacion.hora, 'DD/MM/YYYY HH:mm');
+                    let horas = moment(notificacion.horas, 'HH:mm');
+                    let fecha_hora;
+                    if(notificacion.hoy == '1') {
+                        fecha_hora = horas.formNow();
+                    }else {
+                        fecha_hora = fecha.format('LLL');
+                    }
                     template += `
                     <div class="dropdown-divider"></div>
                         <a href="${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
@@ -60,7 +69,7 @@ $(document).ready(function() {
                                     </h3>
                                     <p class="text-sm">${notificacion.asunto}</p>
                                     <p class="text-sm text-muted">${notificacion.contenido}</p>
-                                    <span class="float-right text-muted text-sm">${notificacion.fecha_creacion}</span>
+                                    <span class="float-right text-muted text-sm">${fecha_hora}</span>
                                 </div>
                             </div>
                         </a>

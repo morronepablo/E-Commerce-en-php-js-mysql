@@ -56,4 +56,24 @@
             }
             
         }
+        function read($id_usuario) {
+            $sql = "SELECT f.id as id,
+                           p.nombre as titulo,
+                           pt.precio as precio,
+                           p.imagen_principal as imagen,
+                           f.url as url,
+                           f.fecha_creacion as fecha_creacion
+                    FROM favorito f
+                    JOIN producto_tienda pt ON f.id_producto_tienda = pt.id
+                    JOIN producto p ON pt.id_producto = p.id
+                    WHERE f.id_usuario=:id_usuario
+                    AND f.estado='A' ORDER BY f.fecha_creacion DESC LIMIT 5";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }

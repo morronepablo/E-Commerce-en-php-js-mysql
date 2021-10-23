@@ -133,6 +133,32 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li>
+      <li id="favorito" class="nav-item dropdown">
+        <a id="numero_favorito" class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-heart"></i>
+          <span class="badge badge-warning navbar-badge">15</span>
+        </a>
+        <div id="favoritos" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-item dropdown-header">15 Notifications</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-envelope mr-2"></i> 4 new messages
+            <span class="float-right text-muted text-sm">3 mins</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-users mr-2"></i> 8 friend requests
+            <span class="float-right text-muted text-sm">12 hours</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-file mr-2"></i> 3 new reports
+            <span class="float-right text-muted text-sm">2 days</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+      </li>
       <li class="nav-item" id="nav_register">
         <a class="nav-link" href="register.php" role="button">
           <i class="fas fa-user-plus"></i> Registrarse
@@ -201,6 +227,14 @@
               <i class="nav-icon far fa-bell"></i>
               <p id="nav_cont_noti">
                 Notificaciones
+              </p>
+            </a>
+          </li>
+          <li id="nav_favoritos" class="nav-item">
+            <a id="active_nav_favoritos" href="../Views/favoritos.php" class="nav-link">
+              <i class="nav-icon far fa-heart"></i>
+              <p id="nav_cont_fav">
+                Favoritos
               </p>
             </a>
           </li>
