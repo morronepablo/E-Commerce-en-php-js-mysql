@@ -5,8 +5,10 @@ include_once '../Models/Historial.php';
 $notificacion = new Notificacion();
 $historial = new Historial();
 session_start();
-
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+$fecha_actual = date('d-m-Y');
 if($_POST['funcion']=='read_notificaciones'){
+    $bandera = '';
     if(!empty($_SESSION['id'])) {
         $id_usuario = $_SESSION['id'];
         $notificacion->read($id_usuario);
@@ -16,6 +18,11 @@ if($_POST['funcion']=='read_notificaciones'){
             $fecha_hora = date_create($objeto->fecha_creacion);
             $hora = $fecha_hora->format('H:i');
             $fecha = date_format($fecha_hora, 'd-m-Y');
+            if($fecha_actual == $fecha) {
+                $bandera = '1';
+            } else {
+                $bandera = '0';
+            }
             $json[] = array(
                 'id'             => openssl_encrypt($objeto->id, CODE, KEY),
                 'titulo'         => $objeto->titulo,
@@ -23,9 +30,10 @@ if($_POST['funcion']=='read_notificaciones'){
                 'contenido'      => $objeto->contenido,
                 'imagen'         => $objeto->imagen,
                 'url_1'          => $objeto->url_1,
+                'fecha_creacion' => $objeto->fecha_creacion,
                 'fecha'          => $fecha,
                 'hora'           => $hora,
-                'fecha_creacion' => $objeto->fecha_creacion
+                'hoy'            => $bandera,
             );
         }
         $jsonstring = json_encode($json);
@@ -35,6 +43,7 @@ if($_POST['funcion']=='read_notificaciones'){
     }
 }
 if($_POST['funcion']=='read_all_notificaciones'){
+    $bandera = '';
     if(!empty($_SESSION['id'])) {
         $id_usuario = $_SESSION['id'];
         $notificacion->read_all_notificaciones($id_usuario);
@@ -44,6 +53,11 @@ if($_POST['funcion']=='read_all_notificaciones'){
             $fecha_hora = date_create($objeto->fecha_creacion);
             $hora = $fecha_hora->format('H:i');
             $fecha = date_format($fecha_hora, 'd-m-Y');
+            if($fecha_actual == $fecha) {
+                $bandera = '1';
+            } else {
+                $bandera = '0';
+            }
             $json[] = array(
                 'id'             => openssl_encrypt($objeto->id, CODE, KEY),
                 'titulo'         => $objeto->titulo,
@@ -51,9 +65,10 @@ if($_POST['funcion']=='read_all_notificaciones'){
                 'contenido'      => $objeto->contenido,
                 'imagen'         => $objeto->imagen,
                 'url_1'          => $objeto->url_1,
+                'fecha_creacion' => $objeto->fecha_creacion,
                 'fecha'          => $fecha,
                 'hora'           => $hora,
-                'fecha_creacion' => $objeto->fecha_creacion,
+                'hoy'            => $bandera,
                 'estado_abierto' => $objeto->estado_abierto
             );
         }

@@ -51,13 +51,15 @@ $(document).ready(function() {
                 `;
                 notificaciones.forEach(notificacion => {
                     let fecha = moment(notificacion.fecha + ' ' + notificacion.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(notificacion.horas, 'HH:mm');
+                    let horas = moment(notificacion.hora, 'HH:mm');
                     let fecha_hora;
                     if(notificacion.hoy == '1') {
-                        fecha_hora = horas.formNow();
+                        // fecha_hora = horas.formNow();
+                        fecha_hora = fecha.format('LLL');
                     }else {
                         fecha_hora = fecha.format('LLL');
                     }
+
                     template += `
                     <div class="dropdown-divider"></div>
                         <a href="${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
@@ -96,6 +98,90 @@ $(document).ready(function() {
         }
     }
 
+    async function read_favoritos() {
+        funcion = "read_favoritos";
+        let data = await fetch('Controllers/FavoritoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let favoritos = JSON.parse(response);
+                console.log(favoritos);
+                let template1 = '';
+                let template2 = '';
+                if(favoritos.length == 0) {
+                    template1 += `
+                        <i class="far fa-heart"></i>
+                    `;
+                    template2 += `
+                        Favoritos
+                    `;
+                } else {
+                    template1 += `
+                        <i class="far fa-heart"></i>
+                        <span class="badge badge-warning navbar-badge">${favoritos.length}</span>
+                    `;
+                    template2 += `
+                        Favoritos <span class="badge badge-warning right">${favoritos.length}</span>
+                    `;
+                }
+                $('#numero_favorito').html(template1);
+                $('#nav_cont_fav').html(template2);
+                let template = '';
+                template += `
+                    <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
+                `;
+                favoritos.forEach(favorito => {
+                    let fecha = moment(favorito.fecha + ' ' + favorito.hora, 'DD/MM/YYYY HH:mm');
+                    let horas = moment(favorito.hora, 'HH:mm');
+                    let fecha_hora;
+                    if(favorito.hoy == '1') {
+                        fecha_hora = horas.formNow();
+                    }else {
+                        fecha_hora = fecha.format('LLL');
+                    }
+                    template += `
+                    <div class="dropdown-divider"></div>
+                        <a href="${favorito.url}" class="dropdown-item">
+                            <div class="media">
+                                <img src="Util/Img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <div class="media-body">
+                                    <h3 class="dropdown-item-title">
+                                        ${favorito.titulo}
+                                    </h3>
+                                    
+                                    <p class="text-sm text-muted">${favorito.precio}</p>
+                                    <span class="float-right text-muted text-sm">${fecha_hora}</span>
+                                </div>
+                            </div>
+                        </a>
+                    <div class="dropdown-divider"></div>
+                    `;
+                });
+                template += `
+                <a href="Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
+                `;
+                $('#favoritos').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('Controllers/UsuarioController.php', { funcion }, (response) => {
@@ -111,10 +197,15 @@ $(document).ready(function() {
                 read_notificaciones();
                 $('#notificacion').show();
                 $('#nav_notificaciones').show();
+                read_favoritos();
+                $('#favorito').show();
+                $('#nav_favoritos').show();
             } else {
                 $('#nav_usuario').hide();
                 $('#notificacion').hide();
                 $('#nav_notificaciones').hide();
+                $('#favorito').hide();
+                $('#nav_favoritos').hide();
             }
         })
     }

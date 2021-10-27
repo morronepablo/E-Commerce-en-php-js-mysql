@@ -30,7 +30,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                // console.log(notificaciones);
+                console.log(notificaciones);
                 let template1 = '';
                 let template2 = '';
                 if(notificaciones.length == 0) {
@@ -57,13 +57,14 @@ $(document).ready(function() {
                 `;
                 notificaciones.forEach(notificacion => {
                     let fecha = moment(notificacion.fecha + ' ' + notificacion.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(notificacion.horas, 'HH:mm');
+                    let horas = moment(notificacion.hora, 'HH:mm');
                     let fecha_hora;
                     if(notificacion.hoy == '1') {
-                        fecha_hora = horas.formNow();
+                        // fecha_hora = horas.formNow();
                     }else {
                         fecha_hora = fecha.format('LLL');
                     }
+                    fecha_hora = fecha.format('LLL');
                     template += `
                     <div class="dropdown-divider"></div>
                         <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
@@ -140,7 +141,7 @@ $(document).ready(function() {
                 `;
                 favoritos.forEach(favorito => {
                     let fecha = moment(favorito.fecha + ' ' + favorito.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(favorito.horas, 'HH:mm');
+                    let horas = moment(favorito.hora, 'HH:mm');
                     let fecha_hora;
                     if(favorito.hoy == '1') {
                         fecha_hora = horas.formNow();
@@ -184,10 +185,6 @@ $(document).ready(function() {
 
         }
     }
-
-
-
-
     function verificar_sesion() {
         funcion = 'verificar_sesion';
         $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
@@ -226,7 +223,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let producto = JSON.parse(response);
-                // console.log(producto);
+                console.log(producto);
                 if(producto.usuario_sesion != '') {
                     read_notificaciones();
                 }
@@ -379,11 +376,19 @@ $(document).ready(function() {
                 template5 += `
                     <div class="direct-chat-messages direct-chat-success preguntas">`;
                     producto.preguntas.forEach(pregunta => {
+                        let fecha1 = moment(pregunta.fecha+' '+pregunta.hora, 'DD/MM/YYYY HH/:mm');
+                        let horas1 = moment(pregunta.hora, 'HH/:mm');
+                        let fecha_hora1;
+                        if(pregunta.hoy == '1') {
+                            fecha_hora1 = horas1.fromNow();
+                        } else {
+                            fecha_hora1 = fecha1.format('LLL');
+                        }
                         template5 += `
                         <div class="direct-chat-msg">
                             <div class="direct-chat-infos clearfix">
                                 <span class="direct-chat-name float-left">${pregunta.username}</span>
-                                <span class="direct-chat-timestamp float-right">${pregunta.fecha_creacion}</span>
+                                <span class="direct-chat-timestamp float-right">${fecha_hora1}</span>
                             </div>
                             <img class="direct-chat-img" src="../Util/Img/Users/${pregunta.avatar}" alt="Message User Image">
                             <div class="direct-chat-text">
@@ -409,12 +414,20 @@ $(document).ready(function() {
                                     `;
                                 }
                             } else {
+                                let fecha2 = moment(pregunta.respuesta.fecha+' '+pregunta.respuesta.hora, 'DD/MM/YYYY HH/:mm');
+                                let horas2 = moment(pregunta.respuesta.hora, 'HH/:mm');
+                                let fecha_hora2;
+                                if(pregunta.respuesta.hoy == '1') {
+                                    fecha_hora2 = horas2.fromNow();
+                                } else {
+                                    fecha_hora2 = fecha2.format('LLL');
+                                }
                                 // La pregunta tiene respuesta
                                 template5 += `
                                 <div class="direct-chat-msg right">
                                     <div class="direct-chat-infos clearfix">
                                         <span class="direct-chat-name float-right">${producto.username}</span>
-                                        <span class="direct-chat-timestamp float-left">${pregunta.respuesta.fecha_creacion}</span>
+                                        <span class="direct-chat-timestamp float-left">${fecha_hora2}</span>
                                     </div>
                                     <img class="direct-chat-img" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
                                     <div class="direct-chat-text">
@@ -546,6 +559,7 @@ $(document).ready(function() {
                     toastr.error('¡* No intente vulnerar el sistema *!');
                 }
                 verificar_producto();
+                read_favoritos();
             } catch (error) {
                 console.error(error);
                 console.log(response);

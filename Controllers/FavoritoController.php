@@ -21,6 +21,8 @@ if($_POST['funcion']=='cambiar_estado_favorito'){
                 $producto_tienda->llenar_productos($id_producto_tienda);
                 $titulo = $producto_tienda->objetos[0]->producto;
                 $url    = 'Views/descripcion.php?name='.$titulo.'&&id='.$formateado;
+                $favorito->read_favorito_usuario_protienda($id_usuario, $id_producto_tienda);
+                $estado_favorito = $favorito->objetos[0]->estado;   
                 if($estado_favorito == 'A') {
                     // Actualizar el estado de Activo a Inactivo de favorito
                     $favorito->update_remove($id_favorito);
