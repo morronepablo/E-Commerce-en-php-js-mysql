@@ -228,7 +228,7 @@
             </a>
           </li>
           <li id="nav_favoritos" class="nav-item">
-            <a id="active_nav_favoritos" href="../Views/favoritos.php" class="nav-link">
+            <a id="active_nav_favoritos" href="Views/favoritos.php" class="nav-link">
               <i class="nav-icon far fa-heart"></i>
               <p id="nav_cont_fav">
                 Favoritos

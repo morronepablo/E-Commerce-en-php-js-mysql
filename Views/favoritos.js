@@ -1,7 +1,7 @@
 $(document).ready(function() {
     moment.locale('es');
     verificar_sesion();
-    $('#active_nav_notificaciones').addClass('active');
+    $('#active_nav_favoritos').addClass('active');
     toastr.options = {
         'debug': false,
         'positionClass': 'toast-bottom-full-width',
@@ -23,7 +23,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                //console.log(notificaciones);
                 let template1 = '';
                 let template2 = '';
                 if(notificaciones.length == 0) {
@@ -106,7 +106,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let favoritos = JSON.parse(response);
-                console.log(favoritos);
+                //console.log(favoritos);
                 let template1 = '';
                 let template2 = '';
                 if(favoritos.length == 0) {
@@ -189,7 +189,7 @@ $(document).ready(function() {
                 $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                 $('#usuario_menu').text(sesion.user);
                 read_notificaciones();
-                read_all_notificaciones();
+                read_all_favoritos();
                 $('#notificacion').show();
                 $('#nav_notificaciones').show();
                 read_favoritos();
@@ -205,9 +205,9 @@ $(document).ready(function() {
             }
         })
     }
-    async function read_all_notificaciones() {
-        funcion = "read_all_notificaciones";
-        let data = await fetch('../Controllers/NotificacionController.php',{
+    async function read_all_favoritos() {
+        funcion = "read_all_favoritos";
+        let data = await fetch('../Controllers/FavoritoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion=' + funcion
@@ -216,13 +216,13 @@ $(document).ready(function() {
             let response = await data.text();
             //console.log(response);
             try {
-                let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                let favoritos = JSON.parse(response);
+                console.log(favoritos);
                 let template = '';
-                let notification = [];
-                notificaciones.forEach(notificacion => {
-                    let fecha = moment(notificacion.fecha+' '+notificacion.hora, 'DD/MM/YYYY HH/:mm');
-                    let horas = moment(notificacion.hora, 'HH/:mm');
+                let favorites = [];
+                favoritos.forEach(favorito => {
+                    let fecha = moment(favorito.fecha+' '+favorito.hora, 'DD/MM/YYYY HH/:mm');
+                    let horas = moment(favorito.hora, 'HH/:mm');
                     let fecha_hora;
                     if(notificacion.hoy == '1') {
                         fecha_hora = horas.fromNow();
@@ -233,26 +233,19 @@ $(document).ready(function() {
                     template += `
                         <div class="row">
                             <div class="col-sm-1 text-center">
-                                <button type="button" class="btn eliminar_noti" attrid="${notificacion.id}">
+                                <button type="button" class="btn eliminar_fav" attrid="${favorito.id}">
                                     <i class="far fa-trash-alt text-danger"></i>
                                 </button>
                             </div>
                             <div class="col-sm-11">
-                                <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
+                                <a href="../${favorito.url}" class="dropdown-item">
                                     <div class="media">
-                                        <img src="../Util/Img/producto/${notificacion.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                        <img src="../Util/Img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                         <div class="media-body">
                                             <h3 class="dropdown-item-title">
-                                                ${notificacion.titulo}
-                                            `;
-                            if(notificacion.estado_abierto == "0") {
-                                template += `<span class="badge badge-success">Cerrado</span>`;
-                            } else {
-                                template += `<span class="badge badge-danger">Abierto</span>`;
-                            }
-                            template += `   </h3>
-                                            <p class="text-sm">${notificacion.asunto}</p>
-                                            <p class="text-sm text-muted">${notificacion.contenido}</p>
+                                                ${favorito.titulo}
+                                            </h3>
+                                            <p class="text-sm text-muted">${favorito.precio}</p>
                                             <span class="float-right text-muted text-sm">${fecha_hora}</span>
                                         </div>
                                     </div>
@@ -261,10 +254,10 @@ $(document).ready(function() {
                         </div>
                         
                     `;
-                    notification.push({ celda: template });
+                    favorites.push({ celda: template });
                 });
-                $('#noti').DataTable( {
-                    data: notification,
+                $('#fav').DataTable( {
+                    data: favorites,
                     "aaSorting": [],
                     "searching": true,
                     "scrollX": true,
@@ -291,50 +284,50 @@ $(document).ready(function() {
         }
     }
 
-    async function eliminar_notificacion(id_notificacion) {
-        funcion = "eliminar_notificacion";
-        let data = await fetch('../Controllers/NotificacionController.php',{
-            method: 'POST',
-            headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id_notificacion=' + id_notificacion
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //console.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                console.log(respuesta);
-                if(respuesta.mensaje1 == "notificacion eliminada") {
-                    toastr.success('¡* El item se eliminó de sus notificaciones *!');
-                } else if(respuesta.mensaje1 == "error al eliminar") {
-                    toastr.error('¡* No intente vulnerar el sistema *!');
-                } else {
-                    toastr.error('¡* Por favor comuníquese con el area de sistemas *!');
-                }
-                read_all_notificaciones();
-                read_notificaciones();
+    // async function eliminar_notificacion(id_notificacion) {
+    //     funcion = "eliminar_notificacion";
+    //     let data = await fetch('../Controllers/NotificacionController.php',{
+    //         method: 'POST',
+    //         headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    //         body: 'funcion=' + funcion + '&&id_notificacion=' + id_notificacion
+    //     })
+    //     if(data.ok) {
+    //         let response = await data.text();
+    //         //console.log(response);
+    //         try {
+    //             let respuesta = JSON.parse(response);
+    //             console.log(respuesta);
+    //             if(respuesta.mensaje1 == "notificacion eliminada") {
+    //                 toastr.success('¡* El item se eliminó de sus notificaciones *!');
+    //             } else if(respuesta.mensaje1 == "error al eliminar") {
+    //                 toastr.error('¡* No intente vulnerar el sistema *!');
+    //             } else {
+    //                 toastr.error('¡* Por favor comuníquese con el area de sistemas *!');
+    //             }
+    //             read_all_notificaciones();
+    //             read_notificaciones();
                 
-            } catch (error) {
-                console.error(error);
-                console.log(response);
+    //         } catch (error) {
+    //             console.error(error);
+    //             console.log(response);
                 
-            }
+    //         }
 
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
+    //     } else {
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: data.statusText,
+    //             text: 'Hubo un conflicto de código: ' + data.status,
+    //         })
 
-        }
-    }
+    //     }
+    // }
 
-    $(document).on('click', '.eliminar_noti', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id = $(elemento).attr('attrid');
-        eliminar_notificacion(id);
-    })
+    // $(document).on('click', '.eliminar_noti', (e) => {
+    //     let elemento = $(this)[0].activeElement;
+    //     let id = $(elemento).attr('attrid');
+    //     eliminar_notificacion(id);
+    // })
 
 })
 let espanol = {

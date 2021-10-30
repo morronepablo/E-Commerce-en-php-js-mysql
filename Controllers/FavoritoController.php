@@ -101,3 +101,29 @@ if($_POST['funcion']=='read_favoritos'){
         echo 'error, el usuario no está en sesión';
     }
 }
+if($_POST['funcion']=='read_all_favoritos'){
+    if(!empty($_SESSION['id'])) {
+        $id_usuario = $_SESSION['id'];
+        $favorito->read_all_favoritos($id_usuario);
+        $json = array();
+        foreach ($favorito->objetos as $objeto) {
+            $fecha_hora = date_create($objeto->fecha_creacion);
+            $hora = $fecha_hora->format('H:i');
+            $fecha = date_format($fecha_hora, 'd-m-Y');
+            $json[] = array(
+                'id'             => openssl_encrypt($objeto->id, CODE, KEY),
+                'titulo'         => $objeto->titulo,
+                'precio'         => $objeto->precio,
+                'imagen'         => $objeto->imagen,
+                'url'            => $objeto->url,
+                'fecha'          => $fecha,
+                'hora'           => $hora,
+                'fecha_creacion' => $objeto->fecha_creacion
+            );
+        }
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error, el usuario no está en sesión';
+    }
+}

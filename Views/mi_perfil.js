@@ -36,7 +36,7 @@ $(document).ready(function() {
             //console.log(historiales);
             let template = '';
             historiales.forEach(historial => {
-                let fecha_moment = moment(historial[0].fecha, 'DD/MM/YY');
+                let fecha_moment = moment(historial[0].fecha, 'DD/MM/YYYY');
                 template += `
                 <div class="time-label">
                     <span class="bg-danger">
@@ -232,13 +232,12 @@ $(document).ready(function() {
                     <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
                 `;
                 notificaciones.forEach(notificacion => {
-                    let fecha = moment(notificacion.fecha + ' ' + notificacion.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(notificacion.hora, 'HH:mm');
+                    let fecha = moment(notificacion.fecha+' '+notificacion.hora, 'DD/MM/YYYY HH/:mm');
+                    let horas = moment(notificacion.hora, 'HH/:mm');
                     let fecha_hora;
                     if(notificacion.hoy == '1') {
-                        // fecha_hora = horas.formNow();
-                        fecha_hora = fecha.format('LLL');
-                    }else {
+                        fecha_hora = horas.fromNow();
+                    } else {
                         fecha_hora = fecha.format('LLL');
                     }
                     template += `
@@ -317,12 +316,12 @@ $(document).ready(function() {
                     <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
                 `;
                 favoritos.forEach(favorito => {
-                    let fecha = moment(favorito.fecha + ' ' + favorito.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(favorito.horas, 'HH:mm');
+                    let fecha = moment(favorito.fecha+' '+favorito.hora, 'DD/MM/YYYY HH/:mm');
+                    let horas = moment(favorito.hora, 'HH/:mm');
                     let fecha_hora;
                     if(favorito.hoy == '1') {
-                        fecha_hora = horas.formNow();
-                    }else {
+                        fecha_hora = horas.fromNow();
+                    } else {
                         fecha_hora = fecha.format('LLL');
                     }
                     template += `

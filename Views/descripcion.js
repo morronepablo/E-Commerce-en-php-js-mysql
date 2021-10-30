@@ -56,15 +56,14 @@ $(document).ready(function() {
                     <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
                 `;
                 notificaciones.forEach(notificacion => {
-                    let fecha = moment(notificacion.fecha + ' ' + notificacion.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(notificacion.hora, 'HH:mm');
+                    let fecha = moment(notificacion.fecha+' '+notificacion.hora, 'DD/MM/YYYY HH/:mm');
+                    let horas = moment(notificacion.hora, 'HH/:mm');
                     let fecha_hora;
                     if(notificacion.hoy == '1') {
-                        // fecha_hora = horas.formNow();
-                    }else {
+                        fecha_hora = horas.fromNow();
+                    } else {
                         fecha_hora = fecha.format('LLL');
                     }
-                    fecha_hora = fecha.format('LLL');
                     template += `
                     <div class="dropdown-divider"></div>
                         <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
@@ -140,12 +139,12 @@ $(document).ready(function() {
                     <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
                 `;
                 favoritos.forEach(favorito => {
-                    let fecha = moment(favorito.fecha + ' ' + favorito.hora, 'DD/MM/YYYY HH:mm');
-                    let horas = moment(favorito.hora, 'HH:mm');
+                    let fecha = moment(favorito.fecha+' '+favorito.hora, 'DD/MM/YYYY HH/:mm');
+                    let horas = moment(favorito.hora, 'HH/:mm');
                     let fecha_hora;
                     if(favorito.hoy == '1') {
-                        fecha_hora = horas.formNow();
-                    }else {
+                        fecha_hora = horas.fromNow();
+                    } else {
                         fecha_hora = fecha.format('LLL');
                     }
                     template += `
