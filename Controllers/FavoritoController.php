@@ -127,3 +127,25 @@ if($_POST['funcion']=='read_all_favoritos'){
         echo 'error, el usuario no está en sesión';
     }
 }
+if($_POST['funcion']=='eliminar_favorito'){
+    if(!empty($_SESSION['id'])) {
+        $id_usuario            = $_SESSION['id'];
+        $id_favorito_encrypted = $_POST['id_favorito'];
+        $formateado            = str_replace(" ","+", $id_favorito_encrypted);
+        $id_favorito           = openssl_decrypt($formateado, CODE, KEY);
+        $mensaje = '';
+        if(is_numeric($id_favorito)) {
+            $favorito->update_remove($id_favorito);
+            $mensaje = 'favorito eliminado';
+        } else {
+            $mensaje = 'error al eliminar';
+        }
+        $json = array(
+            'mensaje' => $mensaje,
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error, el usuario no está en sesión';
+    }
+}

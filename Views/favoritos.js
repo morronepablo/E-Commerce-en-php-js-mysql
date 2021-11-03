@@ -252,7 +252,6 @@ $(document).ready(function() {
                                 </a>
                             </div>
                         </div>
-                        
                     `;
                     favorites.push({ celda: template });
                 });
@@ -271,7 +270,6 @@ $(document).ready(function() {
             } catch (error) {
                 console.error(error);
                 console.log(response);
-                
             }
 
         } else {
@@ -284,51 +282,46 @@ $(document).ready(function() {
         }
     }
 
-    // async function eliminar_notificacion(id_notificacion) {
-    //     funcion = "eliminar_notificacion";
-    //     let data = await fetch('../Controllers/NotificacionController.php',{
-    //         method: 'POST',
-    //         headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    //         body: 'funcion=' + funcion + '&&id_notificacion=' + id_notificacion
-    //     })
-    //     if(data.ok) {
-    //         let response = await data.text();
-    //         //console.log(response);
-    //         try {
-    //             let respuesta = JSON.parse(response);
-    //             console.log(respuesta);
-    //             if(respuesta.mensaje1 == "notificacion eliminada") {
-    //                 toastr.success('¡* El item se eliminó de sus notificaciones *!');
-    //             } else if(respuesta.mensaje1 == "error al eliminar") {
-    //                 toastr.error('¡* No intente vulnerar el sistema *!');
-    //             } else {
-    //                 toastr.error('¡* Por favor comuníquese con el area de sistemas *!');
-    //             }
-    //             read_all_notificaciones();
-    //             read_notificaciones();
-                
-    //         } catch (error) {
-    //             console.error(error);
-    //             console.log(response);
-                
-    //         }
+    async function eliminar_favorito(id_favorito) {
+        funcion = "eliminar_favorito";
+        let data = await fetch('../Controllers/FavoritoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id_favorito=' + id_favorito
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log(respuesta.mensaje);
+                if(respuesta.mensaje == "favorito eliminado") {
+                    toastr.success('¡* El item se eliminó de tus favoritos *!');
+                } else if(respuesta.mensaje == "error al eliminar") {
+                    toastr.error('¡* No intente vulnerar el sistema *!');
+                }
+                read_all_favoritos();
+                read_favoritos();  
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                toastr.error('¡* Por favor comuníquese con el area de sistemas *!');
+            }
 
-    //     } else {
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: data.statusText,
-    //             text: 'Hubo un conflicto de código: ' + data.status,
-    //         })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
 
-    //     }
-    // }
-
-    // $(document).on('click', '.eliminar_noti', (e) => {
-    //     let elemento = $(this)[0].activeElement;
-    //     let id = $(elemento).attr('attrid');
-    //     eliminar_notificacion(id);
-    // })
-
+        }
+    }
+    $(document).on('click', '.eliminar_fav', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('attrid');
+        eliminar_favorito(id);
+    })
 })
 let espanol = {
     "autoFill": {
