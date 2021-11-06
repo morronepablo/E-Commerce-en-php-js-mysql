@@ -2,8 +2,10 @@
 include_once '../Models/ProductoTienda.php';
 include_once '../Util/Config/config.php';
 include_once '../Models/Favorito.php';
+include_once '../Models/Historial.php';
 $producto_tienda = new ProductoTienda();
 $favorito = new Favorito();
+$historial = new Historial();
 session_start();
 
 if($_POST['funcion']=='cambiar_estado_favorito'){
@@ -26,10 +28,14 @@ if($_POST['funcion']=='cambiar_estado_favorito'){
                 if($estado_favorito == 'A') {
                     // Actualizar el estado de Activo a Inactivo de favorito
                     $favorito->update_remove($id_favorito);
+                    $descripcion = 'Se removió de favoritos el producto: '.$titulo;
+                    $historial->crear_historial($descripcion, 3, 5, $id_usuario);
                     $mensaje = 'remove';
                 } else {
                     // Actualizar el estado de Inactivo a Activo de favorito
                     $favorito->update_add($id_usuario, $id_producto_tienda, $id_favorito, $url);
+                    $descripcion = 'Se agregó a favoritos el producto: '.$titulo;
+                    $historial->crear_historial($descripcion, 2, 5, $id_usuario);
                     $mensaje = 'add';
                 }
             } else {
@@ -58,10 +64,14 @@ if($_POST['funcion']=='cambiar_estado_favorito'){
             if($estado_favorito == 'A') {
                 // Actualizar el estado de Activo a Inactivo de favorito
                 $favorito->update_remove($id_favorito);
+                $descripcion = 'Se removió de favoritos el producto: '.$titulo;
+                $historial->crear_historial($descripcion, 3, 5, $id_usuario);
                 $mensaje = 'remove';
             } else {
                 // Actualizar el estado de Inactivo a Activo de favorito
                 $favorito->update_add($id_usuario, $id_producto_tienda, $id_favorito, $url);
+                $descripcion = 'Se agregó a favoritos el producto: '.$titulo;
+                $historial->crear_historial($descripcion, 2, 5, $id_usuario);
                 $mensaje = 'add';
             }
         } else {
@@ -133,9 +143,15 @@ if($_POST['funcion']=='eliminar_favorito'){
         $id_favorito_encrypted = $_POST['id_favorito'];
         $formateado            = str_replace(" ","+", $id_favorito_encrypted);
         $id_favorito           = openssl_decrypt($formateado, CODE, KEY);
+        $formateado            = str_replace(" ","+",$_SESSION['product-verification']);
+        $id_producto_tienda    = openssl_decrypt($formateado, CODE, KEY);
         $mensaje = '';
         if(is_numeric($id_favorito)) {
             $favorito->update_remove($id_favorito);
+            $producto_tienda->llenar_productos($id_producto_tienda);
+            $titulo = $producto_tienda->objetos[0]->producto;
+            $descripcion = 'Se removió de favoritos el producto: '.$titulo;
+            $historial->crear_historial($descripcion, 3, 5, $id_usuario);
             $mensaje = 'favorito eliminado';
         } else {
             $mensaje = 'error al eliminar';
