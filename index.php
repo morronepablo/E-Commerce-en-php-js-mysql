@@ -44,33 +44,9 @@
         </div>
         <div class="card-body">
           <div id="productos" class="row">
-
-            <div class="col-sm-2">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <img src="Util/Img/user_default.png" class="img-fluid" alt="img-fluid">
-                    </div>
-                    <div class="col-sm-12">
-                      <span class="text-muted float-left">Marca</span></br>
-                      <a class="titulo_producto" href="#" style="text-decoration:none">Título del producto</a>
-                      <span class="badge br-success">Envío gratis</span></br>
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="fas fa-star text-warning"></i>
-                      <i class="far fa-star text-warning"></i>
-                      <i class="far fa-star text-warning"></i>
-                      </br>
-                      <span class="text-muted" style="text-decoration: line-through">$ 100000</span>
-                      <span class="text-muted">-10%</span></br>
-                      <h4 class="text-danger">$ 90000</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div id="loader_3" class="overlay">
+              <i class="fas fa-4x fa-sync-alt fa-spin"></i>
             </div>
-            
           </div>
         </div>
         <!-- /.card-body -->

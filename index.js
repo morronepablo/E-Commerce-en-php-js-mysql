@@ -9,8 +9,9 @@ $(document).ready(function() {
     }
     // Fin funcion formato moneda
     var funcion;
-    setTimeout(verificar_sesion,2000);
-    //verificar_sesion();
+    Loader();
+    //setTimeout(verificar_sesion,2000);
+    verificar_sesion();
     
 
     async function read_notificaciones() {
@@ -114,26 +115,27 @@ $(document).ready(function() {
                 let favoritos = JSON.parse(response);
                 console.log(favoritos);
                 let template1 = '';
-                let template2 = '';
+                let template = `
+                <a class="nav-link" data-toggle="dropdown" href="#">`;
                 if(favoritos.length == 0) {
-                    template1 += `
+                    template += `
                         <i class="far fa-heart"></i>
                     `;
-                    template2 += `
+                    template1 += `
                         Favoritos
                     `;
                 } else {
-                    template1 += `
+                    template += `
                         <i class="far fa-heart"></i>
                         <span class="badge badge-warning navbar-badge">${favoritos.length}</span>
                     `;
-                    template2 += `
+                    template1 += `
                         Favoritos <span class="badge badge-warning right">${favoritos.length}</span>
                     `;
                 }
-                $('#numero_favorito').html(template1);
-                $('#nav_cont_fav').html(template2);
-                let template = '';
+                template +=`
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">`;                
                 template += `
                     <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
                 `;
@@ -165,9 +167,10 @@ $(document).ready(function() {
                     `;
                 });
                 template += `
-                <a href="Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
-                `;
-                $('#favoritos').html(template);
+                    <a href="Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
+                </div>`;
+                $('#nav_cont_fav').html(template1);
+                $('#favorito').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -256,30 +259,7 @@ $(document).ready(function() {
               
             </li>
             <li id="favorito" class="nav-item dropdown">
-              <a id="numero_favorito" class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-heart"></i>
-                <span class="badge badge-warning navbar-badge">15</span>
-              </a>
-              <div id="favoritos" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="fas fa-envelope mr-2"></i> 4 new messages
-                  <span class="float-right text-muted text-sm">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="fas fa-users mr-2"></i> 8 friend requests
-                  <span class="float-right text-muted text-sm">12 hours</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="fas fa-file mr-2"></i> 3 new reports
-                  <span class="float-right text-muted text-sm">2 days</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-              </div>
+              
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -298,6 +278,35 @@ $(document).ready(function() {
         $('#menu_superior').html(template);
     }
 
+    function llenar_menu_lateral(usuario) {
+        let template = ``;
+        if(usuario === undefined || usuario == '' || usuario == null) {
+            
+        } else {
+            template = `
+            <li class="nav-header">PERFIL</li>
+            <li id="nav_notificaciones" class="nav-item">
+                <a id="active_nav_notificaciones" href="Views/notificaciones.php" class="nav-link">
+                <i class="nav-icon far fa-bell"></i>
+                <p id="nav_cont_noti">
+                    Notificaciones
+                </p>
+                </a>
+            </li>
+            <li id="nav_favoritos" class="nav-item">
+                <a id="active_nav_favoritos" href="Views/favoritos.php" class="nav-link">
+                <i class="nav-icon far fa-heart"></i>
+                <p id="nav_cont_fav">
+                    Favoritos
+                </p>
+                </a>
+            </li>
+            `;
+        }
+        $('#loader_2').hide(500);
+        $('#menu_lateral').html(template);
+    }
+
     async function verificar_sesion() {
         funcion = "verificar_sesion";
         let data = await fetch('Controllers/UsuarioController.php',{
@@ -309,23 +318,21 @@ $(document).ready(function() {
             let response = await data.text();
             //conselo.log(response);
             try {
-                //let productos = JSON.parse(response);
-                //console.log(productos);
                 if(response != '') {
                     let sesion = JSON.parse(response);
                     llenar_menu_superior(sesion);
+                    llenar_menu_lateral(sesion);
                     $('#avatar_menu').attr('src', 'Util/Img/Users/' + sesion.avatar);
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
-                    $('#favorito').show();
-                    $('#nav_favoritos').show();
                 } else {
+                    llenar_menu_lateral();
                     llenar_menu_superior();
-                    $('#favorito').hide();
-                    $('#nav_favoritos').hide();
                 }
+                //setTimeout(llenar_productos(),10000);
                 llenar_productos();
+                CloseLoader();
 
             } catch (error) {
                 console.error(error);
@@ -396,6 +403,7 @@ $(document).ready(function() {
                     </div>
                     `;
                 });
+                $('#loader_3').hide(500);
                 $('#productos').html(template);
             } catch (error) {
                 console.error(error);
@@ -406,6 +414,29 @@ $(document).ready(function() {
                 icon: 'error',
                 title: data.statusText,
                 text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+    function Loader(mensaje) {
+        if(mensaje == '' || mensaje == null){
+            mensaje = 'Cargando datos...';
+        }
+        Swal.fire({
+            position: 'center',
+            title: mensaje,
+            html: '<i class="fas fa-4x fa-sync-alt fa-spin"></i>',
+            showConfirmButton: false
+        })
+    }
+    function CloseLoader(mensaje, tipo) {
+        if(mensaje == '' || mensaje == null){
+            Swal.close();
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: tipo,
+                title: mensaje,
+                showConfirmButton: false
             })
         }
     }
