@@ -38,7 +38,9 @@ if (!empty($_GET['id']) && $_GET['name']) {
             <div class="card-body">
                 <div class="row">
                     <div id="imagenes" class="col-12 col-sm-6">
-
+                        <div id="loader_3" class="overlay">
+                            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                        </div>
                     </div>
                     <div class="col-12 col-sm-6">
                         <h3 id="producto" class="my-3">LOWA Men’s Renegade GTX Mid Hiking Boots Review</h3>
