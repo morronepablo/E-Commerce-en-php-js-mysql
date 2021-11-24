@@ -43,7 +43,7 @@ if (!empty($_GET['id']) && $_GET['name']) {
                         </div>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <h3 id="producto" class="my-3">LOWA Men’s Renegade GTX Mid Hiking Boots Review</h3>
+                        <h3 id="producto" class="my-3"></h3>
                         <span id="marca"></span><br>
                         <span id="sku"></span>
                         <div id="informacion_precios">

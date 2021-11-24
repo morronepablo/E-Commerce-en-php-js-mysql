@@ -313,24 +313,44 @@ $(document).ready(function() {
         $('#menu_lateral').html(template);
     }
 
-    function verificar_sesion() {
-        funcion = 'verificar_sesion';
-        $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            if(response != '') {
-                let sesion = JSON.parse(response);
-                llenar_menu_superior(sesion);
-                llenar_menu_lateral(sesion);
-                $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#usuario_menu').text(sesion.user);
-                read_notificaciones();
-                read_favoritos();
-            } else {
-                llenar_menu_superior();
-                llenar_menu_lateral(); 
-            }
-            verificar_producto();
-            CloseLoader();
+    async function verificar_sesion() {
+        funcion = "verificar_sesion";
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
         })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                if(response != '') {
+                    let sesion = JSON.parse(response);
+                    llenar_menu_superior(sesion);
+                    llenar_menu_lateral(sesion);
+                    $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
+                    $('#usuario_menu').text(sesion.user);
+                    read_notificaciones();
+                    read_favoritos();
+                } else {
+                    llenar_menu_lateral();
+                    llenar_menu_superior();
+                }
+                //setTimeout(llenar_productos(),10000);
+                verificar_producto();
+                CloseLoader();
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
     }
 
     function mostrar_pasarela(producto) {
@@ -363,6 +383,50 @@ $(document).ready(function() {
         $('#imagenes').html(template);
     }
 
+    async function mostrar_titulo_favorito() {
+        funcion = "mostrar_titulo_favorito";
+        let data = await fetch('../Controllers/FavoritoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let producto = JSON.parse(response);
+                console.log(producto);
+                let template = '';
+                if(producto.usuario_sesion != '') {
+                    if(producto.estado_favorito == '') {
+                        //Esto es cuando no existe como favorito a este usuario el producto
+                        template += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="far fa-heart fa-lg text-danger"></i></button>`;
+                    } else {
+                        if(producto.estado_favorito == 'I') {
+                            //Esto es cuando fue favorito este producto alguna vez a este usuario pero esta inactivo
+                            template += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="far fa-heart fa-lg text-danger"></i></button>`;
+                        } else {
+                            //Esto es cuando es favorito y lo pasamos a inactivo
+                            template += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="fas fa-heart fa-lg text-danger"></i></button>`;
+                        }
+                    }
+                } else {
+                    template += `${producto.producto}`;
+                }
+                $('#producto').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     async function verificar_producto() {
         funcion = "verificar_producto";
         let data = await fetch('../Controllers/ProductoTiendaController.php',{
@@ -380,25 +444,8 @@ $(document).ready(function() {
                     read_notificaciones();
                 }
                 mostrar_pasarela(producto);
-
-                let template6 = '';
-                if(producto.usuario_sesion != '') {
-                    if(producto.estado_favorito == '') {
-                        //Esto es cuando no existe como favorito a este usuario el producto
-                        template6 += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="far fa-heart fa-lg text-danger"></i></button>`;
-                    } else {
-                        if(producto.estado_favorito == 'I') {
-                            //Esto es cuando fue favorito este producto alguna vez a este usuario pero esta inactivo
-                            template6 += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="far fa-heart fa-lg text-danger"></i></button>`;
-                        } else {
-                            //Esto es cuando es favorito y lo pasamos a inactivo
-                            template6 += `${producto.producto}<button type="button" id_favorito="${producto.id_favorito}" estado_fav="${producto.estado_favorito}" class="btn bandera_favorito"><i class="fas fa-heart fa-lg text-danger"></i></button>`;
-                        }
-                    }
-                } else {
-                    template6 += `${producto.producto}`;
-                }
-                $('#producto').html(template6);
+                mostrar_titulo_favorito();
+                
                 $('#marca').text('Marca: ' + producto.marca);
                 $('#sku').text('SKU: ' + producto.sku);
                 let template1 = '';
@@ -686,7 +733,7 @@ $(document).ready(function() {
                 } else if(respuesta.mensaje == "error al eliminar") {
                     toastr.error('¡* No intente vulnerar el sistema *!');
                 }
-                verificar_producto();
+                mostrar_titulo_favorito();
                 read_favoritos();
             } catch (error) {
                 console.error(error);

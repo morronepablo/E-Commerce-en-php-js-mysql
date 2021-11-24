@@ -195,13 +195,7 @@ if($_POST['funcion']=='verificar_producto'){
                 'respuesta'        => $rpst
             );
         }
-        $favorito->read_favorito_usuario_protienda($usuario_sesion, $id_producto_tienda);
-        $id_favorito = '';
-        $estado_favorito = '';
-        if(count($favorito->objetos) > 0) {
-            $id_favorito = openssl_encrypt($favorito->objetos[0]->id, CODE, KEY);
-            $estado_favorito = $favorito->objetos[0]->estado;
-        }
+        
         $json = array(
             'id'                           => $id_producto_tienda,
             'producto'                     => $producto,
@@ -228,8 +222,6 @@ if($_POST['funcion']=='verificar_producto'){
             'caracteristicas'              => $caracteristicas,
             'resenas'                      => $resenas,
             'preguntas'                    => $preguntas,
-            'id_favorito'                  => $id_favorito,
-            'estado_favorito'              => $estado_favorito
         );
         //se debe codificar a un string el json
         $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro

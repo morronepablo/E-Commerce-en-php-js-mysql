@@ -165,3 +165,29 @@ if($_POST['funcion']=='eliminar_favorito'){
         echo 'error, el usuario no está en sesión';
     }
 }
+if($_POST['funcion']=='mostrar_titulo_favorito'){
+    if(!empty($_SESSION['id'])) {
+        $id_usuario         = $_SESSION['id'];
+        $formateado         = str_replace(" ","+",$_SESSION['product-verification']);
+        $id_producto_tienda = openssl_decrypt($formateado, CODE, KEY);
+        $producto_tienda->llenar_productos($id_producto_tienda);
+        $producto = $producto_tienda->objetos[0]->producto;
+        $favorito->read_favorito_usuario_protienda($id_usuario, $id_producto_tienda);
+        $id_favorito = '';
+        $estado_favorito = '';
+        if(count($favorito->objetos) > 0) {
+            $id_favorito = openssl_encrypt($favorito->objetos[0]->id, CODE, KEY);
+            $estado_favorito = $favorito->objetos[0]->estado;
+        }
+        $json = array(
+            'usuario_sesion'  => $id_usuario,
+            'estado_favorito' => $estado_favorito,
+            'producto'        => $producto,
+            'id_favorito'     => $id_favorito
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error, el usuario no está en sesión';
+    }
+}
