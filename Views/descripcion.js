@@ -427,6 +427,101 @@ $(document).ready(function() {
         }
     }
 
+    function mostrar_informacion_precio(producto) {
+        let template = '';
+        if(producto.calificacion != 0) {
+            //template1 += `</br>`;
+            for (let index = 0; index < producto.calificacion; index++) {
+                template += `<i class="fas fa-star text-warning"></i>`;
+            }
+            let estrellas_faltantes = 5 - producto.calificacion;
+            for (let index = 0; index < estrellas_faltantes; index++) {
+                template += `<i class="far fa-star text-warning"></i>`;
+            }
+            template += `</br>`;
+        }
+        if(producto.descuento != 0) {
+            template += `
+            <span class="text-muted" style="text-decoration: line-through">${formatNumber(producto.precio)}</span>
+            <span class="text-muted">-${producto.descuento}%</span></br>
+            `;
+        }
+        template += `<h4 class="text-danger"><strong>${formatNumber(producto.precio_descuento)}</strong>   </h4>`;
+        $('#informacion_precios').html(template);
+    }
+
+    function mostrar_informacion_envio(producto) {
+        let template = '';
+        if(producto.envio == 'gratis'){
+            template += `  <i class="fas fa-truck-moving text-danger"></i>
+                            <span class="ml-1"> Envio: </span>
+                            <span class="badge bg-success ml-1">Envio gratis</span>`;
+        } else {
+            template += `  <i class="fas fa-truck-moving text-danger"></i>
+                            <span class="ml-1"> Envio: </span>
+                            <span class="mr-1">$ 150,00</span>`;
+        }
+        template += `  </br>`;
+        template += `  <i class="fas fa-store text-primary"></i>
+                        <span class="ml-1">Retiralo en tienda: ${producto.direccion_tienda}</span>`;
+        $('#informacion_envio').html(template);
+    }
+
+    function mostrar_tienda(producto) {
+        let template = `
+        <h2 class="mb-0">
+            <button class="btn btn-primary">
+                <i class="fas fa-star text-warning mr-1"></i><span>${producto.promedio_calificacion_tienda}</span>
+            </button>
+            <span class="text-muted ml-1">${producto.tienda}</span>
+        </h2>
+        <h4 class="mt-0">
+            <small>${producto.numero_resenas} reseñas</small>
+        </h4>
+        <div class="mt-2 product-share">
+            <a href="#" class="text-gray">
+                <i class="fab fa-facebook-square fa-2x"></i>
+            </a>
+            <a href="#" class="text-gray">
+                <i class="fab fa-twitter-square fa-2x"></i>
+            </a>
+            <a href="#" class="text-gray">
+                <i class="fas fa-envelope-square fa-2x"></i>
+            </a>
+            <a href="#" class="text-gray">
+                <i class="fas fa-rss-square fa-2x"></i>
+            </a>
+        </div>
+        `;
+        $('#tienda').html(template);
+    }
+
+    function mostrar_agregar_carrito() {
+        let template = `
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <select id="cantidad_producto" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="btn btn-success btn-flat ml-2 rounded-pill">
+                <i class="fas fa-cart-plus fa-lg mr-2"></i>
+                Agregar al carrito
+            </div>
+        </div>
+        `;
+        $('#agregar_carrito').html(template);
+    }
+
     async function verificar_producto() {
         funcion = "verificar_producto";
         let data = await fetch('../Controllers/ProductoTiendaController.php',{
@@ -445,46 +540,12 @@ $(document).ready(function() {
                 }
                 mostrar_pasarela(producto);
                 mostrar_titulo_favorito();
-                
                 $('#marca').text('Marca: ' + producto.marca);
                 $('#sku').text('SKU: ' + producto.sku);
-                let template1 = '';
-                if(producto.calificacion != 0) {
-                    //template1 += `</br>`;
-                    for (let index = 0; index < producto.calificacion; index++) {
-                        template1 += `<i class="fas fa-star text-warning"></i>`;
-                    }
-                    let estrellas_faltantes = 5 - producto.calificacion;
-                    for (let index = 0; index < estrellas_faltantes; index++) {
-                        template1 += `<i class="far fa-star text-warning"></i>`;
-                    }
-                    template1 += `</br>`;
-                }
-                if(producto.descuento != 0) {
-                    template1 += `
-                    <span class="text-muted" style="text-decoration: line-through">${formatNumber(producto.precio)}</span>
-                    <span class="text-muted">-${producto.descuento}%</span></br>
-                    `;
-                }
-                template1 += `<h4 class="text-danger"><strong>${formatNumber(producto.precio_descuento)}</strong>   </h4>`;
-                $('#informacion_precios').html(template1);
-                let template2 = '';
-                if(producto.envio == 'gratis'){
-                    template2 += `  <i class="fas fa-truck-moving text-danger"></i>
-                                    <span class="ml-1"> Envio: </span>
-                                    <span class="badge bg-success ml-1">Envio gratis</span>`;
-                } else {
-                    template2 += `  <i class="fas fa-truck-moving text-danger"></i>
-                                    <span class="ml-1"> Envio: </span>
-                                    <span class="mr-1">$ 150,00</span>`;
-                }
-                template2 += `  </br>`;
-                template2 += `  <i class="fas fa-store text-primary"></i>
-                                <span class="ml-1">Retiralo en tienda: ${producto.direccion_tienda}</span>`;
-                $('#informacion_envio').html(template2);
-                $('#nombre_tienda').text(producto.tienda);
-                $('#numero_resenas').text(producto.numero_resenas + ' reseñas');
-                $('#promedio_calificacion_tienda').text(producto.promedio_calificacion_tienda);
+                mostrar_informacion_precio(producto);
+                mostrar_informacion_envio(producto);
+                mostrar_tienda(producto);
+                mostrar_agregar_carrito();
                 $('#product-desc').text(producto.detalles);
                 let template3 = '';
                 let cont = 0;

@@ -188,6 +188,16 @@ if($_POST['funcion']=='mostrar_titulo_favorito'){
         $jsonstring = json_encode($json);
         echo $jsonstring;
     } else {
-        echo 'error, el usuario no está en sesión';
+        $id_usuario = '';
+        $formateado         = str_replace(" ","+",$_SESSION['product-verification']);
+        $id_producto_tienda = openssl_decrypt($formateado, CODE, KEY);
+        $producto_tienda->llenar_productos($id_producto_tienda);
+        $producto = $producto_tienda->objetos[0]->producto;
+        $json = array(
+            'usuario_sesion'  => $id_usuario,
+            'producto'        => $producto
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
     }
 }

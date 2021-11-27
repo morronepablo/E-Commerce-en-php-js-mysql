@@ -57,53 +57,12 @@ if (!empty($_GET['id']) && $_GET['name']) {
                         </div>
                         <h4>Enviado y vendido por: </h4>
 
-                        <div class="bg-light py-2 px-3 mt-4 border">
-                            <h2 class="mb-0">
-                                <button class="btn btn-primary">
-                                    <i class="fas fa-star text-warning mr-1"></i><span id="promedio_calificacion_tienda">4.5</span>
-                                </button>
-                                <span id="nombre_tienda" class="text-muted ml-1">nombre de tienda</span>
-                            </h2>
-                            <h4 class="mt-0">
-                                <small id="numero_resenas">250 reseñas </small>
-                            </h4>
-                            <div class="mt-2 product-share">
-                                <a href="#" class="text-gray">
-                                    <i class="fab fa-facebook-square fa-2x"></i>
-                                </a>
-                                <a href="#" class="text-gray">
-                                    <i class="fab fa-twitter-square fa-2x"></i>
-                                </a>
-                                <a href="#" class="text-gray">
-                                    <i class="fas fa-envelope-square fa-2x"></i>
-                                </a>
-                                <a href="#" class="text-gray">
-                                    <i class="fas fa-rss-square fa-2x"></i>
-                                </a>
-                            </div>
+                        <div id="tienda" class="bg-light py-2 px-3 mt-4 border">
+                            
                         </div>
 
-                        <div class="mt-4">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <select id="cantidad_producto" class="form-control">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                    </select>
-                                </div>
-                                <div class="btn btn-success btn-flat ml-2 rounded-pill">
-                                    <i class="fas fa-cart-plus fa-lg mr-2"></i>
-                                    Agregar al carrito
-                                </div>
-                            </div>
+                        <div id="agregar_carrito" class="mt-4">
+                            
                         </div>
                     </div>
                 </div>
