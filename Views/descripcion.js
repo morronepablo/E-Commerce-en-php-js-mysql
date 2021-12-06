@@ -522,6 +522,195 @@ $(document).ready(function() {
         $('#agregar_carrito').html(template);
     }
 
+    function mostrar_caracteristicas(caracteristicas) {
+        let template = `
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Característica</th>
+                    <th scope="col">Descripción</th>
+                </tr>
+            </thead>
+            <tbody>`;
+            let cont = 0;
+            caracteristicas.forEach(caracteristica => {
+                cont++;
+                template += `
+                    <tr>
+                        <td>${cont}</td>
+                        <td>${caracteristica.titulo}</td>
+                        <td>${caracteristica.descripcion}</td>
+                    </tr>
+                `;
+            });
+        template+=`
+            </tbody>
+        </table>
+        `;
+        $('#product-caract').html(template);
+    }
+
+    function mostrar_resenas(resenas) {
+        let template = '';
+        resenas.forEach(resena => {
+            template += `
+                <div class="card-comment">
+                    <img class="img-circle img-sm" src="../Util/Img/Users/${resena.avatar}" alt="User Image">
+                    <div class="comment-text">
+                        <span class="username">
+                            ${resena.usuario}
+                            `;
+                            for (let index = 0; index < resena.calificacion; index++) {
+                                template += `<i class="fas fa-star text-warning"></i>`;
+                            }
+                            let estrellas_faltantes = 5 - resena.calificacion;
+                            for (let index = 0; index < estrellas_faltantes; index++) {
+                                template += `<i class="far fa-star text-warning"></i>`;
+                            }
+                            let fecha = moment(resena.fecha+' '+resena.hora, 'DD/MM/YYYY HH/:mm');
+                            let horas = moment(resena.hora, 'HH/:mm');
+                            let fecha_hora;
+                            if(resena.hoy == '1') {
+                                fecha_hora = horas.fromNow();
+                            } else {
+                                fecha_hora = fecha.format('LLL');
+                            }
+                template+=`<span class="text-muted float-right">${fecha_hora}</span>
+                        </span>
+                        ${resena.descripcion}
+                    </div>
+                </div>
+            `;
+        });
+        $('#resenas').html(template);
+    }
+
+    async function mostrar_comentarios() {
+        funcion = "mostrar_comentarios";
+        let data = await fetch('../Controllers/PreguntaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let producto = JSON.parse(response);
+                console.log(producto);
+
+
+
+
+
+
+                let template = '';
+                if(producto.bandera == '2') {
+                    template += `
+                    <div class="card-footer">
+                        <form id="form_pregunta">
+                            <div class="input-group">
+                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar_sesion}" alt="Message User Image">
+                                <input type="text" id="pregunta" placeholder="Escribir pregunta..." class="form-control" required>
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    `;
+                }
+                template += `
+                    <div class="direct-chat-messages direct-chat-success preguntas">`;
+                    producto.preguntas.forEach(pregunta => {
+                        let fecha1 = moment(pregunta.fecha+' '+pregunta.hora, 'DD/MM/YYYY HH/:mm');
+                        let horas1 = moment(pregunta.hora, 'HH/:mm');
+                        let fecha_hora1;
+                        if(pregunta.hoy == '1') {
+                            fecha_hora1 = horas1.fromNow();
+                        } else {
+                            fecha_hora1 = fecha1.format('LLL');
+                        }
+                        template += `
+                        <div class="direct-chat-msg">
+                            <div class="direct-chat-infos clearfix">
+                                <span class="direct-chat-name float-left">${pregunta.username}</span>
+                                <span class="direct-chat-timestamp float-right">${fecha_hora1}</span>
+                            </div>
+                            <img class="direct-chat-img" src="../Util/Img/Users/${pregunta.avatar}" alt="Message User Image">
+                            <div class="direct-chat-text">
+                                ${pregunta.contenido}
+                            </div>`;
+                            if(pregunta.estado_respuesta == '0') {
+                                // No tiene respuesta la pregunta
+                                if(producto.bandera == '1') {
+                                    // Si el usuario logueado es el dueño puede responder pregunta  
+                                    template += `
+                                    <div class="card-footer">
+                                        <form>
+                                            <div class="input-group">
+                                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
+                                                <input type="text" placeholder="Responder pregunta..." class="form-control respuesta" required>
+                                                <input type="hidden" value="${pregunta.id}" class="id_pregunta" >
+                                                <span class="input-group-append">
+                                                <button class="btn btn-success enviar_respuesta">Enviar</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div> 
+                                    `;
+                                }
+                            } else {
+                                let fecha2 = moment(pregunta.respuesta.fecha+' '+pregunta.respuesta.hora, 'DD/MM/YYYY HH/:mm');
+                                let horas2 = moment(pregunta.respuesta.hora, 'HH/:mm');
+                                let fecha_hora2;
+                                if(pregunta.respuesta.hoy == '1') {
+                                    fecha_hora2 = horas2.fromNow();
+                                } else {
+                                    fecha_hora2 = fecha2.format('LLL');
+                                }
+                                // La pregunta tiene respuesta
+                                template += `
+                                <div class="direct-chat-msg right">
+                                    <div class="direct-chat-infos clearfix">
+                                        <span class="direct-chat-name float-right">${producto.username}</span>
+                                        <span class="direct-chat-timestamp float-left">${fecha_hora2}</span>
+                                    </div>
+                                    <img class="direct-chat-img" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
+                                    <div class="direct-chat-text">
+                                        ${pregunta.respuesta.contenido}
+                                    </div>
+                                </div>
+                                `;
+                            }
+                        template += `
+                        </div>
+                        `;
+                    });
+                template += `
+                    </div>`;
+                $('#product-pre').html(template);
+                
+
+
+
+
+
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     async function verificar_producto() {
         funcion = "verificar_producto";
         let data = await fetch('../Controllers/ProductoTiendaController.php',{
@@ -547,138 +736,9 @@ $(document).ready(function() {
                 mostrar_tienda(producto);
                 mostrar_agregar_carrito();
                 $('#product-desc').text(producto.detalles);
-                let template3 = '';
-                let cont = 0;
-                producto.caracteristicas.forEach(caracteristica => {
-                    cont++;
-                    template3 += `
-                        <tr>
-                            <td>${cont}</td>
-                            <td>${caracteristica.titulo}</td>
-                            <td>${caracteristica.descripcion}</td>
-                        </tr>
-                    `;
-                });
-                $('#caracteristicas').html(template3);
-                let template4 = '';
-                producto.resenas.forEach(resena => {
-                    template4 += `
-                        <div class="card-comment">
-                            <img class="img-circle img-sm" src="../Util/Img/Users/${resena.avatar}" alt="User Image">
-                            <div class="comment-text">
-                                <span class="username">
-                                    ${resena.usuario}
-                                    `;
-                                    for (let index = 0; index < resena.calificacion; index++) {
-                                        template4 += `<i class="fas fa-star text-warning"></i>`;
-                                    }
-                                    let estrellas_faltantes = 5 - resena.calificacion;
-                                    for (let index = 0; index < estrellas_faltantes; index++) {
-                                        template4 += `<i class="far fa-star text-warning"></i>`;
-                                    }
-                                    let fecha = moment(resena.fecha+' '+resena.hora, 'DD/MM/YYYY HH/:mm');
-                                    let horas = moment(resena.hora, 'HH/:mm');
-                                    let fecha_hora;
-                                    if(resena.hoy == '1') {
-                                        fecha_hora = horas.fromNow();
-                                    } else {
-                                        fecha_hora = fecha.format('LLL');
-                                    }
-                        template4+=`<span class="text-muted float-right">${fecha_hora}</span>
-                                </span>
-                                ${resena.descripcion}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                $('#resenas').html(template4);
-                let template5 = '';
-                if(producto.bandera == '2') {
-                    template5 += `
-                    <div class="card-footer">
-                        <form id="form_pregunta">
-                            <div class="input-group">
-                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar_sesion}" alt="Message User Image">
-                                <input type="text" id="pregunta" placeholder="Escribir pregunta..." class="form-control" required>
-                                <span class="input-group-append">
-                                    <button type="submit" class="btn btn-primary">Enviar</button>
-                                </span>
-                            </div>
-                        </form>
-                    </div>
-                    `;
-                }
-                template5 += `
-                    <div class="direct-chat-messages direct-chat-success preguntas">`;
-                    producto.preguntas.forEach(pregunta => {
-                        let fecha1 = moment(pregunta.fecha+' '+pregunta.hora, 'DD/MM/YYYY HH/:mm');
-                        let horas1 = moment(pregunta.hora, 'HH/:mm');
-                        let fecha_hora1;
-                        if(pregunta.hoy == '1') {
-                            fecha_hora1 = horas1.fromNow();
-                        } else {
-                            fecha_hora1 = fecha1.format('LLL');
-                        }
-                        template5 += `
-                        <div class="direct-chat-msg">
-                            <div class="direct-chat-infos clearfix">
-                                <span class="direct-chat-name float-left">${pregunta.username}</span>
-                                <span class="direct-chat-timestamp float-right">${fecha_hora1}</span>
-                            </div>
-                            <img class="direct-chat-img" src="../Util/Img/Users/${pregunta.avatar}" alt="Message User Image">
-                            <div class="direct-chat-text">
-                                ${pregunta.contenido}
-                            </div>`;
-                            if(pregunta.estado_respuesta == '0') {
-                                // No tiene respuesta la pregunta
-                                if(producto.bandera == '1') {
-                                    // Si el usuario logueado es el dueño puede responder pregunta  
-                                    template5 += `
-                                    <div class="card-footer">
-                                        <form>
-                                            <div class="input-group">
-                                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
-                                                <input type="text" placeholder="Responder pregunta..." class="form-control respuesta" required>
-                                                <input type="hidden" value="${pregunta.id}" class="id_pregunta" >
-                                                <span class="input-group-append">
-                                                <button class="btn btn-success enviar_respuesta">Enviar</button>
-                                                </span>
-                                            </div>
-                                        </form>
-                                    </div> 
-                                    `;
-                                }
-                            } else {
-                                let fecha2 = moment(pregunta.respuesta.fecha+' '+pregunta.respuesta.hora, 'DD/MM/YYYY HH/:mm');
-                                let horas2 = moment(pregunta.respuesta.hora, 'HH/:mm');
-                                let fecha_hora2;
-                                if(pregunta.respuesta.hoy == '1') {
-                                    fecha_hora2 = horas2.fromNow();
-                                } else {
-                                    fecha_hora2 = fecha2.format('LLL');
-                                }
-                                // La pregunta tiene respuesta
-                                template5 += `
-                                <div class="direct-chat-msg right">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-right">${producto.username}</span>
-                                        <span class="direct-chat-timestamp float-left">${fecha_hora2}</span>
-                                    </div>
-                                    <img class="direct-chat-img" src="../Util/Img/Users/${producto.avatar}" alt="Message User Image">
-                                    <div class="direct-chat-text">
-                                        ${pregunta.respuesta.contenido}
-                                    </div>
-                                </div>
-                                `;
-                            }
-                        template5 += `
-                        </div>
-                        `;
-                    });
-                template5 += `
-                    </div>`;
-                $('#product-pre').html(template5);
+                mostrar_caracteristicas(producto.caracteristicas);
+                mostrar_resenas(producto.resenas);
+                mostrar_comentarios();
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -712,7 +772,7 @@ $(document).ready(function() {
             try {
                 let respuesta = JSON.parse(response);
                 console.log(respuesta);
-                verificar_producto();
+                mostrar_comentarios();
                 $('#form_pregunta').trigger('reset');
             } catch (error) {
                 console.error(error);
@@ -747,7 +807,7 @@ $(document).ready(function() {
             try {
                 let respuesta = JSON.parse(response);
                 console.log(respuesta);
-                verificar_producto();
+                mostrar_comentarios();
             } catch (error) {
                 console.error(error);
                 console.log(response);

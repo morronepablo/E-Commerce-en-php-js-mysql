@@ -77,67 +77,13 @@ if (!empty($_GET['id']) && $_GET['name']) {
                     </nav>
                     <div class="tab-content p-3" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="product-pre" role="tabpanel" aria-labelledby="product-pre-tab">
-                            <div class="card-footer">
-                                <form action="#" method="post">
-                                    <div class="input-group">
-                                        <img class="direct-chat-img mr-2" src="../Util/Img/Users/user_default.png" alt="Message User Image">
-                                        <input type="text" name="message" placeholder="Escribir pregunta..." class="form-control">
-                                        <span class="input-group-append">
-                                            <button type="submit" class="btn btn-primary">Enviar</button>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="direct-chat-messages direct-chat-success preguntas">
-                                <div class="direct-chat-msg">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-left">Alexander Pierce</span>
-                                        <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                                    </div>
-                                    <img class="direct-chat-img" src="../Util/Img/Users/user_default.png" alt="Message User Image">
-                                    <div class="direct-chat-text">
-                                        Is this template really for free? That's unbelievable!
-                                    </div>
-                                    <div class="card-footer">
-                                        <form action="#" method="post">
-                                            <div class="input-group">
-                                                <img class="direct-chat-img mr-2" src="../Util/Img/Users/611fc655433a4-91435524-c622-4855-a569-efd05c0622b0.jpg" alt="Message User Image">
-                                                <input type="text" name="message" placeholder="Responder pregunta..." class="form-control">
-                                                <span class="input-group-append">
-                                                    <button type="submit" class="btn btn-success">Enviar</button>
-                                                </span>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="direct-chat-msg right">
-                                    <div class="direct-chat-infos clearfix">
-                                        <span class="direct-chat-name float-right">Sarah Bullock</span>
-                                        <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                                    </div>
-                                    <img class="direct-chat-img" src="../Util/Img/Users/611fc655433a4-91435524-c622-4855-a569-efd05c0622b0.jpg" alt="Message User Image">
-                                    <div class="direct-chat-text">
-                                        You better believe it!
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="tab-pane fade show" id="product-desc" role="tabpanel" aria-labelledby="product-desc-tab">
-                            descripcion
+                            
                         </div>
                         <div class="tab-pane fade" id="product-caract" role="tabpanel" aria-labelledby="product-caract-tab">
-                            <table class="table table-hover table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Característica</th>
-                                        <th scope="col">Descripción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="caracteristicas">
-
-                                </tbody>
-                            </table>
+                            
                         </div>
                         <div class="tab-pane fade" id="product-rese" role="tabpanel" aria-labelledby="product-rese-tab">
                             <div id="resenas" class="card-footer card-comments">
