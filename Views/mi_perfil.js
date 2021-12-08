@@ -2,8 +2,9 @@ $(document).ready(function() {
     moment.locale('es');
     var funcion;
     bsCustomFileInput.init();
-    verificar_sesion();
-    obtener_datos();
+    Loader();
+    setTimeout(verificar_sesion, 2000);
+    //verificar_sesion();
     llenar_provincias();
     llenar_direcciones();
     llenar_historial();
@@ -208,26 +209,29 @@ $(document).ready(function() {
                 let notificaciones = JSON.parse(response);
                 console.log(notificaciones);
                 let template1 = '';
-                let template2 = '';
-                if(notificaciones.length == 0) {
-                    template1 += `
-                        <i class="far fa-bell"></i>
-                    `;
-                    template2 += `
-                        Notificaciones
-                    `;
-                } else {
-                    template1 += `
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">${notificaciones.length}</span>
-                    `;
-                    template2 += `
-                        Notificaciones <span class="badge badge-warning right">${notificaciones.length}</span>
-                    `;
-                }
-                $('#numero_notificacion').html(template1);
-                $('#nav_cont_noti').html(template2);
-                let template = '';
+                let template = `
+                <a class="nav-link" data-toggle="dropdown" href="#">`;
+                    if(notificaciones.length == 0) {
+                        template += `
+                            <i class="far fa-bell"></i>
+                        `;
+                        template1 += `
+                            Notificaciones
+                        `;
+                    } else {
+                        template += `
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-warning navbar-badge">${notificaciones.length}</span>
+                        `;
+                        template1 += `
+                            Notificaciones <span class="badge badge-warning right">${notificaciones.length}</span>
+                        `;
+                    }
+                template += `</a>
+                <div id="notificaciones" class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                `;
+                $('#nav_cont_noti').html(template1);
+                
                 template += `
                     <span class="dropdown-item dropdown-header">${notificaciones.length} Notificaciones</span>
                 `;
@@ -260,8 +264,8 @@ $(document).ready(function() {
                 });
                 template += `
                 <a href="../Views/notificaciones.php" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
-                `;
-                $('#notificaciones').html(template);
+                </div>`;
+                $('#notificacion').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -292,26 +296,27 @@ $(document).ready(function() {
                 let favoritos = JSON.parse(response);
                 console.log(favoritos);
                 let template1 = '';
-                let template2 = '';
+                let template = `
+                <a class="nav-link" data-toggle="dropdown" href="#">`;
                 if(favoritos.length == 0) {
-                    template1 += `
+                    template += `
                         <i class="far fa-heart"></i>
                     `;
-                    template2 += `
+                    template1 += `
                         Favoritos
                     `;
                 } else {
-                    template1 += `
+                    template += `
                         <i class="far fa-heart"></i>
                         <span class="badge badge-warning navbar-badge">${favoritos.length}</span>
                     `;
-                    template2 += `
+                    template1 += `
                         Favoritos <span class="badge badge-warning right">${favoritos.length}</span>
                     `;
                 }
-                $('#numero_favorito').html(template1);
-                $('#nav_cont_fav').html(template2);
-                let template = '';
+                template +=`
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">`;                
                 template += `
                     <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
                 `;
@@ -343,9 +348,10 @@ $(document).ready(function() {
                     `;
                 });
                 template += `
-                <a href="../Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
-                `;
-                $('#favoritos').html(template);
+                    <a href="../Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
+                </div>`;
+                $('#nav_cont_fav').html(template1);
+                $('#favorito').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -362,32 +368,255 @@ $(document).ready(function() {
         }
     }
 
-    function verificar_sesion() {
-        funcion = 'verificar_sesion';
-        $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            if(response != '') {
-                let sesion = JSON.parse(response);
-                $('#nav_login').hide();
-                $('#nav_register').hide();
-                $('#usuario_nav').text(sesion.user + ' #' + sesion.id);
-                $('#avatar_nav').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                $('#usuario_menu').text(sesion.user);
-                read_notificaciones();
-                $('#notificacion').show();
-                $('#nav_notificaciones').show();
-                read_favoritos();
-                $('#favorito').show();
-                $('#nav_favoritos').show();
-            } else {
-                $('#nav_usuario').hide();
-                $('#notificacion').hide();
-                $('#nav_notificaciones').hide();
-                $('#favorito').hide();
-                $('#nav_favoritos').hide();
-                location.href = 'login.php';
-            }
+    function llenar_menu_superior(usuario) {
+        let template = ``;
+        if(usuario === undefined || usuario == '' || usuario == null) {
+            template = `
+            <li class="nav-item">
+              <a class="nav-link" href="../Views/register.php" role="button">
+                <i class="fas fa-user-plus"></i> Registrarse
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Views/login.php" role="button">
+                <i class="far fa-user"></i> Iniciar sesión
+              </a>
+            </li>
+            `;
+        } else {
+            template = `
+            <li class="nav-item dropdown">
+              <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge badge-danger navbar-badge">3</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                    <div class="media-body">
+                      <h3 class="dropdown-item-title">
+                        Brad Diesel
+                        <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                      </h3>
+                      <p class="text-sm">Call me whenever you can...</p>
+                      <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                    </div>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                    <div class="media-body">
+                      <h3 class="dropdown-item-title">
+                        John Pierce
+                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                      </h3>
+                      <p class="text-sm">I got your message bro</p>
+                      <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                    </div>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                    <div class="media-body">
+                      <h3 class="dropdown-item-title">
+                        Nora Silvester
+                        <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                      </h3>
+                      <p class="text-sm">The subject goes here</p>
+                      <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                    </div>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+              </div>
+            </li>
+            <li id="notificacion" class="nav-item dropdown">
+              
+            </li>
+            <li id="favorito" class="nav-item dropdown">
+              
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img  src="../Util/Img/Users/${usuario.avatar}" width="30" height="30" class="img-fluid img-circle" alt="">
+                <span>${usuario.user}</span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item" href="../Views/mi_perfil.php"><i class="fas fa-user-cog"></i> Mi perfil</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-basket"></i> Mi pedidos</a></li>
+                <li><a class="dropdown-item" href="../Controllers/logout.php"><i class="fas fa-user-times"></i> Cerrar sesión</a></li>
+              </ul>
+            </li>
+            `;
+        }
+        $('#loader_1').hide(500);
+        $('#menu_superior').html(template);
+    }
+
+    function llenar_menu_lateral(usuario) {
+        let template = ``;
+        if(usuario === undefined || usuario == '' || usuario == null) {
+            
+        } else {
+            template = `
+            <li class="nav-header">PERFIL</li>
+            <li id="nav_notificaciones" class="nav-item">
+                <a id="active_nav_notificaciones" href="../Views/notificaciones.php" class="nav-link">
+                <i class="nav-icon far fa-bell"></i>
+                <p id="nav_cont_noti">
+                    Notificaciones
+                </p>
+                </a>
+            </li>
+            <li id="nav_favoritos" class="nav-item">
+                <a id="active_nav_favoritos" href="../Views/favoritos.php" class="nav-link">
+                <i class="nav-icon far fa-heart"></i>
+                <p id="nav_cont_fav">
+                    Favoritos
+                </p>
+                </a>
+            </li>
+            `;
+        }
+        $('#loader_2').hide(500);
+        $('#menu_lateral').html(template);
+    }
+
+    async function mostrar_card_usuario() {
+        funcion = "obtener_datos";
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
         })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let usuario = JSON.parse(response);
+                //console.log(usuario);
+                let template = `
+                <div class="widget-user-header bg-info">
+                    <h3 class="widget-user-username">${usuario.username}</h3>
+                    <h5 class="widget-user-desc">${usuario.tipo_usuario}</h5>
+                </div>
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="../Util/Img/Users/${usuario.avatar}" alt="User Avatar">
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">3,200</h5>
+                                <span class="description-text">SALES</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">13,000</h5>
+                                <span class="description-text">FOLLOWERS</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="description-block">
+                                <h5 class="description-header">35</h5>
+                                <span class="description-text">PRODUCTS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                let template_1 = `
+                <div class="card-header border-bottom-0">
+                    <strong>Mis datos personales</strong>
+                    <div class="card-tools">
+                        <button type="button" class="editar_datos btn btn-tool" data-bs-toggle="modal" data-bs-target="#modal_datos">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body pt-0 mt-3">
+                    <div class="row">
+                        <div class="col-7">
+                            <h2 class="lead"><b>${usuario.nombres + ' ' + usuario.apellidos}</b></h2>
+                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                            <li class="small"><span class="fa-li"><i class="fas fa-address-card"></i></span> DNI: <span>${usuario.dni}</span></li>
+                            <li class="small"><span class="fa-li"><i class="fas fa-at"></i></span> Email: <span>${usuario.email}</span></li>
+                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Teléfono: <span>${usuario.telefono}</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-4 text-center">
+                            <img src="../Util/Img/datos.png" alt="user-avatar" class="img-circle img-fluid">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#modal_contra">Cambiar contraseña</button>
+                </div>
+                `;
+                $('#loader_3').hide(500);
+                $('#loader_4').hide(500);
+                $('#card_usuario').html(template);
+                $('#card_datos_personales').html(template_1);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    async function verificar_sesion() {
+        funcion = "verificar_sesion";
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                if(response != '') {
+                    let sesion = JSON.parse(response);
+                    llenar_menu_superior(sesion);
+                    llenar_menu_lateral(sesion);
+                    $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
+                    $('#usuario_menu').text(sesion.user);
+                    read_notificaciones();
+                    read_favoritos();
+                    mostrar_card_usuario();
+                    CloseLoader();
+                } else {
+                    //llenar_menu_lateral();
+                    //llenar_menu_superior();
+                    location.href='login.php';
+                }
+                //setTimeout(llenar_productos(),10000);
+                
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
     }
     function obtener_datos() {
         funcion = 'obtener_datos';
@@ -643,4 +872,27 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+    function Loader(mensaje) {
+        if(mensaje == '' || mensaje == null){
+            mensaje = 'Cargando datos...';
+        }
+        Swal.fire({
+            position: 'center',
+            title: mensaje,
+            html: '<i class="fas fa-4x fa-sync-alt fa-spin"></i>',
+            showConfirmButton: false
+        })
+    }
+    function CloseLoader(mensaje, tipo) {
+        if(mensaje == '' || mensaje == null){
+            Swal.close();
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: tipo,
+                title: mensaje,
+                showConfirmButton: false
+            })
+        }
+    }
 })

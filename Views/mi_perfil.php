@@ -129,72 +129,18 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-            <div class="card card-widget widget-user">
-              <!-- Add the bg color to the header using any of the bg-* classes -->
-              <div class="widget-user-header bg-info">
-                <h3 id="username" class="widget-user-username"></h3>
-                <h5 id="tipo_usuario" class="widget-user-desc"></h5>
-              </div>
-              <div class="widget-user-image">
-                <img id="avatar_perfil" class="img-circle elevation-2" src="" alt="User Avatar">
-              </div>
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-sm-4 border-right">
-                    <div class="description-block">
-                      <h5 class="description-header">3,200</h5>
-                      <span class="description-text">SALES</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
-                  <div class="col-sm-4 border-right">
-                    <div class="description-block">
-                      <h5 class="description-header">13,000</h5>
-                      <span class="description-text">FOLLOWERS</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
-                  <div class="col-sm-4">
-                    <div class="description-block">
-                      <h5 class="description-header">35</h5>
-                      <span class="description-text">PRODUCTS</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
+            <div id="card_usuario" class="card card-widget widget-user">
+              <div class="card-body">
+                <div id="loader_3" class="overlay">
+                  <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
-                <!-- /.row -->
               </div>
             </div>
-            <!-- About Me Box -->
-            <div class="card card-warning">
-              <div class="card-header border-bottom-0">
-                <strong>Mis datos personales</strong>
-                <div class="card-tools">
-                  <button type="button" class="editar_datos btn btn-tool" data-bs-toggle="modal" data-bs-target="#modal_datos">
-                    <i class="fas fa-pencil-alt"></i>
-                  </button>
+            <div id="card_datos_personales" class="card card-warning">
+              <div class="card-body">
+                <div id="loader_4" class="overlay">
+                  <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
-              </div>
-              <div class="card-body pt-0 mt-3">
-                <div class="row">
-                  <div class="col-7">
-                    <h2 id="nombres" class="lead"><b></b></h2>
-                    <ul class="ml-4 mb-0 fa-ul text-muted">
-                      <li class="small"><span class="fa-li"><i class="fas fa-address-card"></i></span> DNI: <span id="dni"></span></li>
-                      <li class="small"><span class="fa-li"><i class="fas fa-at"></i></span> Email: <span id="email"></span></li>
-                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Teléfono: <span id="telefono"></span></li>
-                    </ul>
-                  </div>
-                  <div class="col-4 text-center">
-                    <img src="../Util/Img/datos.png" alt="user-avatar" class="img-circle img-fluid">
-                  </div>
-                </div>
-              </div>
-              <div class="card-footer">
-                <button class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#modal_contra">Cambiar contraseña</button>
               </div>
             </div>
             <div class="card card-success">
@@ -235,7 +181,6 @@
                 </div>
               </div>
             </div>
-            <!-- /.card -->
           </div>
           <!-- /.col -->
           <div class="col-md-9">
