@@ -143,17 +143,11 @@
                 </div>
               </div>
             </div>
-            <div class="card card-success">
-              <div class="card-header border-bottom-0">
-                <strong>Mis direcciones de envío</strong>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-tool" data-bs-toggle="modal" data-bs-target="#modal_direcciones">
-                    <i class="fas fa-plus"></i>
-                  </button>
+            <div id="card_direcciones" class="card card-success">
+              <div class="card-body">
+                <div id="loader_5" class="overlay">
+                  <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
-              </div>
-              <div id="direcciones" class="card-body pt-0 mt-3">
-                
               </div>
             </div>
             <div class="card card-primary">
@@ -307,15 +301,15 @@
                     </div>
                     <!-- /.post -->
                   </div>
-                  <!-- /.tab-pane -->
                   <div   class="tab-pane active" id="timeline">
-                    <!-- The timeline -->
                     <div id="historiales" class="timeline timeline-inverse">
-                      <!-- timeline time label -->
-                      
+                      <div class="card-body">
+                        <div id="loader_5" class="overlay">
+                          <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <!-- /.tab-pane -->
 
                   <div class="tab-pane" id="settings">
                     <form class="form-horizontal">

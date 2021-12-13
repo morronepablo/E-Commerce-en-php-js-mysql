@@ -6,8 +6,6 @@ $(document).ready(function() {
     setTimeout(verificar_sesion, 2000);
     //verificar_sesion();
     llenar_provincias();
-    llenar_direcciones();
-    llenar_historial();
     $('#provincia').select2({
         placeholder: 'Seleccione una provincia',
         language: {
@@ -30,87 +28,7 @@ $(document).ready(function() {
             }
         }
     });
-    function llenar_historial() {
-        funcion = "llenar_historial";
-        $.post('../Controllers/HistorialController.php', { funcion }, (response) => {
-            let historiales = JSON.parse(response);
-            //console.log(historiales);
-            let template = '';
-            historiales.forEach(historial => {
-                let fecha_moment = moment(historial[0].fecha, 'DD/MM/YYYY');
-                template += `
-                <div class="time-label">
-                    <span class="bg-danger">
-                        ${fecha_moment.format('LL')}
-                    </span>
-                </div>
-                `;
-                historial.forEach(cambio => {
-                    let fecha_hora_moment = moment(cambio.fecha+' '+cambio.hora, 'DD/MM/YYYY HH:mm');
-                    let hora_moment;
-                    if(cambio.bandera == '1') {
-                        hora_moment = fecha_hora_moment.fromNow();
-                    } else {
-                        hora_moment = fecha_hora_moment.format('LLLL');
-                    }
-                    template += `
-                        <div>
-                            ${cambio.m_icono}
-    
-                            <div class="timeline-item">
-                                <span class="time"><i class="far fa-clock m-1"></i> ${hora_moment}</span>
-    
-                                <h3 class="timeline-header"><strong>${cambio.th_icono} Se realizó la acción ${cambio.tipo_historial} en ${cambio.modulo}</strong></h3>
-    
-                                <div class="timeline-body">
-                                    ${cambio.descripcion}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-            template += `
-            <div>
-                <i class="far fa-clock bg-gray"></i>
-            </div>
-            `;
-            $('#historiales').html(template);
-        })
-    }
-    function llenar_direcciones() {
-        funcion = "llenar_direcciones";
-        $.post('../Controllers/UsuarioLocalidadController.php', { funcion }, (response) => {
-            let direcciones = JSON.parse(response);
-            let contador = 0;
-            let template = '';
-            direcciones.forEach(direccion => {
-                contador++;
-                template += `
-                <div class="callout callout-info">
-                    <div class="card-header">
-                        <strong>dirección ${contador}</strong>
-                        <div class="card-tools">
-                            <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tools">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h2 class="lead"><b>${direccion.direccion}</b></h2>
-                        <p class="text-muted text-sm"><b>Referencia: </b>${direccion.referencia}</p>
-                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
-                                ${direccion.localidad}, ${direccion.provincia}
-                            </li>
-                        </ul>
-                    </div>
-                </div> 
-                `;
-            });
-            $('#direcciones').html(template);
-        })
-    }
+
     $(document).on('click','.eliminar_direccion', (e) => {
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('dir_id');
@@ -141,8 +59,8 @@ $(document).ready(function() {
                             'La direccion fué borrada.',
                             'success'
                         )
-                        llenar_direcciones();
-                        llenar_historial();
+                        mostrar_card_direcciones();
+                        mostrar_historial();
                     } else if(response == "error") {
                         swalWithBootstrapButtons.fire(
                             'No se borro!',
@@ -207,7 +125,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                //console.log(notificaciones);
                 let template1 = '';
                 let template = `
                 <a class="nav-link" data-toggle="dropdown" href="#">`;
@@ -294,7 +212,7 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let favoritos = JSON.parse(response);
-                console.log(favoritos);
+                //console.log(favoritos);
                 let template1 = '';
                 let template = `
                 <a class="nav-link" data-toggle="dropdown" href="#">`;
@@ -577,6 +495,139 @@ $(document).ready(function() {
         }
     }
 
+    async function mostrar_card_direcciones() {
+        funcion = "llenar_direcciones";
+        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let direcciones = JSON.parse(response);
+                console.log(direcciones);
+                let contador = 0;
+                let template = `
+                <div class="card-header border-bottom-0">
+                    <strong>Mis direcciones de envío</strong>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-bs-toggle="modal" data-bs-target="#modal_direcciones">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body pt-0 mt-3">`;
+                direcciones.forEach(direccion => {
+                    contador++;
+                    template += `
+                    <div class="callout callout-info">
+                        <div class="card-header">
+                            <strong>dirección ${contador}</strong>
+                            <div class="card-tools">
+                                <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tools">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h2 class="lead"><b>${direccion.direccion}</b></h2>
+                            <p class="text-muted text-sm"><b>Referencia: </b>${direccion.referencia}</p>
+                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span>
+                                    ${direccion.localidad}, ${direccion.provincia}
+                                </li>
+                            </ul>
+                        </div>
+                    </div> 
+                    `;
+                });  
+                template+=`</div>
+                `;
+                $('#loader_5').hide(500);
+                $('#card_direcciones').html(template);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    async function mostrar_historial() {
+        funcion = "llenar_historial";
+        let data = await fetch('../Controllers/HistorialController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let historiales = JSON.parse(response);
+                //console.log(historiales);
+                let template = '';
+                historiales.forEach(historial => {
+                    let fecha_moment = moment(historial[0].fecha, 'DD/MM/YYYY');
+                    template += `
+                    <div class="time-label">
+                        <span class="bg-danger">
+                            ${fecha_moment.format('LL')}
+                        </span>
+                    </div>
+                    `;
+                    historial.forEach(cambio => {
+                        let fecha_hora_moment = moment(cambio.fecha+' '+cambio.hora, 'DD/MM/YYYY HH:mm');
+                        let hora_moment;
+                        if(cambio.bandera == '1') {
+                            hora_moment = fecha_hora_moment.fromNow();
+                        } else {
+                            hora_moment = fecha_hora_moment.format('LLLL');
+                        }
+                        template += `
+                            <div>
+                                ${cambio.m_icono}
+        
+                                <div class="timeline-item">
+                                    <span class="time"><i class="far fa-clock m-1"></i> ${hora_moment}</span>
+        
+                                    <h3 class="timeline-header"><strong>${cambio.th_icono} Se realizó la acción ${cambio.tipo_historial} en ${cambio.modulo}</strong></h3>
+        
+                                    <div class="timeline-body">
+                                        ${cambio.descripcion}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                });
+                template += `
+                <div>
+                    <i class="far fa-clock bg-gray"></i>
+                </div>
+                `;
+                $('#historiales').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     async function verificar_sesion() {
         funcion = "verificar_sesion";
         let data = await fetch('../Controllers/UsuarioController.php',{
@@ -597,6 +648,8 @@ $(document).ready(function() {
                     read_notificaciones();
                     read_favoritos();
                     mostrar_card_usuario();
+                    mostrar_card_direcciones();
+                    mostrar_historial();
                     CloseLoader();
                 } else {
                     //llenar_menu_lateral();
@@ -618,19 +671,7 @@ $(document).ready(function() {
             })
         }
     }
-    function obtener_datos() {
-        funcion = 'obtener_datos';
-        $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            let usuario = JSON.parse(response);
-            $('#username').text(usuario.username);
-            $('#tipo_usuario').text(usuario.tipo_usuario);
-            $('#nombres').text(usuario.nombres + ' ' + usuario.apellidos);
-            $('#avatar_perfil').attr('src', '../Util/Img/Users/' + usuario.avatar);
-            $('#dni').text(usuario.dni);
-            $('#email').text(usuario.email);
-            $('#telefono').text(usuario.telefono);
-        })
-    }
+
     $('#form-direccion').submit(e=>{
         funcion = 'crear_direccion';
         let id_localidad = $('#localidad').val();
@@ -647,8 +688,8 @@ $(document).ready(function() {
                 }).then(function() {
                     $('#form-direccion').trigger('reset');
                     $('#provincia').val('').trigger('change');
-                    llenar_direcciones();
-                    llenar_historial();
+                    mostrar_historial();
+                    mostrar_card_direcciones();
                     location.reload();
                 })
             } else {
@@ -694,8 +735,8 @@ $(document).ready(function() {
                             timer: 1500
                         }).then(function() {
                             verificar_sesion();
-                            obtener_datos();
-                            llenar_historial();
+                            mostrar_card_usuario();
+                            mostrar_historial();
                             location.reload();
                         })
                     } else if(response == 'danger'){
@@ -800,7 +841,7 @@ $(document).ready(function() {
                         timer: 1000
                     }).then(function() {
                         $('#form-contra').trigger('reset');
-                        llenar_historial();
+                        mostrar_historial();
                         location.reload();
                     })
                 } else if(response === 'error') {
