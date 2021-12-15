@@ -1,6 +1,6 @@
 <?php
-
 include_once '../Models/Provincia.php';
+include_once '../Util/Config/config.php';
 $provincia = new Provincia();
 session_start();
 if($_POST['funcion']=='llenar_provincias'){
@@ -8,7 +8,7 @@ if($_POST['funcion']=='llenar_provincias'){
     //var_dump($usuario); para ver datos
     foreach ($provincia->objetos as $objeto) {
         $json[] = array(
-            'id' => $objeto->id,
+            'id'     => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre' => $objeto->nombre
         );
     }

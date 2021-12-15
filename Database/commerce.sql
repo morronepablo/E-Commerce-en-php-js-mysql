@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2021 a las 20:57:09
+-- Tiempo de generación: 13-12-2021 a las 01:27:54
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -87,6 +87,29 @@ INSERT INTO `categoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `est
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `favorito`
+--
+
+CREATE TABLE `favorito` (
+  `id` int(11) NOT NULL,
+  `url` varchar(500) NOT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `id_usuario` int(11) NOT NULL,
+  `id_producto_tienda` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `favorito`
+--
+
+INSERT INTO `favorito` (`id`, `url`, `fecha_creacion`, `estado`, `id_usuario`, `id_producto_tienda`) VALUES
+(1, 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', '2021-10-20 11:46:36', 'A', 1, 1),
+(2, 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', '2021-10-20 12:04:15', 'A', 1, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `historial`
 --
 
@@ -141,7 +164,28 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (35, 'Ha realizado una pregunta: Quisiera saber cuanto tiempo tiene de garantía ?. | en el producto: Samsung Galaxy A21S', '2021-10-13 14:17:12', 2, 3, 2),
 (36, 'Eliminaste una notificación.', '2021-10-13 15:28:32', 3, 4, 1),
 (37, 'Eliminaste una notificación.', '2021-10-13 15:42:42', 3, 4, 1),
-(38, 'Ha respondido una pregunta: Este producto tiene 3 años de garantía. . | en el producto: Samsung Galaxy A21S', '2021-10-13 15:52:38', 2, 3, 1);
+(38, 'Ha respondido una pregunta: Este producto tiene 3 años de garantía. . | en el producto: Samsung Galaxy A21S', '2021-10-13 15:52:38', 2, 3, 1),
+(39, 'Ha realizado una pregunta: Hay algún descuento en este producto ?. | en el producto: iPhone 11', '2021-10-23 12:54:34', 2, 3, 2),
+(40, 'Ha realizado una pregunta: Podrían llevarlo a la casa de mi hermano ?. | en el producto: Samsung Galaxy A21S', '2021-10-27 12:37:56', 2, 3, 5),
+(41, 'Ha respondido una pregunta: Si, te lo llevamos a la casa de tu hermano. | en el producto: Samsung Galaxy A21S', '2021-10-27 12:39:52', 2, 3, 1),
+(42, 'Ha respondido una pregunta: Te puedo hacer el 5% de descuento adicional si ofertas hoy. | en el producto: iPhone 11', '2021-10-27 15:55:51', 2, 3, 1),
+(43, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2021-11-06 11:04:13', 2, 5, 1),
+(44, 'Se agregó a favoritos el producto: iPhone 11', '2021-11-06 11:04:19', 2, 5, 1),
+(45, 'Se removió de favoritos el producto: iPhone 11', '2021-11-06 11:05:30', 3, 5, 1),
+(46, 'Se removió de favoritos el producto: iPhone 11', '2021-11-06 11:09:08', 3, 5, 1),
+(47, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2021-11-10 11:18:42', 2, 5, 1),
+(48, 'Se agregó a favoritos el producto: iPhone 11', '2021-11-10 11:19:00', 2, 5, 1),
+(49, 'Ha realizado una pregunta: podría reservarme uno para el Viernes ?. | en el producto: Samsung Galaxy A21S', '2021-11-10 12:43:11', 2, 3, 2),
+(50, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia a Natalia Elvira, ', '2021-11-13 12:40:46', 1, 1, 1),
+(51, 'Ha creado una nueva dirección: El Arreo 220', '2021-11-13 12:50:29', 2, 1, 2),
+(52, 'Ha realizado una pregunta: Hay Stock disponible ?. | en el producto: iPhone 11', '2021-11-13 12:52:06', 2, 3, 2),
+(53, 'Ha respondido una pregunta: Si tenemos stock disponible, podes ofertar. | en el producto: iPhone 11', '2021-11-13 12:54:33', 2, 3, 1),
+(54, 'Se removió de favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:52:14', 3, 5, 1),
+(55, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:52:17', 2, 5, 1),
+(56, 'Se removió de favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:55:40', 3, 5, 1),
+(57, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:55:43', 2, 5, 1),
+(58, 'Ha respondido una pregunta: Perfecto reservado para el viernes. | en el producto: Samsung Galaxy A21S', '2021-12-06 13:21:15', 2, 3, 1),
+(59, 'Ha realizado una pregunta: Necesitaría saber si se puede cambiar por color Blanco ?. | en el producto: Samsung Galaxy A21S', '2021-12-06 13:23:00', 2, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -2613,7 +2657,8 @@ INSERT INTO `modulo` (`id`, `nombre`, `icono`, `estado`) VALUES
 (1, 'Mi perfil', '<i class=\"fas fa-user bg-info\"></i>', 'A'),
 (2, 'Mis compras', '<i class=\"fas fa-shopping-cart bg-success\"></i>', 'A'),
 (3, 'Producto', '<i class=\"fas fa-box bg-primary\"></i>', 'A'),
-(4, 'Notificaciones', '<i class=\"far fa-bell bg-warning\"></i>', 'A');
+(4, 'Notificaciones', '<i class=\"far fa-bell bg-warning\"></i>', 'A'),
+(5, 'Favoritos', '<i class=\"fas fa-heart bg-danger\"></i>', 'A');
 
 -- --------------------------------------------------------
 
@@ -2655,7 +2700,16 @@ INSERT INTO `notificacion` (`id`, `titulo`, `asunto`, `contenido`, `imagen`, `ur
 (13, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Queda en stock de color blanco ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-09 11:59:25', 1, 'I', 1),
 (14, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Si hay stock podes ofertar', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-09 12:10:16', 1, 'A', 2),
 (15, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Quisiera saber cuanto tiempo tiene de garantía ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-13 14:17:12', 1, 'A', 1),
-(16, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Este producto tiene 3 años de garantía. ', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-13 15:52:38', 1, 'A', 2);
+(16, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Este producto tiene 3 años de garantía. ', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-13 15:52:38', 1, 'A', 2),
+(17, 'iPhone 11', 'Alguien realizó una pregunta en tu producto', 'Hay algún descuento en este producto ?', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-10-23 12:54:34', 1, 'A', 1),
+(18, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Podrían llevarlo a la casa de mi hermano ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-27 12:37:56', 1, 'A', 1),
+(19, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Si, te lo llevamos a la casa de tu hermano', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-10-27 12:39:52', 1, 'A', 5),
+(20, 'iPhone 11', 'El vendedor te respondió tu pregunta', 'Te puedo hacer el 5% de descuento adicional si ofertas hoy', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-10-27 15:55:51', 1, 'A', 2),
+(21, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'podría reservarme uno para el Viernes ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-11-10 12:43:11', 0, 'A', 1),
+(22, 'iPhone 11', 'Alguien realizó una pregunta en tu producto', 'Hay Stock disponible ?', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-11-13 12:52:06', 0, 'A', 1),
+(23, 'iPhone 11', 'El vendedor te respondió tu pregunta', 'Si tenemos stock disponible, podes ofertar', 'iPhone11-principal.png', 'Views/descripcion.php?name=iPhone 11&&id=ikWiIdsoykIoPZ0059v4Vg==', NULL, '2021-11-13 12:54:33', 0, 'A', 2),
+(24, 'Samsung Galaxy A21S', 'El vendedor te respondió tu pregunta', 'Perfecto reservado para el viernes', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-12-06 13:21:15', 0, 'A', 2),
+(25, 'Samsung Galaxy A21S', 'Alguien realizó una pregunta en tu producto', 'Necesitaría saber si se puede cambiar por color Blanco ?', 'a21s-principal.png', 'Views/descripcion.php?name=Samsung Galaxy A21S&&id=oyWLV2zvZfKAz4e2G9uEFw==', NULL, '2021-12-06 13:23:00', 0, 'A', 1);
 
 -- --------------------------------------------------------
 
@@ -2692,7 +2746,12 @@ INSERT INTO `pregunta` (`id`, `contenido`, `fecha_creacion`, `estado`, `respuest
 (12, 'Quisiera saber si queda en stock ?', '2021-10-08 16:31:18', 'A', 1, 2, 2),
 (13, 'Queda en stock en color Rojo ?', '2021-10-08 16:55:56', 'A', 1, 1, 2),
 (14, 'Queda en stock de color blanco ?', '2021-10-09 11:59:25', 'A', 1, 1, 2),
-(15, 'Quisiera saber cuanto tiempo tiene de garantía ?', '2021-10-13 14:17:12', 'A', 1, 1, 2);
+(15, 'Quisiera saber cuanto tiempo tiene de garantía ?', '2021-10-13 14:17:12', 'A', 1, 1, 2),
+(16, 'Hay algún descuento en este producto ?', '2021-10-23 12:54:34', 'A', 1, 2, 2),
+(17, 'Podrían llevarlo a la casa de mi hermano ?', '2021-10-27 12:37:56', 'A', 1, 1, 5),
+(18, 'podría reservarme uno para el Viernes ?', '2021-11-10 12:43:11', 'A', 1, 1, 2),
+(19, 'Hay Stock disponible ?', '2021-11-13 12:52:06', 'A', 1, 2, 2),
+(20, 'Necesitaría saber si se puede cambiar por color Blanco ?', '2021-12-06 13:23:00', 'A', 0, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -2875,7 +2934,11 @@ INSERT INTO `respuesta` (`id`, `contenido`, `fecha_creacion`, `estado`, `id_preg
 (12, 'si te lo podemos enviar por Uber', '2021-10-08 16:58:25', 'A', 11),
 (13, 'Si teneos en stock podes ofertar', '2021-10-08 16:58:55', 'A', 13),
 (14, 'Si hay stock podes ofertar', '2021-10-09 12:10:16', 'A', 14),
-(15, 'Este producto tiene 3 años de garantía. ', '2021-10-13 15:52:38', 'A', 15);
+(15, 'Este producto tiene 3 años de garantía. ', '2021-10-13 15:52:38', 'A', 15),
+(16, 'Si, te lo llevamos a la casa de tu hermano', '2021-10-27 12:39:52', 'A', 17),
+(17, 'Te puedo hacer el 5% de descuento adicional si ofertas hoy', '2021-10-27 15:55:51', 'A', 16),
+(18, 'Si tenemos stock disponible, podes ofertar', '2021-11-13 12:54:33', 'A', 19),
+(19, 'Perfecto reservado para el viernes', '2021-12-06 13:21:15', 'A', 18);
 
 -- --------------------------------------------------------
 
@@ -2997,7 +3060,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`, `referencia`, `dni`, `email`, `telefono`, `avatar`, `estado`, `id_tipo`) VALUES
-(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '614603db7a781-91435524-c622-4855-a569-efd05c0622b0.jpg', 'A', 2),
+(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia Elvira', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '614603db7a781-91435524-c622-4855-a569-efd05c0622b0.jpg', 'A', 2),
 (2, 'morronepablo', '7l03cuwx4PrLgLWv40ymSg==', 'Pablo Martin', 'Morrone', NULL, NULL, 22362590, 'morronepablo@gmail.com', 1138669097, '61469865cedca-pablo.jpg', 'A', 2),
 (3, 'codewaruser', '12345', 'Juan', 'Cosme', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
 (4, 'Warpiceuser', '12345', 'juan', 'diego', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
@@ -3027,7 +3090,8 @@ INSERT INTO `usuario_provincia` (`id`, `direccion`, `referencia`, `estado`, `id_
 (2, 'Arrecifes 455', 'Casa Hermana Pablo', 'A', 164, 1),
 (3, 'Garcia Lorca 789 - La Reja - Bs. As.', 'Casa Vecino', 'I', 200, 1),
 (4, 'El Arreo 250', 'Vecino del frente', 'A', 200, 1),
-(5, 'Pergamino 424', 'Casa de la madre', 'A', 164, 5);
+(5, 'Pergamino 424', 'Casa de la madre', 'A', 164, 5),
+(6, 'El Arreo 220', 'Casa Particular', 'A', 200, 2);
 
 --
 -- Índices para tablas volcadas
@@ -3045,6 +3109,14 @@ ALTER TABLE `caracteristica`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `favorito`
+--
+ALTER TABLE `favorito`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`,`id_producto_tienda`),
+  ADD KEY `id_producto_tienda` (`id_producto_tienda`);
 
 --
 -- Indices de la tabla `historial`
@@ -3199,10 +3271,16 @@ ALTER TABLE `categoria`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `favorito`
+--
+ALTER TABLE `favorito`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3226,19 +3304,19 @@ ALTER TABLE `marca`
 -- AUTO_INCREMENT de la tabla `modulo`
 --
 ALTER TABLE `modulo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
@@ -3274,7 +3352,7 @@ ALTER TABLE `resena`
 -- AUTO_INCREMENT de la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `subcategoria`
@@ -3310,7 +3388,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `usuario_provincia`
 --
 ALTER TABLE `usuario_provincia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -3321,6 +3399,13 @@ ALTER TABLE `usuario_provincia`
 --
 ALTER TABLE `caracteristica`
   ADD CONSTRAINT `caracteristica_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`);
+
+--
+-- Filtros para la tabla `favorito`
+--
+ALTER TABLE `favorito`
+  ADD CONSTRAINT `favorito_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `favorito_ibfk_2` FOREIGN KEY (`id_producto_tienda`) REFERENCES `producto_tienda` (`id`);
 
 --
 -- Filtros para la tabla `historial`

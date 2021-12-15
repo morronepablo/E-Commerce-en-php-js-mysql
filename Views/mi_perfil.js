@@ -5,7 +5,7 @@ $(document).ready(function() {
     Loader();
     setTimeout(verificar_sesion, 2000);
     //verificar_sesion();
-    llenar_provincias();
+    //llenar_provincias();
     $('#provincia').select2({
         placeholder: 'Seleccione una provincia',
         language: {
@@ -84,35 +84,7 @@ $(document).ready(function() {
             }
           })
     })
-    function llenar_provincias() {
-        funcion = "llenar_provincias";
-        $.post('../Controllers/ProvinciaController.php', { funcion }, (response) => {
-            let provincias = JSON.parse(response);
-            let template = '';
-            provincias.forEach(provincia => {
-                template += `
-                <option value="${provincia.id}">${provincia.nombre}</option>
-                `;
-            });
-            $('#provincia').html(template);
-            $('#provincia').val('').trigger('change');
-        })
-    }
-    $('#provincia').change(function() {
-        let id_provincia = $('#provincia').val();
-        funcion = "llenar_localidad";
-        $.post('../Controllers/LocalidadController.php', { funcion, id_provincia }, (response) => {
-            let localidades = JSON.parse(response);
-            let template = '';
-            localidades.forEach(localidad => {
-                template += `
-                <option value="${localidad.id}">${localidad.nombre}</option>
-                `;
-            });
-            $('#localidad').html(template);
-            $('#localidad').val('').trigger('change');
-        })
-    });
+
     async function read_notificaciones() {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
@@ -628,6 +600,41 @@ $(document).ready(function() {
         }
     }
 
+    async function llenar_provincias() {
+        funcion = "llenar_provincias";
+        let data = await fetch('../Controllers/ProvinciaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let provincias = JSON.parse(response);
+                //console.log(provincias);
+                let template = '';
+                provincias.forEach(provincia => {
+                    template += `
+                    <option value="${provincia.id}">${provincia.nombre}</option>
+                    `;
+                });
+                $('#provincia').html(template);
+                $('#provincia').val('').trigger('change');
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     async function verificar_sesion() {
         funcion = "verificar_sesion";
         let data = await fetch('../Controllers/UsuarioController.php',{
@@ -650,6 +657,7 @@ $(document).ready(function() {
                     mostrar_card_usuario();
                     mostrar_card_direcciones();
                     mostrar_historial();
+                    llenar_provincias();
                     CloseLoader();
                 } else {
                     //llenar_menu_lateral();
@@ -657,8 +665,6 @@ $(document).ready(function() {
                     location.href='login.php';
                 }
                 //setTimeout(llenar_productos(),10000);
-                
-
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -671,6 +677,42 @@ $(document).ready(function() {
             })
         }
     }
+
+    $('#provincia').change(async function() {
+        let id_provincia = $('#provincia').val();
+        funcion = "llenar_localidad";
+        let data = await fetch('../Controllers/LocalidadController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion+'&&id_provincia='+id_provincia
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let localidades = JSON.parse(response);
+                //console.log(localidades);
+                let template = '';
+                localidades.forEach(localidad => {
+                    template += `
+                    <option value="${localidad.id}">${localidad.nombre}</option>
+                    `;
+                });
+                $('#localidad').html(template);
+                $('#localidad').val('').trigger('change');
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    });
 
     $('#form-direccion').submit(e=>{
         funcion = 'crear_direccion';
@@ -702,6 +744,7 @@ $(document).ready(function() {
         });
         e.preventDefault();
     })
+
     $(document).on('click', '.editar_datos', (e) => {
         funcion = "obtener_datos";
         $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
@@ -713,6 +756,7 @@ $(document).ready(function() {
             $('#telefono_mod').val(usuario.telefono);
         })
     })
+
     $.validator.setDefaults({
         submitHandler: function () {
             funcion = "editar_datos";

@@ -1,16 +1,17 @@
 <?php
-
 include_once '../Models/Localidad.php';
+include_once '../Util/Config/config.php';
 $localidad = new Localidad();
 session_start();
 if($_POST['funcion']=='llenar_localidad'){
-    $id_provincia = $_POST['id_provincia'];
+    $formateado = str_replace(" ","+",$_POST['id_provincia']);
+    $id_provincia = openssl_decrypt($formateado, CODE, KEY);
     $localidad->llenar_localidad($id_provincia);
     $json = array();
     //var_dump($usuario); para ver datos
     foreach ($localidad->objetos as $objeto) {
         $json[] = array(
-            'id' => $objeto->id,
+            'id'     => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre' => $objeto->nombre
         );
     }
