@@ -8,14 +8,23 @@ if($_POST['funcion']=='llenar_localidad'){
     $id_provincia = openssl_decrypt($formateado, CODE, KEY);
     $localidad->llenar_localidad($id_provincia);
     $json = array();
-    //var_dump($usuario); para ver datos
-    foreach ($localidad->objetos as $objeto) {
-        $json[] = array(
-            'id'     => openssl_encrypt($objeto->id, CODE, KEY),
-            'nombre' => $objeto->nombre
-        );
+    if($_POST['id_provincia'] != '') {
+        if(is_numeric($id_provincia)) {
+            //var_dump($usuario); para ver datos
+            foreach ($localidad->objetos as $objeto) {
+                $json[] = array(
+                    'id'     => openssl_encrypt($objeto->id, CODE, KEY),
+                    'nombre' => $objeto->nombre
+                );
+            }
+            //se debe codificar a un string el json
+            $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro
+            echo $jsonstring;
+        } else {
+            echo 'error';
+        }
+    } else {
+        $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro
+        echo $jsonstring;
     }
-    //se debe codificar a un string el json
-    $jsonstring = json_encode($json);//se pone Sjson[0] porque solo traemos 1 registro
-    echo $jsonstring;
 }

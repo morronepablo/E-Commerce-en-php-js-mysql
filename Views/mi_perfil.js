@@ -680,6 +680,9 @@ $(document).ready(function() {
 
     $('#provincia').change(async function() {
         let id_provincia = $('#provincia').val();
+        if(id_provincia == null) {
+            id_provincia = '';
+        }
         funcion = "llenar_localidad";
         let data = await fetch('../Controllers/LocalidadController.php',{
             method: 'POST',
@@ -690,16 +693,25 @@ $(document).ready(function() {
             let response = await data.text();
             //conselo.log(response);
             try {
-                let localidades = JSON.parse(response);
-                //console.log(localidades);
-                let template = '';
-                localidades.forEach(localidad => {
-                    template += `
-                    <option value="${localidad.id}">${localidad.nombre}</option>
-                    `;
-                });
-                $('#localidad').html(template);
-                $('#localidad').val('').trigger('change');
+                if(response != 'error') {
+                    let localidades = JSON.parse(response);
+                    //console.log(localidades);
+                    let template = '';
+                    localidades.forEach(localidad => {
+                        template += `
+                        <option value="${localidad.id}">${localidad.nombre}</option>
+                        `;
+                    });
+                    $('#localidad').html(template);
+                    $('#localidad').val('').trigger('change');
+                } else {
+                    $('#localidad').html('');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intentes vulnerar el sistema, presione F5',
+                    })
+                }
                 
             } catch (error) {
                 console.error(error);
