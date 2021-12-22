@@ -7,13 +7,25 @@ $historial = new Historial();
 session_start();
 if($_POST['funcion']=='crear_direccion'){
     $id_usuario = $_SESSION['id'];
-    $id_localidad = $_POST['id_localidad'];
+    $formateado = str_replace(" ","+",$_POST['id_localidad']);
+    $id_localidad = openssl_decrypt($formateado, CODE, KEY);
     $direccion = $_POST['direccion'];
     $referencia = $_POST['referencia'];
-    $usuario_localidad->crear_direccion($id_usuario, $id_localidad, $direccion, $referencia);
-    $descripcion = 'Ha creado una nueva dirección: '.$direccion;
-    $historial->crear_historial($descripcion, 2, 1, $id_usuario);
-    echo 'success';
+    $mensaje = '';
+    if(is_numeric($id_localidad)) {
+        $usuario_localidad->crear_direccion($id_usuario, $id_localidad, $direccion, $referencia);
+        $descripcion = 'Ha creado una nueva dirección: '.$direccion;
+        $historial->crear_historial($descripcion, 2, 1, $id_usuario);
+        $mensaje = 'success';
+    } else {
+        $mensaje = 'error';
+    }
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+    
 }
 if($_POST['funcion']=='llenar_direcciones'){
     $id_usuario = $_SESSION['id'];
@@ -32,15 +44,22 @@ if($_POST['funcion']=='llenar_direcciones'){
     echo $jsonstring;
 }
 if($_POST['funcion']=='eliminar_direccion'){
-    $id_direccion = openssl_decrypt($_POST['id'],CODE,KEY);
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_direccion = openssl_decrypt($formateado, CODE, KEY);
+    $mensaje = '';
     if(is_numeric($id_direccion)) {
         $usuario_localidad->recuperar_direccion($id_direccion);
         $direccion_borrada = $usuario_localidad->objetos[0]->direccion.', Localidad: '.$usuario_localidad->objetos[0]->localidades.', Provincia: '.$usuario_localidad->objetos[0]->provincias;
         $usuario_localidad->eliminar_direccion($id_direccion);
         $descripcion = 'Ha eliminado la direccion: '.$direccion_borrada;
         $historial->crear_historial($descripcion, 3, 1, $_SESSION['id']);
-        echo 'success';
+        $mensaje = 'success';
     } else {
-        echo 'error';
+        $mensaje = 'error';
     }
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }

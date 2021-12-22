@@ -29,62 +29,6 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click','.eliminar_direccion', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id = $(elemento).attr('dir_id');
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-              confirmButton: 'btn btn-success m-3',
-              cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-          })
-          
-          swalWithBootstrapButtons.fire({
-            title: 'Desea borrar esta dirección?',
-            text: "Esta acción puede traer consecuencias!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Si, borra esto!',
-            cancelButtonText: 'No, cancelar!',
-            reverseButtons: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-                funcion = "eliminar_direccion";
-                $.post('../Controllers/UsuarioLocalidadController.php', { funcion, id }, (response) => {
-                    //console.log(response);
-                    if(response == "success") {
-                        swalWithBootstrapButtons.fire(
-                            'Borrado!',
-                            'La direccion fué borrada.',
-                            'success'
-                        )
-                        mostrar_card_direcciones();
-                        mostrar_historial();
-                    } else if(response == "error") {
-                        swalWithBootstrapButtons.fire(
-                            'No se borro!',
-                            'Hubo alteraciones en la integridad de los datos',
-                            'error'
-                        )
-                    } else {
-                        swalWithBootstrapButtons.fire(
-                            'No se ha borrado!',
-                            'Tenemos problemas en el sistema',
-                            'error'
-                        )
-                    }
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire(
-                    'Cancelado',
-                    'La dirección no se borro :)',
-                    'error'
-                )
-            }
-          })
-    })
-
     async function read_notificaciones() {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
@@ -726,35 +670,144 @@ $(document).ready(function() {
         }
     });
 
-    $('#form-direccion').submit(e=>{
+    async function crear_direccion(id_localidad, direccion, referencia) {
+        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion+'&&id_localidad='+id_localidad+'&&direccion='+direccion+'&&referencia='+referencia
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log("respuesta ", respuesta);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha registrado su dirección',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        $('#form-direccion').trigger('reset');
+                        $('#provincia').val('').trigger('change');
+                        mostrar_historial();
+                        mostrar_card_direcciones();
+                        location.reload();
+                    })
+                } else if(respuesta.mensaje == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No intente vulnerar el sistema',
+                    })
+                }
+                
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $('#form-direccion').submit(e => {
         funcion = 'crear_direccion';
         let id_localidad = $('#localidad').val();
         let direccion = $('#direccion').val();
         let referencia = $('#referencia').val();
-        $.post('../Controllers/UsuarioLocalidadController.php', { id_localidad, direccion, referencia, funcion }, (response)=> {
-            if(response === 'success') {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Se ha registrado su dirección',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(function() {
-                    $('#form-direccion').trigger('reset');
-                    $('#provincia').val('').trigger('change');
-                    mostrar_historial();
-                    mostrar_card_direcciones();
-                    location.reload();
-                })
-            } else {
+        crear_direccion(id_localidad, direccion, referencia);
+        e.preventDefault();
+    })
+
+    async function eliminar_direccion(id) {
+        funcion = "eliminar_direccion";
+        let respuesta = '';
+        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion+'&&id='+id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                respuesta = JSON.parse(response);
+                //console.log("respuesta ", respuesta);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Hubo un conflicto al crear su dirección, comuniquese con el area de sistemas',
+                    text: 'Comuniquese con el area de sistema',
                 })
             }
-        });
-        e.preventDefault();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+        return respuesta;
+    }
+
+    $(document).on('click','.eliminar_direccion', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('dir_id');
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success m-3',
+              cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+          })
+          
+          swalWithBootstrapButtons.fire({
+            title: 'Desea borrar esta dirección?',
+            text: "Esta acción puede traer consecuencias!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, borra esto!',
+            cancelButtonText: 'No, cancelar!',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+                eliminar_direccion(id).then(respuesta => {
+                    if(respuesta.mensaje == "success") {
+                        swalWithBootstrapButtons.fire(
+                            'Borrado!',
+                            'La direccion fué borrada.',
+                            'success'
+                        )
+                        mostrar_card_direcciones();
+                        mostrar_historial();
+                    } else if(respuesta.mensaje == "error") {
+                        swalWithBootstrapButtons.fire(
+                            'No se borro!',
+                            'Hubo alteraciones en la integridad de los datos',
+                            'error'
+                        )
+                    }
+                });
+                
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'La dirección no se borro :)',
+                    'error'
+                )
+            }
+          })
     })
 
     $(document).on('click', '.editar_datos', (e) => {
