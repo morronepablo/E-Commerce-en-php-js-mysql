@@ -810,59 +810,97 @@ $(document).ready(function() {
           })
     })
 
-    $(document).on('click', '.editar_datos', (e) => {
+    $(document).on('click', '.editar_datos', async (e) => {
         funcion = "obtener_datos";
-        $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            let usuario = JSON.parse(response);
-            $('#nombres_mod').val(usuario.nombres);
-            $('#apellidos_mod').val(usuario.apellidos);
-            $('#dni_mod').val(usuario.dni);
-            $('#email_mod').val(usuario.email);
-            $('#telefono_mod').val(usuario.telefono);
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
         })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let usuario = JSON.parse(response);
+                //console.log(usuario);
+                $('#nombres_mod').val(usuario.nombres);
+                $('#apellidos_mod').val(usuario.apellidos);
+                $('#dni_mod').val(usuario.dni);
+                $('#email_mod').val(usuario.email);
+                $('#telefono_mod').val(usuario.telefono);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Comuniquese con el area de sistema',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
     })
-
+    async function editar_datos(datos){
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log("respuesta ", respuesta);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado sus datos',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        verificar_sesion();
+                        mostrar_card_usuario();
+                        mostrar_historial();
+                        //location.reload();
+                    })
+                } else if(respuesta.mensaje == 'danger'){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No alteró ningún cambio',
+                        text: 'Modifique algun dato para realizar la edición !',
+                    })
+                }
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Comuniquese con el area de sistema',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
     $.validator.setDefaults({
         submitHandler: function () {
             funcion = "editar_datos";
             let datos = new FormData($('#form-datos')[0]);
             datos.append("funcion", funcion);
-            $.ajax({
-                type: "POST",
-                url: "../Controllers/UsuarioController.php",
-                data: datos,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if(response == "success") {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Se ha editado sus datos',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(function() {
-                            verificar_sesion();
-                            mostrar_card_usuario();
-                            mostrar_historial();
-                            location.reload();
-                        })
-                    } else if(response == 'danger'){
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'No alteró ningún cambio',
-                            text: 'Modifique algun dato para realizar la edición !',
-                        })
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Hubo un conflicto al editar sus datos, comuniquese con el area de sistemas',
-                        })
-                    }
-                }
-            });
+            editar_datos(datos);
         }
     });
     jQuery.validator.addMethod("letras", 
