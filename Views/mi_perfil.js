@@ -973,13 +973,19 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
-    $.validator.setDefaults({
-        submitHandler: function () {
-            funcion = "cambiar_contra";
-            let pass_old = $('#pass_old').val();
-            let pass_new = $('#pass_new').val();
-            $.post('../Controllers/UsuarioController.php', { funcion, pass_old, pass_new }, (response) => {
-                if(response == 'success') {
+    async function cambiar_contra(funcion, pass_old, pass_new){
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion+'&&pass_old='+pass_old+'&&pass_new='+pass_new
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log("respuesta ", respuesta);
+                if(respuesta.mensaje == 'success') {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -989,22 +995,39 @@ $(document).ready(function() {
                     }).then(function() {
                         $('#form-contra').trigger('reset');
                         mostrar_historial();
-                        location.reload();
+                        //location.reload();
                     })
-                } else if(response === 'error') {
+                } else if(respuesta.mensaje === 'error') {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Contraseña incorrecta',
                         text: 'Ingrese su contraseña actual para poder cambiarla',
                     })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Hubo un conflicto al cambiar su contraseña, comuniquese con el area de sistemas',
-                    })
                 }
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Comuniquese con el area de sistema',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
             })
+        }
+    }
+    $.validator.setDefaults({
+        submitHandler: function () {
+            funcion = "cambiar_contra";
+            let pass_old = $('#pass_old').val();
+            let pass_new = $('#pass_new').val();
+            cambiar_contra(funcion, pass_old, pass_new);
         }
       });
       

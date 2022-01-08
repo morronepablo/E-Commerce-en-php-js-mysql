@@ -147,6 +147,7 @@ if($_POST['funcion'] == 'cambiar_contra') {
     $pass_old   = $_POST['pass_old'];
     $pass_new   = $_POST['pass_new'];
     $usuario->verificar_usuario($user);
+    $mensaje = '';
     if(!empty($usuario->objetos)){
         $pass_bd = openssl_decrypt($usuario->objetos[0]->pass, CODE, KEY);
         if($pass_bd == $pass_old) {
@@ -154,11 +155,16 @@ if($_POST['funcion'] == 'cambiar_contra') {
             $usuario->cambiar_contra($id_usuario, $pass_new_encriptada);
             $descripcion = 'Ha cambiado su contraseña.';
             $historial->crear_historial($descripcion, 1, 1, $id_usuario);
-            echo 'success';
+            $mensaje = 'success';
         } else {
-            echo 'error';
+            $mensaje = 'error';
         }
     } else {
-        echo 'error';
+        $mensaje = 'error';
     }
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }
