@@ -3,8 +3,8 @@ $(document).ready(function() {
     var funcion;
     bsCustomFileInput.init();
     Loader();
-    setTimeout(verificar_sesion, 2000);
-    //verificar_sesion();
+    //setTimeout(verificar_sesion, 2000);
+    verificar_sesion();
     //llenar_provincias();
     $('#provincia').select2({
         placeholder: 'Seleccione una provincia',

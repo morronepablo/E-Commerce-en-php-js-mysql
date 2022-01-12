@@ -13,6 +13,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="../Util/Css/adminlte.min.css">
   <link rel="stylesheet" href="../Util/Css/toastr.min.css">
+  <link rel="stylesheet" href="../Util/Css/sweetalert2.min.css">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -72,6 +73,7 @@
 <!-- AdminLTE App -->
 <script src="../Util/Js/adminlte.min.js"></script>
 <script src="../Util/Js/toastr.min.js"></script>
+<script src="../Util/Js/sweetalert2.min.js"></script>
 <script src="login.js"></script>
 </body>
 </html>

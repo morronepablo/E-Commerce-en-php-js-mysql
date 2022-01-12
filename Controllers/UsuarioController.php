@@ -10,6 +10,7 @@ if($_POST['funcion'] == 'login') {
     $user = $_POST['user'];
     $pass = $_POST['pass'];
     $usuario->verificar_usuario($user);
+    $mensaje = '';
     if($usuario->objetos != null) {
         $pass_bd = openssl_decrypt($usuario->objetos[0]->pass, CODE, KEY);
         if($pass_bd == $pass) {
@@ -17,9 +18,18 @@ if($_POST['funcion'] == 'login') {
             $_SESSION['user']         = $usuario->objetos[0]->user;
             $_SESSION['tipo_usuario'] = $usuario->objetos[0]->id_tipo;
             $_SESSION['avatar']       = $usuario->objetos[0]->avatar;
-            echo 'logueado';
+            $mensaje = 'logueado';
+        } else {
+            $mensaje = 'error';
         }
+    } else {
+        $mensaje = 'error';
     }
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }
 if($_POST['funcion'] == 'verificar_sesion') {
     if(!empty($_SESSION['id'])) {
@@ -51,7 +61,11 @@ if($_POST['funcion'] == 'registrar_usuario') {
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
     $usuario->registrar_usuario($username, $pass, $nombres, $apellidos, $dni, $email, $telefono);
-    echo 'success';
+    $json = array(
+        'mensaje' => 'success'
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }
 if($_POST['funcion'] == 'obtener_datos') {
     $usuario->obtener_datos($_SESSION['id']);

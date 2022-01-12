@@ -1,28 +1,52 @@
 $(document).ready(function() {
     var funcion;
+    Loader();
+    //setTimeout(verificar_sesion, 2000);
     verificar_sesion();
 
-    function verificar_sesion() {
-        funcion = 'verificar_sesion';
-        $.post('../Controllers/UsuarioController.php', { funcion }, (response) => {
-            if(response != '') {
-                location.href = '../index.php';
-            }
+    async function verificar_sesion() {
+        funcion = "verificar_sesion";
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
         })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                if(response != '') {
+                    location.href = '../index.php';
+                }
+                CloseLoader();
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
     }
-    $.validator.setDefaults({
-        submitHandler: function () {
-          let username  = $('#username').val();
-          let pass      = $('#pass').val();
-          let nombres   = $('#nombres').val();
-          let apellidos = $('#apellidos').val();
-          let dni       = $('#dni').val();
-          let email     = $('#email').val();
-          let telefono  = $('#telefono').val();
-          funcion = "registrar_usuario";
-          $.post('../Controllers/UsuarioController.php', { username, pass, nombres, apellidos, dni, email, telefono, funcion }, (response) => {
-            response = response.trim();  
-            if(response == 'success') {
+
+    async function registrarse(username, pass, nombres, apellidos, dni, email, telefono) {
+        funcion = "registrar_usuario";
+        let data = await fetch('../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion+'&&username='+username+'&&pass='+pass+'&&nombres='+nombres+'&&apellidos='+apellidos+'&&dni='+dni+'&&email='+email+'&&telefono='+telefono
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+              let respuesta = JSON.parse(response);
+              console.log(respuesta);
+              if(respuesta.mensaje == 'success') {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -33,14 +57,38 @@ $(document).ready(function() {
                     $('#form-register').trigger('reset');
                     location.href = '../Views/login.php';
                 })
-              } else {
+              } 
+              CloseLoader();
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un conflicto al registrarse, comuniquese con el area de sistemas',
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Hubo un conflicto al registrarse, comuniquese con el area de sistemas',
                 })
-              }
-          })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+          let username  = $('#username').val();
+          let pass      = $('#pass').val();
+          let nombres   = $('#nombres').val();
+          let apellidos = $('#apellidos').val();
+          let dni       = $('#dni').val();
+          let email     = $('#email').val();
+          let telefono  = $('#telefono').val();
+          Loader('Registrando usuario...');
+          registrarse(username, pass, nombres, apellidos, dni, email, telefono);
         }
       });
       jQuery.validator.addMethod("usuario_existente", 
@@ -166,4 +214,27 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+    function Loader(mensaje) {
+      if(mensaje == '' || mensaje == null){
+          mensaje = 'Cargando datos...';
+      }
+      Swal.fire({
+          position: 'center',
+          title: mensaje,
+          html: '<i class="fas fa-4x fa-sync-alt fa-spin"></i>',
+          showConfirmButton: false
+      })
+  }
+  function CloseLoader(mensaje, tipo) {
+      if(mensaje == '' || mensaje == null){
+          Swal.close();
+      } else {
+          Swal.fire({
+              position: 'center',
+              icon: tipo,
+              title: mensaje,
+              showConfirmButton: false
+          })
+      }
+  }
 })
