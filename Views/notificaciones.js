@@ -3,7 +3,6 @@ $(document).ready(function() {
     Loader();
     //setTimeout(verificar_sesion, 2000);
     verificar_sesion();
-    $('#active_nav_notificaciones').addClass('active');
     toastr.options = {
         'debug': false,
         'positionClass': 'toast-bottom-full-width',
@@ -322,6 +321,7 @@ $(document).ready(function() {
                     let sesion = JSON.parse(response);
                     llenar_menu_superior(sesion);
                     llenar_menu_lateral(sesion);
+                    $('#active_nav_notificaciones').addClass('active');
                     $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();

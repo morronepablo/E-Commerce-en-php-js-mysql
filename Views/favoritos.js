@@ -3,7 +3,6 @@ $(document).ready(function() {
     Loader();
     //setTimeout(verificar_sesion, 2000);
     verificar_sesion();
-    $('#active_nav_favoritos').addClass('active');
     toastr.options = {
         'debug': false,
         'positionClass': 'toast-bottom-full-width',
@@ -13,6 +12,7 @@ $(document).ready(function() {
         'timeOut': 5000,
         'extendedTimeOut': 1000
     }
+    
     async function read_notificaciones() {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
@@ -321,6 +321,7 @@ $(document).ready(function() {
                     let sesion = JSON.parse(response);
                     llenar_menu_superior(sesion);
                     llenar_menu_lateral(sesion);
+                    $('#active_nav_favoritos').addClass('active');
                     $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();

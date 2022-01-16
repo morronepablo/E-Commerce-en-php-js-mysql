@@ -1,5 +1,4 @@
 <?php
- 
     include_once 'Conexion.php';
     class Favorito {
         var $objetos;
