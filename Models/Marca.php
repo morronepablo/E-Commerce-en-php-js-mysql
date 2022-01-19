@@ -11,7 +11,7 @@
                     FROM marca
                     WHERE estado='A' ORDER BY fecha_creacion DESC";
             $query = $this->acceso->prepare($sql);
-            $query->execute();
+            $query->execute ();
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }

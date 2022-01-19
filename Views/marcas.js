@@ -1,6 +1,7 @@
 $(document).ready(function() {
     Loader();
     //setTimeout(verificar_sesion, 2000);
+    bsCustomFileInput.init();
     verificar_sesion();
     toastr.options = {
         'debug': false,
@@ -365,55 +366,33 @@ $(document).ready(function() {
             try {
                 let marcas = JSON.parse(response);
                 console.log(marcas);
-                /*let template = '';
-                let favorites = [];
-                favoritos.forEach(favorito => {
-                    let fecha = moment(favorito.fecha+' '+favorito.hora, 'DD/MM/YYYY HH/:mm');
-                    let horas = moment(favorito.hora, 'HH/:mm');
-                    let fecha_hora;
-                    if(notificacion.hoy == '1') {
-                        fecha_hora = horas.fromNow();
-                    } else {
-                        fecha_hora = fecha.format('LLL');
-                    }
-                    template = '';
-                    template += `
-                        <div class="row">
-                            <div class="col-sm-1 text-center">
-                                <button type="button" class="btn eliminar_fav" attrid="${favorito.id}">
-                                    <i class="far fa-trash-alt text-danger"></i>
-                                </button>
-                            </div>
-                            <div class="col-sm-11">
-                                <a href="../${favorito.url}" class="dropdown-item">
-                                    <div class="media">
-                                        <img src="../Util/Img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                        <div class="media-body">
-                                            <h3 class="dropdown-item-title">
-                                                ${favorito.titulo}
-                                            </h3>
-                                            <p class="text-sm text-muted">${favorito.precio}</p>
-                                            <span class="float-right text-muted text-sm">${fecha_hora}</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    favorites.push({ celda: template });
-                });
-                $('#fav').DataTable( {
-                    data: favorites,
+                
+                $('#marca').DataTable( {
+                    data: marcas,
                     "aaSorting": [],
                     "searching": true,
                     "scrollX": true,
                     "autoWidth": false,
+                    "responsive": true,
+                    "processing": true,
                     columns: [
-                        { data: "celda" }
+                        { data: "nombre" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
+                            }
+                        },
+                        { data: "fecha_creacion" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                return `<button class="btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                            }
+                        }
                     ],
                     "destroy": true,
                     "language": espanol
-                } );*/
+                });
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -428,6 +407,46 @@ $(document).ready(function() {
 
         }
     }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert('validado');
+        }
+    });
+
+    $('#form-marca').validate({
+        rules: {
+            nombre: {
+                required: true,
+            },
+            imagen: {
+                required: true,
+                extension: "png|jpg|jpeg|bmp"
+            }
+        },
+        messages: {
+            nombre: {
+                required: "* Este campo es obligatorio"
+            },
+            imagen: {
+                required: "* Este campo es obligatorio",
+                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

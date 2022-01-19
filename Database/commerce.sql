@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-12-2021 a las 01:27:54
+-- Tiempo de generación: 19-01-2022 a las 16:47:00
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -185,7 +185,20 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (56, 'Se removió de favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:55:40', 3, 5, 1),
 (57, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2021-11-24 20:55:43', 2, 5, 1),
 (58, 'Ha respondido una pregunta: Perfecto reservado para el viernes. | en el producto: Samsung Galaxy A21S', '2021-12-06 13:21:15', 2, 3, 1),
-(59, 'Ha realizado una pregunta: Necesitaría saber si se puede cambiar por color Blanco ?. | en el producto: Samsung Galaxy A21S', '2021-12-06 13:23:00', 2, 3, 2);
+(59, 'Ha realizado una pregunta: Necesitaría saber si se puede cambiar por color Blanco ?. | en el producto: Samsung Galaxy A21S', '2021-12-06 13:23:00', 2, 3, 2),
+(60, 'Ha creado una nueva dirección: Garcia Lorca 789', '2021-12-22 13:26:21', 2, 1, 1),
+(61, 'Ha creado una nueva dirección: Juan V. Justo y Av, Corrientes', '2021-12-22 14:07:15', 2, 1, 1),
+(62, 'Ha creado una nueva dirección: Arrecifes 455', '2021-12-22 14:08:50', 2, 1, 2),
+(63, 'Ha eliminado la direccion: Arrecifes 455, Localidad: Castelar, Provincia: Buenos Aires-GBA', '2021-12-22 14:31:27', 3, 1, 2),
+(64, 'Ha eliminado la direccion: Juan V. Justo y Av, Corrientes, Localidad: Almagro, Provincia: Capital Federal', '2021-12-22 14:48:10', 3, 1, 1),
+(65, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia Elvira a Natalia Elvir, ', '2022-01-06 12:25:47', 1, 1, 1),
+(66, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia Elvir a Natalia Elvira, ', '2022-01-06 12:26:06', 1, 1, 1),
+(67, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia Elvira a Natalia Elvir, ', '2022-01-06 12:27:33', 1, 1, 1),
+(68, 'Ha editado sus datos personales, ha echo los siguientes cambios: su nombre cambio de Natalia Elvir a Natalia Elvira, ', '2022-01-06 12:27:39', 1, 1, 1),
+(69, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2022-01-06 12:36:22', 1, 1, 1),
+(70, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2022-01-06 12:36:40', 1, 1, 1),
+(71, 'Ha cambiado su contraseña.', '2022-01-08 12:50:36', 1, 1, 1),
+(72, 'Ha cambiado su contraseña.', '2022-01-08 12:51:34', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -3060,11 +3073,15 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`, `referencia`, `dni`, `email`, `telefono`, `avatar`, `estado`, `id_tipo`) VALUES
-(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia Elvira', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '614603db7a781-91435524-c622-4855-a569-efd05c0622b0.jpg', 'A', 2),
+(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia Elvira', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '61d70c883d7d6-lamejorfoto.jpg', 'A', 2),
 (2, 'morronepablo', '7l03cuwx4PrLgLWv40ymSg==', 'Pablo Martin', 'Morrone', NULL, NULL, 22362590, 'morronepablo@gmail.com', 1138669097, '61469865cedca-pablo.jpg', 'A', 2),
 (3, 'codewaruser', '12345', 'Juan', 'Cosme', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
 (4, 'Warpiceuser', '12345', 'juan', 'diego', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
-(5, 'martintrinidad', '7l03cuwx4PrLgLWv40ymSg==', 'Martin', 'Trinidad', NULL, NULL, 20123334, 'martin@gmail.com', 1165332389, 'user_default.png', 'A', 2);
+(5, 'martintrinidad', '7l03cuwx4PrLgLWv40ymSg==', 'Martin', 'Trinidad', NULL, NULL, 20123334, 'martin@gmail.com', 1165332389, 'user_default.png', 'A', 2),
+(6, 'pedroalfonzo', '7l03cuwx4PrLgLWv40ymSg==', 'Pedro', 'Alfonzo', NULL, NULL, 33112244, 'pedroalfonzo@gmail.com', 1122345678, 'user_default.png', 'A', 2),
+(7, 'juliocesar', '7l03cuwx4PrLgLWv40ymSg==', 'Julio', 'Cesar', NULL, NULL, 88888888, 'juliocesar@gmail.com', 1188776655, 'user_default.png', 'A', 2),
+(8, 'maxihoeffler', '7l03cuwx4PrLgLWv40ymSg==', 'Maximiliano', 'Hoeffler', NULL, NULL, 3088765, 'maxihoeffler@gmail.com', 1155657667, 'user_default.png', 'A', 2),
+(9, 'victoriagallo', '7l03cuwx4PrLgLWv40ymSg==', 'Victoria', 'Gallo', NULL, NULL, 2688765, 'victoriagallo@gmail.com', 1134233222, 'user_default.png', 'A', 2);
 
 -- --------------------------------------------------------
 
@@ -3091,7 +3108,10 @@ INSERT INTO `usuario_provincia` (`id`, `direccion`, `referencia`, `estado`, `id_
 (3, 'Garcia Lorca 789 - La Reja - Bs. As.', 'Casa Vecino', 'I', 200, 1),
 (4, 'El Arreo 250', 'Vecino del frente', 'A', 200, 1),
 (5, 'Pergamino 424', 'Casa de la madre', 'A', 164, 5),
-(6, 'El Arreo 220', 'Casa Particular', 'A', 200, 2);
+(6, 'El Arreo 220', 'Casa Particular', 'A', 200, 2),
+(9, 'Garcia Lorca 789', 'Vecino Octavio', 'A', 200, 1),
+(10, 'Juan V. Justo y Av, Corrientes', 'Manuel Peña', 'I', 283, 1),
+(11, 'Arrecifes 455', 'Hermana', 'I', 164, 2);
 
 --
 -- Índices para tablas volcadas
@@ -3280,7 +3300,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3382,13 +3402,13 @@ ALTER TABLE `tipo_usuario`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_provincia`
 --
 ALTER TABLE `usuario_provincia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Restricciones para tablas volcadas
