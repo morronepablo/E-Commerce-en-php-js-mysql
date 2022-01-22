@@ -15,4 +15,14 @@
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }
+        function crear($nombre, $nombre_imagen) {
+            $sql = "INSERT INTO marca (nombre, imagen)
+                    VALUES (:nombre, :imagen)";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':nombre' => $nombre,
+                ':imagen' => $nombre_imagen
+            );
+            $query->execute ($variables);
+        }
     }

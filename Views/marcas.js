@@ -408,9 +408,54 @@ $(document).ready(function() {
         }
     }
 
+    async function crear_marca(datos) {
+        let data = await fetch('../Controllers/MarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha creado la marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        read_all_marcas();
+                        $('#form-marca').trigger('reset');
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No se pudo crear la marca, comuniquese con el administrador del sistema.',
+                })
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
     $.validator.setDefaults({
         submitHandler: function () {
-            alert('validado');
+            let funcion = 'crear_marca';
+            let datos = new FormData($('#form-marca')[0]);
+            datos.append("funcion", funcion);
+            crear_marca(datos);
         }
     });
 

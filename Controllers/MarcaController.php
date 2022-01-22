@@ -22,3 +22,20 @@ if($_POST['funcion']=='read_all_marcas'){
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
+if($_POST['funcion']=='crear_marca'){
+    $id_usuario    = $_SESSION['id'];
+    $nombre        = $_POST['nombre'];
+    $img           = $_FILES['imagen']['name'];
+    $nombre_imagen = uniqid().'-'.$img;
+    $ruta          = '../Util/Img/marca/'.$nombre_imagen;
+    move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
+    $marca->crear($nombre, $nombre_imagen);
+    $descripcion = 'Ha creado la marca, '.$nombre;
+    $historial->crear_historial($descripcion, 2, 6, $id_usuario);
+    $mensaje = 'success';
+    $json = array(
+        'mensaje' => $mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}
