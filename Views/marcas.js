@@ -385,7 +385,7 @@ $(document).ready(function() {
                         { data: "fecha_creacion" },
                         {
                             "render": function(data, type, datos, meta) {
-                                return `<button class="btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
                                         <button class="btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         }
@@ -475,6 +475,58 @@ $(document).ready(function() {
             },
             imagen: {
                 required: "* Este campo es obligatorio",
+                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
+
+    $(document).on('click', '.edit', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id       = $(elemento).attr('id');
+        let nombre   = $(elemento).attr('nombre');
+        let img      = $(elemento).attr('img');
+        //console.log(id,nombre,img);
+        $('#widget_nombre_marca').text(nombre);
+        $('#widget_imagen_marca').attr('src', '../Util/Img/marca/'+img);
+        $('#nombre_mod').val(nombre);
+        $('#id_marca_mod').val(id);
+    });
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion = 'editar_marca';
+            let datos   = new FormData($('#form-marca_mod')[0]);
+            datos.append('funcion', funcion);
+        }
+    });
+
+    $('#form-marca_mod').validate({
+        rules: {
+            nombre_mod: {
+                required: true,
+            },
+            imagen_mod: {
+                extension: "png|jpg|jpeg|bmp"
+            }
+        },
+        messages: {
+            nombre_mod: {
+                required: "* Este campo es obligatorio"
+            },
+            imagen_mod: {
                 extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
             }
         },
