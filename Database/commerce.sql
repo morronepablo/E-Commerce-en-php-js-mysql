@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-01-2022 a las 16:47:00
+-- Tiempo de generación: 26-01-2022 a las 17:54:54
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -198,7 +198,9 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (69, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2022-01-06 12:36:22', 1, 1, 1),
 (70, 'Ha editado sus datos personales, ha echo los siguientes cambios: su avatar fué cambiado. ', '2022-01-06 12:36:40', 1, 1, 1),
 (71, 'Ha cambiado su contraseña.', '2022-01-08 12:50:36', 1, 1, 1),
-(72, 'Ha cambiado su contraseña.', '2022-01-08 12:51:34', 1, 1, 1);
+(72, 'Ha cambiado su contraseña.', '2022-01-08 12:51:34', 1, 1, 1),
+(73, 'Ha creado la marca, Adidas', '2022-01-22 20:32:57', 2, 6, 1),
+(74, 'Ha creado la marca, Topper', '2022-01-22 20:47:37', 2, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -2647,7 +2649,10 @@ CREATE TABLE `marca` (
 
 INSERT INTO `marca` (`id`, `nombre`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
 (1, 'Samsung', 'marca_default.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
-(2, 'Apple', 'marca_default.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A');
+(2, 'Apple', 'marca_default.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
+(3, 'Nike', '61ec8d3660b95-Nike.png', '2022-01-22 20:03:18', '2022-01-22 20:03:18', 'A'),
+(4, 'Adidas', '61ec942909469-addidas.png', '2022-01-22 20:32:57', '2022-01-22 20:32:57', 'A'),
+(5, 'Topper', '61ec9799be998-Topper_arg_logo.png', '2022-01-22 20:47:37', '2022-01-22 20:47:37', 'A');
 
 -- --------------------------------------------------------
 
@@ -2671,7 +2676,8 @@ INSERT INTO `modulo` (`id`, `nombre`, `icono`, `estado`) VALUES
 (2, 'Mis compras', '<i class=\"fas fa-shopping-cart bg-success\"></i>', 'A'),
 (3, 'Producto', '<i class=\"fas fa-box bg-primary\"></i>', 'A'),
 (4, 'Notificaciones', '<i class=\"far fa-bell bg-warning\"></i>', 'A'),
-(5, 'Favoritos', '<i class=\"fas fa-heart bg-danger\"></i>', 'A');
+(5, 'Favoritos', '<i class=\"fas fa-heart bg-danger\"></i>', 'A'),
+(6, 'Marcas', '<i class=\"fas fa-apple-alt bg-secondary\"></i>', 'A');
 
 -- --------------------------------------------------------
 
@@ -3300,7 +3306,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3318,13 +3324,13 @@ ALTER TABLE `localidades`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
 --
 ALTER TABLE `modulo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
