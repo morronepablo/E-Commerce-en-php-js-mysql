@@ -39,3 +39,47 @@ if($_POST['funcion']=='crear_marca'){
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
+if($_POST['funcion']=='editar_marca'){
+    $id_usuario      = $_SESSION['id'];
+    $nombre          = $_POST['nombre_mod'];
+    $img             = $_FILES['imagen_mod']['name'];
+    $formateado      = str_replace(" ","+",$_POST['id_marca_mod']);
+    $id_marca        = openssl_decrypt($formateado, CODE, KEY);
+    $mensaje         = '';
+    $nombre_imagen   = '';
+    $datos_cambiados = 'ha echo los siguientes cambios: ';
+    if(is_numeric($id_marca)) {
+        $marca->obtener_marca($id_marca);
+        if($nombre != $marca->objetos[0]->nombre || $img != '') {
+            if($nombre != $marca->objetos[0]->nombre) {
+                $datos_cambiados.= 'Una marca cambió su nombre de '.$marca->objetos[0]->nombre.' a '.$nombre.', ';
+            }
+            if($img != '') {
+                $datos_cambiados.= 'Su imagen fué cambiada.';
+                $nombre_imagen = uniqid().'-'.$img;
+                $ruta          = '../Util/Img/marca/'.$nombre_imagen;
+                move_uploaded_file($_FILES['imagen_mod']['tmp_name'], $ruta);
+                $avatar_actual = $marca->objetos[0]->imagen;
+                if($avatar_actual != 'marca_default.png') {
+                    unlink('../Util/Img/marca/'.$avatar_actual);
+                }
+            }
+            $marca->editar($id_marca, $nombre, $nombre_imagen);
+            $descripcion = 'Ha editado una marca, '.$datos_cambiados;
+            $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+            $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        } else {
+            $mensaje = 'danger'; // no ha modificado ningun dato del formulario
+        }
+        $json = array(
+            'mensaje' => $mensaje,
+            'nombre_marca' => $nombre,
+            'img' => $nombre_imagen
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error'; // vulnero el sistema
+    }
+    
+}

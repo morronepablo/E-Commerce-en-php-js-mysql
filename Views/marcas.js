@@ -505,11 +505,66 @@ $(document).ready(function() {
         $('#id_marca_mod').val(id);
     });
 
+    async function editar_marca(datos) {
+        let data = await fetch('../Controllers/MarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado la marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        $('#widget_nombre_marca').text(respuesta.nombre_marca);
+                        if(respuesta.img != '') {
+                            $('#widget_imagen_marca').attr('src', '../Util/Img/marca/'+respuesta.img);
+                        }
+                        read_all_marcas();
+                        //$('#form-marca_mod').trigger('reset');
+                    })
+                } else if (respuesta.mensaje == 'danger') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No alteró ningun cambio!',
+                        text: 'Modifique algun cambio para realizar la edición.',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
     $.validator.setDefaults({
         submitHandler: function () {
             let funcion = 'editar_marca';
             let datos   = new FormData($('#form-marca_mod')[0]);
             datos.append('funcion', funcion);
+            editar_marca(datos);
         }
     });
 
