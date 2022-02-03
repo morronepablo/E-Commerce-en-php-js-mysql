@@ -83,3 +83,22 @@ if($_POST['funcion']=='editar_marca'){
     }
     
 }
+if($_POST['funcion']=='eliminar_marca'){
+    $id_usuario = $_SESSION['id'];
+    $nombre     = $_POST['nombre'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_marca   = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_marca)) {
+        $marca->eliminar_marca($id_marca);
+        $descripcion = 'Ha eliminado una marca, '.$nombre;
+        $historial->crear_historial($descripcion, 3, 6, $id_usuario);
+        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $json = array(
+            'mensaje' => $mensaje
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}

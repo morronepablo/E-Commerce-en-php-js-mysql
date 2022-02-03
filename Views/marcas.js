@@ -354,7 +354,7 @@ $(document).ready(function() {
     }
 
     async function read_all_marcas() {
-        funcion = "read_all_marcas";
+        let funcion = "read_all_marcas";
         let data = await fetch('../Controllers/MarcaController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -386,7 +386,7 @@ $(document).ready(function() {
                         {
                             "render": function(data, type, datos, meta) {
                                 return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         }
                     ],
@@ -528,7 +528,8 @@ $(document).ready(function() {
                             $('#widget_imagen_marca').attr('src', '../Util/Img/marca/'+respuesta.img);
                         }
                         read_all_marcas();
-                        //$('#form-marca_mod').trigger('reset');
+                        $('#form-marca_mod').trigger('reset');
+                        $('#modal_editar_marca').modal('hide')
                     })
                 } else if (respuesta.mensaje == 'danger') {
                     Swal.fire({
@@ -598,6 +599,91 @@ $(document).ready(function() {
           $(element).removeClass('is-invalid');
           $(element).addClass('is-valid');
         }
+    });
+
+    async function eliminar_marca(id, nombre) {
+        let funcion = "eliminar_marca";
+        let respuesta = '';
+        let data = await fetch('../Controllers/MarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id + '&&nombre=' + nombre
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                respuesta = JSON.parse(response);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+        return respuesta;
+    }
+
+    $(document).on('click', '.remove', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id       = $(elemento).attr('id');
+        let nombre   = $(elemento).attr('nombre');
+        let img      = $(elemento).attr('img');
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success',
+              cancelButton: 'btn btn-danger mr-2'
+            },
+            buttonsStyling: false
+        })
+          
+        swalWithBootstrapButtons.fire({
+            title: 'Está seguro de eliminar la marca '+nombre+' ?',
+            text: "¡No podrás revertir esto!",
+            imageUrl: '../Util/Img/marca/'+img,
+            imageWidth: 100,
+            imageHeight: 100,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i>',
+            cancelButtonText: '<i class="fas fa-times"></i>',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminar_marca(id, nombre).then(respuesta => {
+                    if(respuesta.mensaje == 'success') {
+                        swalWithBootstrapButtons.fire(
+                            '¡Eliminado!',
+                            'La marca '+nombre+' ha sido eliminada.',
+                            'success'
+                        )
+                        read_all_marcas();
+                    }
+                })
+            } else if (
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'No se ha eliminado la marca :)',
+                    'error'
+                )
+            }
+        })
+
     });
 
     function Loader(mensaje) {

@@ -59,4 +59,14 @@
                 $query->execute ($variables);
             }
         }
+        function eliminar_marca($id_marca) {
+            $sql = "UPDATE marca SET estado=:estado
+                    WHERE id=:id_marca";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_marca' => $id_marca,
+                ':estado' => 'I'
+            );
+            $query->execute ($variables);
+        }
     }
