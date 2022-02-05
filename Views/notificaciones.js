@@ -299,8 +299,43 @@ $(document).ready(function() {
                     Favoritos
                 </p>
                 </a>
-            </li>
-            `;
+            </li>`;
+            if(usuario.tipo_usuario == 1) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
+            if(usuario.tipo_usuario == 2) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
+            if(usuario.tipo_usuario == 3) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
         }
         $('#loader_2').hide(500);
         $('#menu_lateral').html(template);
@@ -343,7 +378,6 @@ $(document).ready(function() {
             })
         }
     }
-
 
     async function read_all_notificaciones() {
         funcion = "read_all_notificaciones";
@@ -502,6 +536,7 @@ $(document).ready(function() {
     }
 
 })
+
 let espanol = {
     "autoFill": {
         "cancel": "Cancelar",

@@ -14,6 +14,7 @@ if($_POST['funcion']=='read_all_marcas'){
         $json[]=array(
             'id'             => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre'         => $objeto->nombre,
+            'descripcion'    => $objeto->descripcion,
             'imagen'         => $objeto->imagen,
             'fecha_creacion' => $objeto->fecha_creacion,
             'estado'         => $objeto->estado,
@@ -25,11 +26,12 @@ if($_POST['funcion']=='read_all_marcas'){
 if($_POST['funcion']=='crear_marca'){
     $id_usuario    = $_SESSION['id'];
     $nombre        = $_POST['nombre'];
+    $desc          = $_POST['desc'];
     $img           = $_FILES['imagen']['name'];
     $nombre_imagen = uniqid().'-'.$img;
     $ruta          = '../Util/Img/marca/'.$nombre_imagen;
     move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
-    $marca->crear($nombre, $nombre_imagen);
+    $marca->crear($nombre, $desc, $nombre_imagen);
     $descripcion = 'Ha creado la marca, '.$nombre;
     $historial->crear_historial($descripcion, 2, 6, $id_usuario);
     $mensaje = 'success';
@@ -42,6 +44,7 @@ if($_POST['funcion']=='crear_marca'){
 if($_POST['funcion']=='editar_marca'){
     $id_usuario      = $_SESSION['id'];
     $nombre          = $_POST['nombre_mod'];
+    $desc            = $_POST['desc_mod'];
     $img             = $_FILES['imagen_mod']['name'];
     $formateado      = str_replace(" ","+",$_POST['id_marca_mod']);
     $id_marca        = openssl_decrypt($formateado, CODE, KEY);
@@ -50,9 +53,12 @@ if($_POST['funcion']=='editar_marca'){
     $datos_cambiados = 'ha echo los siguientes cambios: ';
     if(is_numeric($id_marca)) {
         $marca->obtener_marca($id_marca);
-        if($nombre != $marca->objetos[0]->nombre || $img != '') {
+        if($nombre != $marca->objetos[0]->nombre || $desc != $marca->objetos[0]->descripcion || $img != '') {
             if($nombre != $marca->objetos[0]->nombre) {
-                $datos_cambiados.= 'Una marca cambió su nombre de '.$marca->objetos[0]->nombre.' a '.$nombre.', ';
+                $datos_cambiados.= 'cambió su nombre de '.$marca->objetos[0]->nombre.' a '.$nombre.', ';
+            }
+            if($desc != $marca->objetos[0]->descripcion) {
+                $datos_cambiados.= 'cambió su descripción de '.$marca->objetos[0]->descripcion.' a '.$desc.', ';
             }
             if($img != '') {
                 $datos_cambiados.= 'Su imagen fué cambiada.';
@@ -64,7 +70,7 @@ if($_POST['funcion']=='editar_marca'){
                     unlink('../Util/Img/marca/'.$avatar_actual);
                 }
             }
-            $marca->editar($id_marca, $nombre, $nombre_imagen);
+            $marca->editar($id_marca, $nombre, $desc, $nombre_imagen);
             $descripcion = 'Ha editado una marca, '.$datos_cambiados;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'success'; // se hicieron modificaciones y todo ok
@@ -72,9 +78,10 @@ if($_POST['funcion']=='editar_marca'){
             $mensaje = 'danger'; // no ha modificado ningun dato del formulario
         }
         $json = array(
-            'mensaje' => $mensaje,
+            'mensaje'      => $mensaje,
             'nombre_marca' => $nombre,
-            'img' => $nombre_imagen
+            'desc_marca'   => $desc,
+            'img'          => $nombre_imagen
         );
         $jsonstring = json_encode($json);
         echo $jsonstring;

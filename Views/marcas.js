@@ -299,17 +299,43 @@ $(document).ready(function() {
                     Favoritos
                 </p>
                 </a>
-            </li>
-            <li class="nav-header">PRODUCTO</li>
-            <li id="nav_marcas" class="nav-item">
-                <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
-                <i class="nav-icon fas fa-apple-alt"></i>
-                <p id="nav_cont_marc">
-                    Marcas
-                </p>
-                </a>
-            </li>
-            `;
+            </li>`;
+            if(usuario.tipo_usuario == 1) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
+            if(usuario.tipo_usuario == 2) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
+            if(usuario.tipo_usuario == 3) {
+                template+=`<li class="nav-header">PRODUCTO</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <i class="nav-icon fas fa-apple-alt"></i>
+                    <p id="nav_cont_marc">
+                        Marcas
+                    </p>
+                    </a>
+                </li>
+                `;
+            }
         }
         $('#loader_2').hide(500);
         $('#menu_lateral').html(template);
@@ -328,15 +354,19 @@ $(document).ready(function() {
             try {
                 if(response != '') {
                     let sesion = JSON.parse(response);
-                    llenar_menu_superior(sesion);
-                    llenar_menu_lateral(sesion);
-                    $('#active_nav_marcas').addClass('active');
-                    $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
-                    $('#usuario_menu').text(sesion.user);
-                    read_notificaciones();
-                    read_favoritos();
-                    read_all_marcas();
-                    CloseLoader();
+                    if(sesion.tipo_usuario != 4) {
+                        llenar_menu_superior(sesion);
+                        llenar_menu_lateral(sesion);
+                        $('#active_nav_marcas').addClass('active');
+                        $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
+                        $('#usuario_menu').text(sesion.user);
+                        read_notificaciones();
+                        read_favoritos();
+                        read_all_marcas();
+                        CloseLoader();
+                    } else {
+                        location.href='../index.php';
+                    }
                 } else {
                     location.href='login.php';
                 }
@@ -377,6 +407,7 @@ $(document).ready(function() {
                     "processing": true,
                     columns: [
                         { data: "nombre" },
+                        { data: "descripcion" },
                         {
                             "render": function(data, type, datos, meta) {
                                 return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
@@ -385,7 +416,7 @@ $(document).ready(function() {
                         { data: "fecha_creacion" },
                         {
                             "render": function(data, type, datos, meta) {
-                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         }
@@ -464,6 +495,9 @@ $(document).ready(function() {
             nombre: {
                 required: true,
             },
+            desc: {
+                required: true,
+            },
             imagen: {
                 required: true,
                 extension: "png|jpg|jpeg|bmp"
@@ -471,6 +505,9 @@ $(document).ready(function() {
         },
         messages: {
             nombre: {
+                required: "* Este campo es obligatorio"
+            },
+            desc: {
                 required: "* Este campo es obligatorio"
             },
             imagen: {
@@ -494,14 +531,17 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.edit', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id       = $(elemento).attr('id');
-        let nombre   = $(elemento).attr('nombre');
-        let img      = $(elemento).attr('img');
+        let elemento    = $(this)[0].activeElement;
+        let id          = $(elemento).attr('id');
+        let nombre      = $(elemento).attr('nombre');
+        let descripcion = $(elemento).attr('desc');
+        let img         = $(elemento).attr('img');
         //console.log(id,nombre,img);
         $('#widget_nombre_marca').text(nombre);
+        $('#widget_desc_marca').text(descripcion);
         $('#widget_imagen_marca').attr('src', '../Util/Img/marca/'+img);
         $('#nombre_mod').val(nombre);
+        $('#desc_mod').val(descripcion);
         $('#id_marca_mod').val(id);
     });
 
@@ -524,6 +564,7 @@ $(document).ready(function() {
                         timer: 1500
                     }).then(function() {
                         $('#widget_nombre_marca').text(respuesta.nombre_marca);
+                        $('#widget_desc_marca').text(respuesta.desc_marca);
                         if(respuesta.img != '') {
                             $('#widget_imagen_marca').attr('src', '../Util/Img/marca/'+respuesta.img);
                         }
@@ -574,12 +615,18 @@ $(document).ready(function() {
             nombre_mod: {
                 required: true,
             },
+            desc_mod: {
+                required: true,
+            },
             imagen_mod: {
                 extension: "png|jpg|jpeg|bmp"
             }
         },
         messages: {
             nombre_mod: {
+                required: "* Este campo es obligatorio"
+            },
+            desc_mod: {
                 required: "* Este campo es obligatorio"
             },
             imagen_mod: {
@@ -712,6 +759,7 @@ $(document).ready(function() {
     }
 
 })
+
 let espanol = {
     "autoFill": {
         "cancel": "Cancelar",

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-01-2022 a las 17:54:54
+-- Tiempo de generación: 05-02-2022 a las 16:48:50
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -200,7 +200,18 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (71, 'Ha cambiado su contraseña.', '2022-01-08 12:50:36', 1, 1, 1),
 (72, 'Ha cambiado su contraseña.', '2022-01-08 12:51:34', 1, 1, 1),
 (73, 'Ha creado la marca, Adidas', '2022-01-22 20:32:57', 2, 6, 1),
-(74, 'Ha creado la marca, Topper', '2022-01-22 20:47:37', 2, 6, 1);
+(74, 'Ha creado la marca, Topper', '2022-01-22 20:47:37', 2, 6, 1),
+(75, 'Ha editado una marca, ha echo los siguientes cambios: Una marca cambió su nombre de Topper a Toppers, ', '2022-01-29 13:56:25', 1, 6, 1),
+(76, 'Ha editado una marca, ha echo los siguientes cambios: Una marca cambió su nombre de Topper a Topperes, ', '2022-01-29 14:01:47', 1, 6, 1),
+(77, 'Ha editado una marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-01-29 14:03:14', 1, 6, 1),
+(78, 'Ha editado una marca, ha echo los siguientes cambios: Una marca cambió su nombre de Topperes a Topper, Su imagen fué cambiada.', '2022-01-29 14:03:55', 1, 6, 1),
+(79, 'Ha eliminado una marca, Topper', '2022-02-02 22:21:35', 3, 6, 1),
+(80, 'Ha creado la marca, Puma', '2022-02-05 12:07:04', 2, 6, 1),
+(81, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de d a Ropa Deportiva, ', '2022-02-05 12:39:59', 1, 6, 1),
+(82, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de c a Ropa Deportiva, ', '2022-02-05 12:40:30', 1, 6, 1),
+(83, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de a a Tecnología, ', '2022-02-05 12:41:35', 1, 6, 1),
+(84, 'Ha editado una marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-02-05 12:43:42', 1, 6, 1),
+(85, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de b a Tecnología, Su imagen fué cambiada.', '2022-02-05 12:45:43', 1, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -2637,6 +2648,7 @@ INSERT INTO `localidades` (`id`, `nombre`, `id_provincia`) VALUES
 CREATE TABLE `marca` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
+  `descripcion` varchar(1000) NOT NULL,
   `imagen` varchar(100) NOT NULL DEFAULT 'marca_default.png',
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
@@ -2647,12 +2659,13 @@ CREATE TABLE `marca` (
 -- Volcado de datos para la tabla `marca`
 --
 
-INSERT INTO `marca` (`id`, `nombre`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
-(1, 'Samsung', 'marca_default.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
-(2, 'Apple', 'marca_default.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
-(3, 'Nike', '61ec8d3660b95-Nike.png', '2022-01-22 20:03:18', '2022-01-22 20:03:18', 'A'),
-(4, 'Adidas', '61ec942909469-addidas.png', '2022-01-22 20:32:57', '2022-01-22 20:32:57', 'A'),
-(5, 'Topper', '61ec9799be998-Topper_arg_logo.png', '2022-01-22 20:47:37', '2022-01-22 20:47:37', 'A');
+INSERT INTO `marca` (`id`, `nombre`, `descripcion`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
+(1, 'Samsung', 'Tecnología', '61fe9b2e5f6e9-samsung_marca.jpg', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
+(2, 'Apple', 'Tecnología', '61fe9ba7ec6cc-descarga.png', '2021-08-20 13:20:44', '2021-08-20 13:20:44', 'A'),
+(3, 'Nike', 'Ropa Deportiva', '61ec8d3660b95-Nike.png', '2022-01-22 20:03:18', '2022-01-22 20:03:18', 'A'),
+(4, 'Adidas', 'Ropa Deportiva', '61ec942909469-addidas.png', '2022-01-22 20:32:57', '2022-01-22 20:32:57', 'A'),
+(5, 'Topper', 'e', '61f5737bc4e59-Topper_arg_logo.png', '2022-01-22 20:47:37', '2022-01-22 20:47:37', 'I'),
+(6, 'Puma', 'Ropa Deportiva', '61fe9298de8ad-puma.jpg', '2022-02-05 12:07:04', '2022-02-05 12:07:04', 'A');
 
 -- --------------------------------------------------------
 
@@ -3049,8 +3062,9 @@ CREATE TABLE `tipo_usuario` (
 
 INSERT INTO `tipo_usuario` (`id`, `tipo`, `estado`) VALUES
 (1, 'Root', 'A'),
-(2, 'Cliente', 'A'),
-(3, 'Vendedor', 'A');
+(2, 'Administrador', 'A'),
+(3, 'Vendedor', 'A'),
+(4, 'Cliente', 'A');
 
 -- --------------------------------------------------------
 
@@ -3306,7 +3320,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3324,7 +3338,7 @@ ALTER TABLE `localidades`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
@@ -3402,7 +3416,7 @@ ALTER TABLE `tipo_historial`
 -- AUTO_INCREMENT de la tabla `tipo_usuario`
 --
 ALTER TABLE `tipo_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

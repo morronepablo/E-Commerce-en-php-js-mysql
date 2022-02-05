@@ -18,6 +18,10 @@ include_once 'Layouts/general/header.php';
                         <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese nombre">
                     </div>
                     <div class="form-group">
+                        <label for="desc">Descripción</label>
+                        <input type="text" name="desc" class="form-control" id="desc" placeholder="Ingrese una descripción">
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputFile">Imagen</label>
                         <div class="input-group">
                             <div class="custom-file">
@@ -51,7 +55,7 @@ include_once 'Layouts/general/header.php';
                 <div class="card card-widget widget-user">
                     <div class="widget-user-header bg-info">
                         <h3 id="widget_nombre_marca" class="widget-user-username"></h3>
-                        <h5 class="widget-user-desc">Founder &amp; CEO</h5>
+                        <h5 id="widget_desc_marca" class="widget-user-desc"></h5>
                     </div>
                     <div class="widget-user-image">
                         <img id="widget_imagen_marca" class="img-circle elevation-2" src="" alt="imagen marca">
@@ -84,6 +88,10 @@ include_once 'Layouts/general/header.php';
                     <div class="form-group">
                         <label for="nombre_mod">Nombre</label>
                         <input type="text" name="nombre_mod" class="form-control" id="nombre_mod" placeholder="Ingrese nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc_mod">Descripción</label>
+                        <input type="text" name="desc_mod" class="form-control" id="desc_mod" placeholder="Ingrese una descripción">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Imagen</label>
@@ -129,6 +137,7 @@ include_once 'Layouts/general/header.php';
                 <thead>
                     <tr>
                         <th>Marca</th>
+                        <th>Descripcion</th>
                         <th>Imagen</th>
                         <th>Fecha Creación</th>
                         <th>Acciones</th>
