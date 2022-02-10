@@ -1,17 +1,19 @@
 $(document).ready(function() {
     Loader();
+    $('#btn_adm').hide();
+    $('#btn_ven').hide();
     //setTimeout(verificar_sesion, 2000);
     bsCustomFileInput.init();
     verificar_sesion();
-    toastr.options = {
-        'debug': false,
-        'positionClass': 'toast-bottom-full-width',
-        'onclick': null,
-        'fadeIn': 300,
-        'fadeOut': 1000,
-        'timeOut': 5000,
-        'extendedTimeOut': 1000
-    }
+    // toastr.options = {
+    //     'debug': false,
+    //     'positionClass': 'toast-bottom-full-width',
+    //     'onclick': null,
+    //     'fadeIn': 300,
+    //     'fadeOut': 1000,
+    //     'timeOut': 5000,
+    //     'extendedTimeOut': 1000
+    // }
     
     async function read_notificaciones() {
         funcion = "read_notificaciones";
@@ -363,7 +365,13 @@ $(document).ready(function() {
                         read_notificaciones();
                         read_favoritos();
                         read_all_marcas();
-                        CloseLoader();
+                        if(sesion.tipo_usuario == 1 || sesion.tipo_usuario ==2) {
+                            CloseLoader();
+                            $('#btn_adm').show();
+                        } else if(sesion.tipo_usuario == 3) {
+                            CloseLoader();
+                            $('#btn_ven').show();
+                        }
                     } else {
                         location.href='../index.php';
                     }
@@ -416,8 +424,13 @@ $(document).ready(function() {
                         { data: "fecha_creacion" },
                         {
                             "render": function(data, type, datos, meta) {
-                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                if(datos.tipo_usuario == 3) {
+                                    return `<button class="alerta_usuario btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="alerta_usuario btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else {
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                }
                             }
                         }
                     ],
@@ -731,6 +744,60 @@ $(document).ready(function() {
             }
         })
 
+    });
+
+    $(document).on('click', '.alerta_usuario', (e) => {
+        toastr.error('No tienes permiso para realizar esta acción', 'Error!');
+    });
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert('validado');
+            // let funcion = 'crear_marca';
+            // let datos = new FormData($('#form-marca')[0]);
+            // datos.append("funcion", funcion);
+            // crear_marca(datos);
+        }
+    });
+
+    $('#form-marca_sol').validate({
+        rules: {
+            nombre_sol: {
+                required: true,
+            },
+            desc_sol: {
+                required: true,
+            },
+            imagen_sol: {
+                required: true,
+                extension: "png|jpg|jpeg|bmp"
+            }
+        },
+        messages: {
+            nombre_sol: {
+                required: "* Este campo es obligatorio"
+            },
+            desc_sol: {
+                required: "* Este campo es obligatorio"
+            },
+            imagen_sol: {
+                required: "* Este campo es obligatorio",
+                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
     });
 
     function Loader(mensaje) {
