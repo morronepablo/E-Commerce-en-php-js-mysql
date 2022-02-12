@@ -123,26 +123,26 @@ include_once 'Layouts/general/header.php';
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form id="form-marca_sol" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="nombre_sol">Nombre</label>
-                        <input type="text" name="nombre_sol" class="form-control" id="nombre_sol" placeholder="Ingrese nombre">
-                    </div>
-                    <div class="form-group">
-                        <label for="desc_sol">Descripción</label>
-                        <input type="text" name="desc_sol" class="form-control" id="desc_sol" placeholder="Ingrese una descripción">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputFile">Imagen</label>
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="imagen_sol" id="imagen">
-                                <label class="custom-file-label" for="exampleInputFile">Seleccione una imagen</label>
+                <div class="modal-body">
+                    <form id="form-marca_sol" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="nombre_sol">Nombre</label>
+                            <input type="text" name="nombre_sol" class="form-control" id="nombre_sol" placeholder="Ingrese nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="desc_sol">Descripción</label>
+                            <input type="text" name="desc_sol" class="form-control" id="desc_sol" placeholder="Ingrese una descripción">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputFile">Imagen</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="imagen_sol" id="imagen">
+                                    <label class="custom-file-label" for="exampleInputFile">Seleccione una imagen</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-            </div>
+                </div>
             <div class="modal-footer">
                 <span>
                     Esta solicitud estará en lista de espera para ser enviada a todos los administradores para ser revisada, si los datos son correctos se aprobará, si no se le enviará un mensaje para que haga las correcciones correspondientes.

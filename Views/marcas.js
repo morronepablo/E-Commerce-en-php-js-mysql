@@ -369,6 +369,7 @@ $(document).ready(function() {
                             CloseLoader();
                             $('#btn_adm').show();
                         } else if(sesion.tipo_usuario == 3) {
+                            read_tus_solicitudes();
                             CloseLoader();
                             $('#btn_ven').show();
                         }
@@ -437,6 +438,67 @@ $(document).ready(function() {
                     "destroy": true,
                     "language": espanol
                 });
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+    async function read_tus_solicitudes() {
+        let funcion = "read_tus_solicitudes";
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let solicitudes = JSON.parse(response);
+                console.log(solicitudes);
+                /*
+                $('#marca').DataTable( {
+                    data: marcas,
+                    "aaSorting": [],
+                    "searching": true,
+                    "scrollX": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "processing": true,
+                    columns: [
+                        { data: "nombre" },
+                        { data: "descripcion" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
+                            }
+                        },
+                        { data: "fecha_creacion" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                if(datos.tipo_usuario == 3) {
+                                    return `<button class="alerta_usuario btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="alerta_usuario btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else {
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                }
+                            }
+                        }
+                    ],
+                    "destroy": true,
+                    "language": espanol
+                }); */
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -750,13 +812,56 @@ $(document).ready(function() {
         toastr.error('No tienes permiso para realizar esta acción', 'Error!');
     });
 
+    /* Creacion de solicitudes marca */
+    async function crear_solicitud_marca(datos) {
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha creado la solicitud marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        //read_all_marcas();
+                        $('#form-marca_sol').trigger('reset');
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'No se pudo crear la marca, comuniquese con el administrador del sistema.',
+                })
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
     $.validator.setDefaults({
         submitHandler: function () {
-            alert('validado');
-            // let funcion = 'crear_marca';
-            // let datos = new FormData($('#form-marca')[0]);
-            // datos.append("funcion", funcion);
-            // crear_marca(datos);
+
+            let funcion = 'crear_solicitud_marca';
+            let datos = new FormData($('#form-marca_sol')[0]);
+            datos.append("funcion", funcion);
+            crear_solicitud_marca(datos);
         }
     });
 
