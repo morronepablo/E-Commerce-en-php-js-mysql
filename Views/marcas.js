@@ -466,12 +466,12 @@ $(document).ready(function() {
             try {
                 let solicitudes = JSON.parse(response);
                 console.log(solicitudes);
-                /*
-                $('#marca').DataTable( {
-                    data: marcas,
+                
+                $('#mis_solicitudes_marcas').DataTable( {
+                    data: solicitudes,
                     "aaSorting": [],
                     "searching": true,
-                    "scrollX": true,
+                    "scrollX": false,
                     "autoWidth": false,
                     "responsive": true,
                     "processing": true,
@@ -483,22 +483,50 @@ $(document).ready(function() {
                                 return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
                             }
                         },
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                if(datos.estado_envio == '0') {
+                                    return `<button class="btn btn-primary">Enviar</button>`;
+                                } else if (datos.estado_envio == '1') {
+                                    return `<span class="badge bg-primary">Enviado</span>`;
+                                } else if (datos.estado_envio == '2') {
+                                    return `<span class="badge bg-success">Aceptado</span>`;
+                                } else if (datos.estado_envio == '3') {
+                                    return `<span class="badge bg-danger">Rechazado</span>`;
+                                }
+                            }
+                        },
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                if(datos.estado_aprobado == '' || datos.estado_aprobado == null) {
+                                    return `<span class="badge bg-info">En espera</span>`;
+                                } else {
+                                    return `<span>${datos.estado_aprobado}</span>`;
+                                }
+                            }
+                        },
                         { data: "fecha_creacion" },
                         {
                             "render": function(data, type, datos, meta) {
-                                if(datos.tipo_usuario == 3) {
-                                    return `<button class="alerta_usuario btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="alerta_usuario btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
-                                } else {
-                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
-                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                if(datos.estado_envio == '0') {
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-pencil-alt"></i></button>
+                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else if (datos.estado_envio == '1') {
+                                    return `<button class="alerta_solicitud_enviada btn btn-info" title="Editar solicitud" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="alerta_solicitud_enviada btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else if (datos.estado_envio == '2') {
+                                    return `<button class="alerta_solicitud_aprobada btn btn-info" title="Editar solicitud" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                    <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else if (datos.estado_envio == '3') {
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-pencil-alt"></i></button>
+                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
                                 }
                             }
                         }
                     ],
                     "destroy": true,
                     "language": espanol
-                }); */
+                });
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -513,6 +541,22 @@ $(document).ready(function() {
 
         }
     }
+
+    $(document).on('click', '.edit_solicitud', (e) => {
+        alert('Editar solicitud');
+    });
+
+    $(document).on('click', '.remove_solicitud', (e) => {
+        alert('Eliminar solicitud');
+    });
+
+    $(document).on('click', '.alerta_solicitud_enviada', (e) => {
+        toastr.warning('La solicitud ya fue enviada, no se puede editar ni eliminar', 'Cuidado !');
+    });
+
+    $(document).on('click', '.alerta_solicitud_aprobada', (e) => {
+        toastr.warning('La solicitud fue aprobada, no se puede editar la solicitud', 'Cuidado !');
+    });
 
     async function crear_marca(datos) {
         let data = await fetch('../Controllers/MarcaController.php',{
