@@ -509,7 +509,7 @@ $(document).ready(function() {
                         {
                             "render": function(data, type, datos, meta) {
                                 if(datos.estado_envio == '0') {
-                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-pencil-alt"></i></button>
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_sol"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
                                 } else if (datos.estado_envio == '1') {
                                     return `<button class="alerta_solicitud_enviada btn btn-info" title="Editar solicitud" type="button"><i class="fas fa-pencil-alt"></i></button>
@@ -518,7 +518,7 @@ $(document).ready(function() {
                                     return `<button class="alerta_solicitud_aprobada btn btn-info" title="Editar solicitud" type="button"><i class="fas fa-pencil-alt"></i></button>
                                     <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
                                 } else if (datos.estado_envio == '3') {
-                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-pencil-alt"></i></button>
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_sol"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
                                 }
                             }
@@ -541,22 +541,6 @@ $(document).ready(function() {
 
         }
     }
-
-    $(document).on('click', '.edit_solicitud', (e) => {
-        alert('Editar solicitud');
-    });
-
-    $(document).on('click', '.remove_solicitud', (e) => {
-        alert('Eliminar solicitud');
-    });
-
-    $(document).on('click', '.alerta_solicitud_enviada', (e) => {
-        toastr.warning('La solicitud ya fue enviada, no se puede editar ni eliminar', 'Cuidado !');
-    });
-
-    $(document).on('click', '.alerta_solicitud_aprobada', (e) => {
-        toastr.warning('La solicitud fue aprobada, no se puede editar la solicitud', 'Cuidado !');
-    });
 
     async function crear_marca(datos) {
         let data = await fetch('../Controllers/MarcaController.php',{
@@ -856,6 +840,14 @@ $(document).ready(function() {
         toastr.error('No tienes permiso para realizar esta acción', 'Error!');
     });
 
+    $(document).on('click', '.alerta_solicitud_enviada', (e) => {
+        toastr.warning('La solicitud ya fue enviada, no se puede editar ni eliminar', 'Cuidado !');
+    });
+
+    $(document).on('click', '.alerta_solicitud_aprobada', (e) => {
+        toastr.warning('La solicitud fue aprobada, no se puede editar la solicitud', 'Cuidado !');
+    });
+
     /* Creacion de solicitudes marca */
     async function crear_solicitud_marca(datos) {
         let data = await fetch('../Controllers/SolicitudMarcaController.php',{
@@ -875,18 +867,26 @@ $(document).ready(function() {
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function() {
-                        //read_all_marcas();
+                        read_tus_solicitudes();
                         $('#form-marca_sol').trigger('reset');
                     })
                 }
             } catch (error) {
                 console.error(error);
                 console.log(response);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'No se pudo crear la marca, comuniquese con el administrador del sistema.',
-                })
+                if(response == "error_marca") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'La marca ya existe',
+                    })
+                } else if(response == "error_sol") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'Ya existe una solicitud para esta marca',
+                    })
+                }
             }
 
         } else {
@@ -948,6 +948,132 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+
+    /* Editar solicitudes marca */
+
+    $(document).on('click', '.edit_solicitud', (e) => {
+        let elemento    = $(this)[0].activeElement;
+        let id          = $(elemento).attr('id');
+        let nombre      = $(elemento).attr('nombre');
+        let descripcion = $(elemento).attr('desc');
+        let img         = $(elemento).attr('img');
+        //console.log(id,nombre,img,descripcion);
+        $('#widget_nombre_sol').text(nombre);
+        $('#widget_desc_sol').text(descripcion);
+        $('#widget_imagen_sol').attr('src', '../Util/Img/marca/'+img);
+        $('#nombre_mod_sol').val(nombre);
+        $('#desc_mod_sol').val(descripcion);
+        $('#id_marca_mod_sol').val(id);
+    });
+
+    async function editar_solicitud(datos) {
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log(respuesta);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado la solicitud marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        $('#widget_nombre_sol').text(respuesta.nombre_sol);
+                        $('#widget_desc_sol').text(respuesta.desc_sol);
+                        if(respuesta.img_sol != '') {
+                            $('#widget_imagen_sol').attr('src', '../Util/Img/marca/'+respuesta.img_sol);
+                        }
+                        read_tus_solicitudes();
+                        $('#form-marca_mod_sol').trigger('reset');
+                        $('#modal_editar_sol').modal('hide')
+                    })
+                } else if (respuesta.mensaje == 'danger') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No alteró ningun cambio!',
+                        text: 'Modifique algun cambio para realizar la edición.',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion = 'editar_solicitud';
+            let datos   = new FormData($('#form-marca_mod_sol')[0]);
+            datos.append('funcion', funcion);
+            editar_solicitud(datos);
+        }
+    });
+
+    $('#form-marca_mod_sol').validate({
+        rules: {
+            nombre_mod_sol: {
+                required: true,
+            },
+            desc_mod_sol: {
+                required: true,
+            },
+            imagen_mod_sol: {
+                extension: "png|jpg|jpeg|bmp"
+            }
+        },
+        messages: {
+            nombre_mod_sol: {
+                required: "* Este campo es obligatorio"
+            },
+            desc_mod_sol: {
+                required: "* Este campo es obligatorio"
+            },
+            imagen_mod_sol: {
+                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
+
+    $(document).on('click', '.remove_solicitud', (e) => {
+        alert('Eliminar solicitud');
+    });
+
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

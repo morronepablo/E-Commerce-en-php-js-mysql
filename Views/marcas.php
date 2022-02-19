@@ -156,6 +156,78 @@ include_once 'Layouts/general/header.php';
 </div>
 <!-- Fin Modal -->
 
+<!-- Modal Editar Solicitud -->
+<div class="modal fade" id="modal_editar_sol" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar solicitud marca</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-widget widget-user">
+                    <div class="widget-user-header bg-info">
+                        <h3 id="widget_nombre_sol" class="widget-user-username"></h3>
+                        <h5 id="widget_desc_sol" class="widget-user-desc"></h5>
+                    </div>
+                    <div class="widget-user-image">
+                        <img id="widget_imagen_sol" class="img-circle elevation-2" src="" alt="imagen solicitud">
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">3,200</h5>
+                                    <span class="description-text">SALES</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">13,000</h5>
+                                    <span class="description-text">FOLLOWERS</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="description-block">
+                                    <h5 class="description-header">35</h5>
+                                    <span class="description-text">PRODUCTS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="form-marca_mod_sol" enctype="multipart/form-data">
+                    <input type="hidden" id="id_marca_mod_sol" name="id_marca_mod_sol">
+                    <div class="form-group">
+                        <label for="nombre_mod_sol">Nombre</label>
+                        <input type="text" name="nombre_mod_sol" class="form-control" id="nombre_mod_sol" placeholder="Ingrese nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc_mod_sol">Descripción</label>
+                        <input type="text" name="desc_mod_sol" class="form-control" id="desc_mod_sol" placeholder="Ingrese una descripción">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Imagen</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="imagen_mod_sol" id="imagen_mod_sol">
+                                <label class="custom-file-label" for="exampleInputFile">Seleccione una imagen</label>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal -->
+
 <title>Marcas | Morrone</title>
 <section class="content-header">
     <div class="container-fluid">

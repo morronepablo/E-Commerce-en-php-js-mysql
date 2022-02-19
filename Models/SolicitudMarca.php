@@ -42,4 +42,40 @@ class SolicitudMarca {
         $this->objetos = $query->fetchAll();
         return $this->objetos;
     }
+    function obtener_solicitud($id_solicitud) {
+        $sql = "SELECT *
+                FROM solicitud_marca sm
+                WHERE sm.id=:id_solicitud AND estado='A'";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_solicitud' => $id_solicitud
+        );
+        $query->execute ($variables);
+        $this->objetos = $query->fetchAll();
+        return $this->objetos;
+    }
+    function editar($id_solicitud, $nombre, $desc, $img) {
+        if($img != '') {
+            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion, imagen=:img
+                    WHERE id=:id_solicitud";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':nombre'       => $nombre,
+                ':descripcion'  => $desc,
+                ':img'          => $img,
+                ':id_solicitud' => $id_solicitud
+            );
+            $query->execute ($variables);
+        } else {
+            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion
+                    WHERE id=:id_solicitud";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':nombre'       => $nombre,
+                ':descripcion'  => $desc,
+                ':id_solicitud' => $id_solicitud
+            );
+            $query->execute ($variables);
+        }
+    }
 }

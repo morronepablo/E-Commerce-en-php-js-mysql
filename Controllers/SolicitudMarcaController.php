@@ -32,7 +32,7 @@ if($_POST['funcion']=='crear_solicitud_marca'){
             $jsonstring = json_encode($json);
             echo $jsonstring;
         } else {
-            echo 'error_marca';
+            echo 'error_sol';
         }
     } else {
         echo 'error_marca';
@@ -58,4 +58,53 @@ if($_POST['funcion']=='read_tus_solicitudes'){
     }
     $jsonstring = json_encode($json);
     echo $jsonstring;
+}
+if($_POST['funcion']=='editar_solicitud'){
+    $id_usuario      = $_SESSION['id'];
+    $nombre          = $_POST['nombre_mod_sol'];
+    $desc            = $_POST['desc_mod_sol'];
+    $img             = $_FILES['imagen_mod_sol']['name'];
+    $formateado      = str_replace(" ","+",$_POST['id_marca_mod_sol']);
+    $id_solicitud    = openssl_decrypt($formateado, CODE, KEY);
+    $mensaje         = '';
+    $nombre_imagen   = '';
+    $datos_cambiados = 'ha echo los siguientes cambios: ';
+    if(is_numeric($id_solicitud)) {
+        $solicitud_marca->obtener_solicitud($id_solicitud);
+        if($nombre != $solicitud_marca->objetos[0]->nombre || $desc != $solicitud_marca->objetos[0]->descripcion || $img != '') {
+            if($nombre != $solicitud_marca->objetos[0]->nombre) {
+                $datos_cambiados.= 'cambió su nombre de '.$solicitud_marca->objetos[0]->nombre.' a '.$nombre.', ';
+            }
+            if($desc != $solicitud_marca->objetos[0]->descripcion) {
+                $datos_cambiados.= 'cambió su descripción de '.$solicitud_marca->objetos[0]->descripcion.' a '.$desc.', ';
+            }
+            if($img != '') {
+                $datos_cambiados.= 'Su imagen fué cambiada.';
+                $nombre_imagen = uniqid().'-'.$img;
+                $ruta          = '../Util/Img/marca/'.$nombre_imagen;
+                move_uploaded_file($_FILES['imagen_mod_sol']['tmp_name'], $ruta);
+                $avatar_actual = $solicitud_marca->objetos[0]->imagen;
+                if($avatar_actual != 'marca_default.png') {
+                    unlink('../Util/Img/marca/'.$avatar_actual);
+                }
+            }
+            $solicitud_marca->editar($id_solicitud, $nombre, $desc, $nombre_imagen);
+            $descripcion = 'Ha editado una solicitud marca, '.$datos_cambiados;
+            $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+            $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        } else {
+            $mensaje = 'danger'; // no ha modificado ningun dato del formulario
+        }
+        $json = array(
+            'mensaje'    => $mensaje,
+            'nombre_sol' => $nombre,
+            'desc_sol'   => $desc,
+            'img_sol'    => $nombre_imagen
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error'; // vulnero el sistema
+    }
+    
 }
