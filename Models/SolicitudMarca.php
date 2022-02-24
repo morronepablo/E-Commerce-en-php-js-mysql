@@ -78,4 +78,24 @@ class SolicitudMarca {
             $query->execute ($variables);
         }
     }
+    function eliminar_solicitud($id_solicitud) {
+        $sql = "UPDATE solicitud_marca SET estado=:estado
+                WHERE id=:id_solicitud";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_solicitud' => $id_solicitud,
+            ':estado' => 'I'
+        );
+        $query->execute ($variables);
+    }
+    function enviar_solicitud($id_solicitud) {
+        $sql = "UPDATE solicitud_marca SET estado_solicitud=:estado_solicitud
+                WHERE id=:id_solicitud";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_solicitud' => $id_solicitud,
+            ':estado_solicitud' => '1'
+        );
+        $query->execute ($variables);
+    }
 }

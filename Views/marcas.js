@@ -486,7 +486,7 @@ $(document).ready(function() {
                         { 
                             "render": function(data, type, datos, meta) {
                                 if(datos.estado_envio == '0') {
-                                    return `<button class="btn btn-primary">Enviar</button>`;
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" class="send_sol btn btn-primary">Enviar</button>`;
                                 } else if (datos.estado_envio == '1') {
                                     return `<span class="badge bg-primary">Enviado</span>`;
                                 } else if (datos.estado_envio == '2') {
@@ -1070,10 +1070,139 @@ $(document).ready(function() {
         }
     });
 
+    /* Eliminar Solicitudes Marca */
+    async function eliminar_solicitud(id, nombre) {
+        let funcion = "eliminar_solicitud";
+        let respuesta = '';
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id + '&&nombre=' + nombre
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                respuesta = JSON.parse(response);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+        return respuesta;
+    }
+
     $(document).on('click', '.remove_solicitud', (e) => {
-        alert('Eliminar solicitud');
+        let elemento = $(this)[0].activeElement;
+        let id       = $(elemento).attr('id');
+        let nombre   = $(elemento).attr('nombre');
+        let img      = $(elemento).attr('img');
+        //console.log(id, nombre, img);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success',
+              cancelButton: 'btn btn-danger mr-2'
+            },
+            buttonsStyling: false
+        })
+          
+        swalWithBootstrapButtons.fire({
+            title: 'Está seguro de eliminar la solicitud marca '+nombre+' ?',
+            text: "¡No podrás revertir esto!",
+            imageUrl: '../Util/Img/marca/'+img,
+            imageWidth: 100,
+            imageHeight: 100,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i>',
+            cancelButtonText: '<i class="fas fa-times"></i>',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminar_solicitud(id, nombre).then(respuesta => {
+                    //console.log(respuesta);
+                    if(respuesta.mensaje == 'success') {
+                        swalWithBootstrapButtons.fire(
+                            '¡Eliminado!',
+                            'La solicitud marca '+nombre+' ha sido eliminada.',
+                            'success'
+                        )
+                        read_tus_solicitudes();
+                    }
+                })
+            } else if (
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'No se ha eliminado la solicitud marca :)',
+                    'error'
+                )
+            }
+        })
     });
 
+    /* Envio de solicitud */
+    async function enviar_solicitud(id, nombre) {
+        let funcion = "enviar_solicitud";
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id + '&&nombre=' + nombre
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log(respuesta);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('La solicitud marca ' + nombre + ' fué enviado correctamente', 'Solicitud enviada !');
+                    read_tus_solicitudes();
+                }
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+    $(document).on('click', '.send_sol', (e) => {
+        let elemento    = $(this)[0].activeElement;
+        let id          = $(elemento).attr('id');
+        let nombre      = $(elemento).attr('nombre');;
+        enviar_solicitud(id, nombre);
+    });
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

@@ -106,5 +106,44 @@ if($_POST['funcion']=='editar_solicitud'){
     } else {
         echo 'error'; // vulnero el sistema
     }
-    
+}
+if($_POST['funcion']=='eliminar_solicitud'){
+    $id_usuario = $_SESSION['id'];
+    $nombre     = $_POST['nombre'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_solicitud   = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_solicitud)) {
+        $solicitud_marca->eliminar_solicitud($id_solicitud);
+        $descripcion = 'Ha eliminado una solicitud marca, '.$nombre;
+        $historial->crear_historial($descripcion, 3, 6, $id_usuario);
+        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $json = array(
+            'mensaje' => $mensaje
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
+if($_POST['funcion']=='enviar_solicitud'){
+    $id_usuario = $_SESSION['id'];
+    $nombre     = $_POST['nombre'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_solicitud   = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_solicitud)) {
+        $solicitud_marca->enviar_solicitud($id_solicitud);
+        /* Envio de mensajes */
+        /*
+        $descripcion = 'Ha eliminado una solicitud marca, '.$nombre;
+        $historial->crear_historial($descripcion, 3, 6, $id_usuario);*/
+        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $json = array(
+            'mensaje' => $mensaje
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
 }
