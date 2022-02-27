@@ -147,3 +147,41 @@ if($_POST['funcion']=='enviar_solicitud'){
         echo 'error';
     }
 }
+if($_POST['funcion']=='read_solicitudes_por_aprobar'){
+    $id_usuario = $_SESSION['id'];
+    $solicitud_marca->solicitudes_por_aprobar();
+    //var_dump($solicitud_marca);
+    $json=array();
+    foreach ($solicitud_marca->objetos as $objeto) {
+        $json[]=array(
+            'id'             => openssl_encrypt($objeto->id, CODE, KEY),
+            'nombre'         => $objeto->nombre,
+            'descripcion'    => $objeto->descripcion,
+            'imagen'         => $objeto->imagen,
+            'fecha_creacion' => $objeto->fecha_creacion,
+            'solicitante'    => $objeto->nombres.' '.$objeto->apellidos,
+            'tipo_usuario'   => $_SESSION['tipo_usuario']
+        );
+    }
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}
+if($_POST['funcion']=='aprobar_solicitud'){
+    $id_usuario = $_SESSION['id'];
+    $nombre     = $_POST['nombre'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_solicitud   = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_solicitud)) {
+        $solicitud_marca->aprobar_solicitud($id_solicitud, $id_usuario);
+        $descripcion = 'Ha aprobado una solicitud marca, '.$nombre;
+        $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $json = array(
+            'mensaje' => $mensaje
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}

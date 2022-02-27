@@ -292,7 +292,21 @@ include_once 'Layouts/general/header.php';
                     </table>
                 </div>
                 <div class="tab-pane" id="tab_por_aprobar">
-                    tab3
+                    <table id="solicitudes_por_aprobar" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Imagen</th>
+                                <th>Solicitante</th>
+                                <th>Fecha Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

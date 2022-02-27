@@ -366,6 +366,7 @@ $(document).ready(function() {
                         read_favoritos();
                         read_all_marcas();
                         if(sesion.tipo_usuario == 1 || sesion.tipo_usuario ==2) {
+                            read_solicitudes_por_aprobar();
                             CloseLoader();
                             $('#btn_adm').show();
                         } else if(sesion.tipo_usuario == 3) {
@@ -521,6 +522,63 @@ $(document).ready(function() {
                                     return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit_solicitud btn btn-info" title="Editar solicitud" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_sol"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove_solicitud btn btn-danger" title="Eliminar solicitud" type="button"><i class="fas fa-trash-alt"></i></button>`;
                                 }
+                            }
+                        }
+                    ],
+                    "destroy": true,
+                    "language": espanol
+                });
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+    async function read_solicitudes_por_aprobar() {
+        let funcion = "read_solicitudes_por_aprobar";
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let solicitudes = JSON.parse(response);
+                //console.log(solicitudes);
+                
+                $('#solicitudes_por_aprobar').DataTable( {
+                    data: solicitudes,
+                    "aaSorting": [],
+                    "searching": true,
+                    "scrollX": false,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "processing": true,
+                    columns: [
+                        { data: "nombre" },
+                        { data: "descripcion" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
+                            }
+                        },
+                        { data: "solicitante" },
+                        { data: "fecha_creacion" },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="aprobar_solicitud btn btn-success" title="Aprobar la solicitud"><i class="fas fa-check"></i></button>
+                                <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="rechazar_solicitud btn btn-danger" title="Rechazar la solicitud"><i class="fas fa-times"></i></button>`;
                             }
                         }
                     ],
@@ -1197,11 +1255,100 @@ $(document).ready(function() {
 
         }
     }
+
     $(document).on('click', '.send_sol', (e) => {
         let elemento    = $(this)[0].activeElement;
         let id          = $(elemento).attr('id');
         let nombre      = $(elemento).attr('nombre');;
         enviar_solicitud(id, nombre);
+    });
+
+    /* Aprobar solicitud */
+    async function aprobar_solicitud(id, nombre) {
+        let funcion = "aprobar_solicitud";
+        let respuesta = '';
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id + '&&nombre=' + nombre
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                respuesta = JSON.parse(response);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+        return respuesta;
+    }
+
+    $(document).on('click', '.aprobar_solicitud', (e) => {
+        let elemento    = $(this)[0].activeElement;
+        let id          = $(elemento).attr('id');
+        let nombre      = $(elemento).attr('nombre');
+        let img         = $(elemento).attr('img');
+        let descripcion = $(elemento).attr('desc');
+        //console.log(id, nombre, img);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success',
+              cancelButton: 'btn btn-danger mr-2'
+            },
+            buttonsStyling: false
+        })
+          
+        swalWithBootstrapButtons.fire({
+            title: 'Desea aprobar la solicitud marca '+nombre+' ?',
+            text: "¡No podrás revertir esto!",
+            imageUrl: '../Util/Img/marca/'+img,
+            imageWidth: 100,
+            imageHeight: 100,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fas fa-check"></i>',
+            cancelButtonText: '<i class="fas fa-times"></i>',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                aprobar_solicitud(id, nombre).then(respuesta => {
+                    //console.log(respuesta);
+                    if(respuesta.mensaje == 'success') {
+                        swalWithBootstrapButtons.fire(
+                            '¡Aprobado!',
+                            'La solicitud marca '+nombre+' ha sido aprobada.',
+                            'success'
+                        )
+                        read_solicitudes_por_aprobar();
+                    }
+                })
+            } else if (
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'No se aprobó la solicitud marca :)',
+                    'error'
+                )
+            }
+        })
     });
 
     function Loader(mensaje) {

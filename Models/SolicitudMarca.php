@@ -98,4 +98,34 @@ class SolicitudMarca {
         );
         $query->execute ($variables);
     }
+    function solicitudes_por_aprobar() {
+        $sql = "SELECT sm.id as id, 
+                       sm.nombre as nombre,
+                       sm.descripcion as descripcion,
+                       sm.imagen as imagen,
+                       sm.fecha_creacion as fecha_creacion,
+                       u.nombres as nombres,
+                       u.apellidos as apellidos 
+                FROM solicitud_marca sm
+                JOIN usuario u ON sm.id_usuario=u.id
+                WHERE sm.estado='A' AND sm.estado_solicitud=:estado_solicitud ORDER BY sm.fecha_creacion DESC";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':estado_solicitud'  => '1'
+        );
+        $query->execute ($variables);
+        $this->objetos = $query->fetchAll();
+        return $this->objetos;
+    }
+    function aprobar_solicitud($id_solicitud, $id_usuario) {
+        $sql = "UPDATE solicitud_marca SET estado_solicitud=:estado_solicitud, aprobado_por=:aprobado_por
+                WHERE id=:id_solicitud";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_solicitud'     => $id_solicitud,
+            ':estado_solicitud' => '2',
+            ':aprobado_por'     => $id_usuario
+        );
+        $query->execute ($variables);
+    }
 }
