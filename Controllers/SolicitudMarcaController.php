@@ -3,9 +3,11 @@ include_once '../Util/Config/config.php';
 include_once '../Models/Marca.php';
 include_once '../Models/SolicitudMarca.php';
 include_once '../Models/Historial.php';
+include_once '../Models/Usuario.php';
 $marca = new Marca();
 $solicitud_marca = new SolicitudMarca();
 $historial = new Historial();
+$usuario = new Usuario();
 session_start();
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $fecha_actual = date('d-m-Y');
@@ -44,6 +46,12 @@ if($_POST['funcion']=='read_tus_solicitudes'){
     //var_dump($solicitud_marca);
     $json=array();
     foreach ($solicitud_marca->objetos as $objeto) {
+        if(!empty($objeto->aprobado_por)) {
+            $usuario->obtener_datos($objeto->aprobado_por);
+            $aprobado_por = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
+        } else {
+            $aprobado_por = '';
+        }
         $json[]=array(
             'id'              => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre'          => $objeto->nombre,
@@ -52,7 +60,8 @@ if($_POST['funcion']=='read_tus_solicitudes'){
             'fecha_creacion'  => $objeto->fecha_creacion,
             'estado'          => $objeto->estado,
             'estado_envio'    => $objeto->estado_solicitud,
-            'estado_aprobado' => $objeto->aprobado_por,
+            'estado_aprobado' => $aprobado_por,
+            'observacion'     => $objeto->observacion,
             'tipo_usuario'    => $_SESSION['tipo_usuario']
         );
     }
@@ -172,10 +181,28 @@ if($_POST['funcion']=='aprobar_solicitud'){
     $formateado = str_replace(" ","+",$_POST['id']);
     $id_solicitud   = openssl_decrypt($formateado, CODE, KEY);
     if(is_numeric($id_solicitud)) {
-        $solicitud_marca->aprobar_solicitud($id_solicitud, $id_usuario);
-        $descripcion = 'Ha aprobado una solicitud marca, '.$nombre;
-        $historial->crear_historial($descripcion, 1, 6, $id_usuario);
-        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $marca->buscar($nombre);
+        if(empty($marca->objetos)) {
+            // Se aprueba la solicitud
+            $solicitud_marca->aprobar_solicitud($id_solicitud, $id_usuario);
+            // Se crea la marca
+            $solicitud_marca->obtener_solicitud($id_solicitud);
+            $desc   = $solicitud_marca->objetos[0]->descripcion;
+            $imagen = $solicitud_marca->objetos[0]->imagen;
+            $marca->crear($nombre, $desc, $imagen);
+            $descripcion = 'Ha aprobado una solicitud marca, '.$nombre;
+            $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+            $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        } else {
+            // La marca ya existe y no se puede crear
+            // Rechazar la solicitud marca
+            $observacion = "No se aproba la solicitud ya que existe una marca con el mismo nombre ".$nombre;
+            $solicitud_marca->rechazar_solicitud($id_solicitud, $id_usuario, $observacion);
+            $descripcion = 'Ha rechazado una solicitud marca, '.$nombre;
+            $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+            $mensaje = 'danger';
+        }
+        
         $json = array(
             'mensaje' => $mensaje
         );

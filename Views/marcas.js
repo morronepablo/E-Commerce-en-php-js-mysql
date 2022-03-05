@@ -411,7 +411,7 @@ $(document).ready(function() {
                     data: marcas,
                     "aaSorting": [],
                     "searching": true,
-                    "scrollX": true,
+                    "scrollX": false,
                     "autoWidth": false,
                     "responsive": true,
                     "processing": true,
@@ -493,7 +493,9 @@ $(document).ready(function() {
                                 } else if (datos.estado_envio == '2') {
                                     return `<span class="badge bg-success">Aceptado</span>`;
                                 } else if (datos.estado_envio == '3') {
-                                    return `<span class="badge bg-danger">Rechazado</span>`;
+                                    return `<span class="badge bg-danger">Rechazado</span>
+                                            </br>
+                                            <span>${datos.observacion}</span>`;
                                 }
                             }
                         },
@@ -1335,6 +1337,14 @@ $(document).ready(function() {
                             '¡Aprobado!',
                             'La solicitud marca '+nombre+' ha sido aprobada.',
                             'success'
+                        )
+                        read_solicitudes_por_aprobar();
+                        read_all_marcas();
+                    } else if(respuesta.mensaje == 'danger') {
+                        swalWithBootstrapButtons.fire(
+                            'No se pudo aprobar',
+                            'No se aprobó la solicitud, ya que existe una marca con el mismo nombre',
+                            'error'
                         )
                         read_solicitudes_por_aprobar();
                     }

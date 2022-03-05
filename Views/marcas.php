@@ -280,7 +280,7 @@ include_once 'Layouts/general/header.php';
                                 <th>Marca</th>
                                 <th>Descripcion</th>
                                 <th>Imagen</th>
-                                <th>Estado de envío</th>
+                                <th style="width: 15%">Estado de envío</th>
                                 <th>Estado aprobado</th>
                                 <th>Fecha Creación</th>
                                 <th>Acciones</th>

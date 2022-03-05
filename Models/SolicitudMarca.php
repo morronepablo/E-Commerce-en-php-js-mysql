@@ -56,24 +56,26 @@ class SolicitudMarca {
     }
     function editar($id_solicitud, $nombre, $desc, $img) {
         if($img != '') {
-            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion, imagen=:img
+            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion, imagen=:img, estado_solicitud=:estado_solicitud
                     WHERE id=:id_solicitud";
             $query = $this->acceso->prepare($sql);
             $variables = array(
-                ':nombre'       => $nombre,
-                ':descripcion'  => $desc,
-                ':img'          => $img,
-                ':id_solicitud' => $id_solicitud
+                ':nombre'           => $nombre,
+                ':descripcion'      => $desc,
+                ':img'              => $img,
+                ':id_solicitud'     => $id_solicitud,
+                ':estado_solicitud' => '0'
             );
             $query->execute ($variables);
         } else {
-            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion
+            $sql = "UPDATE solicitud_marca SET nombre=:nombre, descripcion=:descripcion, estado_solicitud=:estado_solicitud
                     WHERE id=:id_solicitud";
             $query = $this->acceso->prepare($sql);
             $variables = array(
-                ':nombre'       => $nombre,
-                ':descripcion'  => $desc,
-                ':id_solicitud' => $id_solicitud
+                ':nombre'           => $nombre,
+                ':descripcion'      => $desc,
+                ':id_solicitud'     => $id_solicitud,
+                ':estado_solicitud' => '0'
             );
             $query->execute ($variables);
         }
@@ -125,6 +127,18 @@ class SolicitudMarca {
             ':id_solicitud'     => $id_solicitud,
             ':estado_solicitud' => '2',
             ':aprobado_por'     => $id_usuario
+        );
+        $query->execute ($variables);
+    }
+    function rechazar_solicitud($id_solicitud, $id_usuario, $observacion) {
+        $sql = "UPDATE solicitud_marca SET estado_solicitud=:estado_solicitud, aprobado_por=:aprobado_por, observacion=:observacion
+                WHERE id=:id_solicitud";
+        $query = $this->acceso->prepare($sql);
+        $variables = array(
+            ':id_solicitud'     => $id_solicitud,
+            ':estado_solicitud' => '3',
+            ':aprobado_por'     => $id_usuario,
+            ':observacion'      => $observacion
         );
         $query->execute ($variables);
     }
