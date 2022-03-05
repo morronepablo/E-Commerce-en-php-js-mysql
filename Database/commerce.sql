@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-02-2022 a las 16:48:50
+-- Tiempo de generación: 05-03-2022 a las 02:54:35
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -211,7 +211,19 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (82, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de c a Ropa Deportiva, ', '2022-02-05 12:40:30', 1, 6, 1),
 (83, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de a a Tecnología, ', '2022-02-05 12:41:35', 1, 6, 1),
 (84, 'Ha editado una marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-02-05 12:43:42', 1, 6, 1),
-(85, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de b a Tecnología, Su imagen fué cambiada.', '2022-02-05 12:45:43', 1, 6, 1);
+(85, 'Ha editado una marca, ha echo los siguientes cambios: cambió su descripción de b a Tecnología, Su imagen fué cambiada.', '2022-02-05 12:45:43', 1, 6, 1),
+(86, 'Ha creado una solicitud marca, Flecha', '2022-02-12 16:59:13', 2, 6, 1),
+(87, 'Ha creado una solicitud marca, Motorola', '2022-02-19 14:40:21', 2, 6, 1),
+(88, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su nombre de Motorola a Motorolas, ', '2022-02-19 14:42:42', 1, 6, 1),
+(89, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su nombre de Motorolas a Motorola, ', '2022-02-19 14:42:55', 1, 6, 1),
+(90, 'Ha eliminado una solicitud marca, Motorola', '2022-02-24 10:45:22', 3, 6, 1),
+(91, 'Ha aprobado una solicitud marca, Motorola', '2022-02-27 18:56:56', 1, 6, 2),
+(92, 'Ha aprobado una solicitud marca, Flecha', '2022-02-27 18:58:22', 1, 6, 2),
+(93, 'Ha creado la marca, Motorola', '2022-03-04 22:09:24', 2, 6, 2),
+(94, 'Ha rechazado una solicitud marca, Motorola', '2022-03-04 22:12:10', 1, 6, 2),
+(95, 'Ha aprobado una solicitud marca, Flecha', '2022-03-04 22:12:46', 1, 6, 2),
+(96, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su nombre de Motorola a Xiaomi, Su imagen fué cambiada.', '2022-03-04 22:50:26', 1, 6, 1),
+(97, 'Ha aprobado una solicitud marca, Xiaomi', '2022-03-04 22:51:49', 1, 6, 2);
 
 -- --------------------------------------------------------
 
@@ -2665,7 +2677,10 @@ INSERT INTO `marca` (`id`, `nombre`, `descripcion`, `imagen`, `fecha_creacion`, 
 (3, 'Nike', 'Ropa Deportiva', '61ec8d3660b95-Nike.png', '2022-01-22 20:03:18', '2022-01-22 20:03:18', 'A'),
 (4, 'Adidas', 'Ropa Deportiva', '61ec942909469-addidas.png', '2022-01-22 20:32:57', '2022-01-22 20:32:57', 'A'),
 (5, 'Topper', 'e', '61f5737bc4e59-Topper_arg_logo.png', '2022-01-22 20:47:37', '2022-01-22 20:47:37', 'I'),
-(6, 'Puma', 'Ropa Deportiva', '61fe9298de8ad-puma.jpg', '2022-02-05 12:07:04', '2022-02-05 12:07:04', 'A');
+(6, 'Puma', 'Ropa Deportiva', '61fe9298de8ad-puma.jpg', '2022-02-05 12:07:04', '2022-02-05 12:07:04', 'A'),
+(7, 'Motorola', 'Tecnología', '6222b84499936-motorola.jpg', '2022-03-04 22:09:24', '2022-03-04 22:09:24', 'A'),
+(8, 'Flecha', 'Calzado Deportivo', '620811912cfcd-Flecha.png', '2022-03-04 22:12:46', '2022-03-04 22:12:46', 'A'),
+(9, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', '2022-03-04 22:51:49', '2022-03-04 22:51:49', 'A');
 
 -- --------------------------------------------------------
 
@@ -2975,6 +2990,34 @@ INSERT INTO `respuesta` (`id`, `contenido`, `fecha_creacion`, `estado`, `id_preg
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `solicitud_marca`
+--
+
+CREATE TABLE `solicitud_marca` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(1000) NOT NULL,
+  `descripcion` varchar(1000) NOT NULL,
+  `imagen` varchar(1000) NOT NULL,
+  `observacion` varchar(10000) DEFAULT NULL,
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `estado_solicitud` varchar(10) NOT NULL DEFAULT '0',
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `aprobado_por` int(11) DEFAULT NULL,
+  `id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `solicitud_marca`
+--
+
+INSERT INTO `solicitud_marca` (`id`, `nombre`, `descripcion`, `imagen`, `observacion`, `estado`, `estado_solicitud`, `fecha_creacion`, `fecha_edicion`, `aprobado_por`, `id_usuario`) VALUES
+(1, 'Flecha', 'Calzado Deportivo', '620811912cfcd-Flecha.png', NULL, 'A', '2', '2022-02-12 16:59:13', '2022-03-04 22:12:46', 2, 1),
+(2, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', 'No se aproba la solicitud ya que existe una marca con el mismo nombre Motorola', 'A', '2', '2022-02-19 14:40:21', '2022-03-04 22:51:49', 2, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `subcategoria`
 --
 
@@ -3093,7 +3136,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`, `referencia`, `dni`, `email`, `telefono`, `avatar`, `estado`, `id_tipo`) VALUES
-(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia Elvira', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '61d70c883d7d6-lamejorfoto.jpg', 'A', 2),
+(1, 'nataliaoduber', '7l03cuwx4PrLgLWv40ymSg==', 'Natalia Elvira', 'Oduber', 'El Arreo 220 - La Reja - Bs. As.', 'Entre Cortejarena y García Lorca - Portón Negro', 94654750, 'nataliaoduber@gmail.com', 1138661609, '61d70c883d7d6-lamejorfoto.jpg', 'A', 3),
 (2, 'morronepablo', '7l03cuwx4PrLgLWv40ymSg==', 'Pablo Martin', 'Morrone', NULL, NULL, 22362590, 'morronepablo@gmail.com', 1138669097, '61469865cedca-pablo.jpg', 'A', 2),
 (3, 'codewaruser', '12345', 'Juan', 'Cosme', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
 (4, 'Warpiceuser', '12345', 'juan', 'diego', NULL, NULL, 12345678, 'juan.diego.polo.cosme.warpice@gmail.com', 1234567890, 'user_default.png', 'A', 2),
@@ -3253,6 +3296,13 @@ ALTER TABLE `respuesta`
   ADD KEY `id_pregunta` (`id_pregunta`);
 
 --
+-- Indices de la tabla `solicitud_marca`
+--
+ALTER TABLE `solicitud_marca`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
 -- Indices de la tabla `subcategoria`
 --
 ALTER TABLE `subcategoria`
@@ -3320,7 +3370,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3338,7 +3388,7 @@ ALTER TABLE `localidades`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
@@ -3393,6 +3443,12 @@ ALTER TABLE `resena`
 --
 ALTER TABLE `respuesta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT de la tabla `solicitud_marca`
+--
+ALTER TABLE `solicitud_marca`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `subcategoria`
@@ -3512,6 +3568,12 @@ ALTER TABLE `resena`
 --
 ALTER TABLE `respuesta`
   ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
+
+--
+-- Filtros para la tabla `solicitud_marca`
+--
+ALTER TABLE `solicitud_marca`
+  ADD CONSTRAINT `solicitud_marca_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `subcategoria`
