@@ -580,7 +580,7 @@ $(document).ready(function() {
                         {
                             "render": function(data, type, datos, meta) {
                                 return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="aprobar_solicitud btn btn-success" title="Aprobar la solicitud"><i class="fas fa-check"></i></button>
-                                <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="rechazar_solicitud btn btn-danger" title="Rechazar la solicitud"><i class="fas fa-times"></i></button>`;
+                                <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" solicitante="${datos.solicitante}" class="rechazar_solicitud btn btn-danger" title="Rechazar la solicitud" data-bs-toggle="modal" data-bs-target="#modal_rechazar_sol"><i class="fas fa-times"></i></button>`;
                             }
                         }
                     ],
@@ -1359,6 +1359,104 @@ $(document).ready(function() {
                 )
             }
         })
+    });
+
+    /* Rechazar solicitud */
+    $(document).on('click', '.rechazar_solicitud', (e) => {
+        let elemento    = $(this)[0].activeElement;
+        let id          = $(elemento).attr('id');
+        let nombre      = $(elemento).attr('nombre');
+        let img         = $(elemento).attr('img');
+        let descripcion = $(elemento).attr('desc');
+        let solicitante = $(elemento).attr('solicitante');
+        //console.log(id,nombre,img,descripcion,solicitante);
+        $('#widget_nombre_sol_rechazar').text(nombre);
+        $('#widget_desc_sol_rechazar').text(descripcion);
+        $('#widget_imagen_sol_rechazar').attr('src', '../Util/Img/marca/'+img);
+        $('#solicitante').text(solicitante);
+        $('#id_marca_rechazar_sol').val(id);
+        $('#nombre_rechazar_sol').val(nombre);
+    });
+
+    async function rechazar_solicitud(datos) {
+        let data = await fetch('../Controllers/SolicitudMarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                console.log(respuesta);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha rechazado la solicitud marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        read_solicitudes_por_aprobar();
+                        $('#form-marca_rechazar_sol').trigger('reset');
+                        $('#modal_rechazar_sol').modal('hide')
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion = 'rechazar_solicitud';
+            let datos   = new FormData($('#form-marca_rechazar_sol')[0]);
+            datos.append('funcion', funcion);
+            rechazar_solicitud(datos);
+        }
+    });
+
+    $('#form-marca_rechazar_sol').validate({
+        rules: {
+            observaciones: {
+                required: true,
+            }
+        },
+        messages: {
+            observaciones: {
+                required: "* Este campo es obligatorio"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
     });
 
     function Loader(mensaje) {

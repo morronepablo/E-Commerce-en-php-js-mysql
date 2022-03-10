@@ -228,6 +228,54 @@ include_once 'Layouts/general/header.php';
 </div>
 <!-- Fin Modal -->
 
+<!-- Modal Rechazar Solicitud -->
+<div class="modal fade" id="modal_rechazar_sol" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Rechazar solicitud marca</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-widget widget-user">
+                    <div class="widget-user-header bg-info">
+                        <h3 id="widget_nombre_sol_rechazar" class="widget-user-username"></h3>
+                        <h5 id="widget_desc_sol_rechazar" class="widget-user-desc"></h5>
+                    </div>
+                    <div class="widget-user-image">
+                        <img id="widget_imagen_sol_rechazar" class="img-circle elevation-2" src="" alt="imagen solicitud">
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-12 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">Solicitante</h5>
+                                    <span id="solicitante" class="description-text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="form-marca_rechazar_sol" enctype="multipart/form-data">
+                    <input type="hidden" id="id_marca_rechazar_sol" name="id_marca_rechazar_sol">
+                    <input type="hidden" id="nombre_rechazar_sol" name="nombre_rechazar_sol">
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea style="height: 150px" type="text" name="observaciones" class="form-control" id="observaciones" placeholder="Ingrese observaciones"></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal -->
+
 <title>Marcas | Morrone</title>
 <section class="content-header">
     <div class="container-fluid">

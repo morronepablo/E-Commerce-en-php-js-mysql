@@ -212,3 +212,23 @@ if($_POST['funcion']=='aprobar_solicitud'){
         echo 'error';
     }
 }
+if($_POST['funcion']=='rechazar_solicitud'){
+    $id_usuario    = $_SESSION['id'];
+    $nombre        = $_POST['nombre_rechazar_sol'];
+    $formateado    = str_replace(" ","+",$_POST['id_marca_rechazar_sol']);
+    $id_solicitud  = openssl_decrypt($formateado, CODE, KEY);
+    $observaciones = $_POST['observaciones'];
+    if(is_numeric($id_solicitud)) {
+        $solicitud_marca->rechazar_solicitud($id_solicitud, $id_usuario, $observaciones);
+        $descripcion = 'Ha rechazado una solicitud marca, '.$nombre;
+        $historial->crear_historial($descripcion, 1, 6, $id_usuario);
+        $mensaje = 'success'; // se hicieron modificaciones y todo ok
+        $json = array(
+            'mensaje' => $mensaje
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
