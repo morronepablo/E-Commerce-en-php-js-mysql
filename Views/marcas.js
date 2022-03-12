@@ -302,6 +302,14 @@ $(document).ready(function() {
                     Favoritos
                 </p>
                 </a>
+            </li>
+            <li id="nav_mensajes" class="nav-item">
+                <a id="active_nav_mensajes" href="../Views/mensajes" class="nav-link">
+                <i class="nav-icon far fa-envelope"></i>
+                <p id="nav_cont_mens">
+                    Mensajes
+                </p>
+                </a>
             </li>`;
             if(usuario.tipo_usuario == 1) {
                 template+=`<li class="nav-header">PRODUCTO</li>

@@ -124,6 +124,7 @@ if($_POST['funcion']=='editar_solicitud'){
                 $nombre_img = uniqid().'-'.uniqid();
                 $archivo = $nombre_img;
                 $extension = pathinfo($img, PATHINFO_EXTENSION);
+                $nombre_imagen = $nombre_img.'.'.$extension;
                 $nombre_base = basename($archivo, '.'.$extension);
                 $handle = new \Verot\Upload\Upload($_FILES['imagen_mod_sol']);
                 if ($handle->uploaded) {
@@ -143,7 +144,7 @@ if($_POST['funcion']=='editar_solicitud'){
                     unlink('../Util/Img/marca/'.$avatar_actual);
                 }
             }
-            $solicitud_marca->editar($id_solicitud, $nombre, $desc, $nombre_img.'.'.$extension);
+            $solicitud_marca->editar($id_solicitud, $nombre, $desc, $nombre_imagen);
             $descripcion = 'Ha editado una solicitud marca, '.$datos_cambiados;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'success'; // se hicieron modificaciones y todo ok
@@ -154,7 +155,7 @@ if($_POST['funcion']=='editar_solicitud'){
             'mensaje'    => $mensaje,
             'nombre_sol' => $nombre,
             'desc_sol'   => $desc,
-            'img_sol'    => $nombre_img.'.'.$extension
+            'img_sol'    => $nombre_imagen
         );
         $jsonstring = json_encode($json);
         echo $jsonstring;
