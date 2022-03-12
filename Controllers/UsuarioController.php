@@ -113,9 +113,9 @@ if($_POST['funcion'] == 'editar_datos') {
         }
         if($avatar != '') {
             $datos_cambiados.= 'su avatar fué cambiado. ';
-            $nombre = uniqid().'-'.$avatar;
+            $nombre = uniqid().'-'.uniqid();
             $archivo = $nombre;
-            $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+            $extension = pathinfo($avatar, PATHINFO_EXTENSION);
             $nombre_base = basename($archivo, '.'.$extension);
             $handle = new \Verot\Upload\Upload($_FILES['avatar_mod']);
             if ($handle->uploaded) {

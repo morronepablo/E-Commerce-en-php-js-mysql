@@ -4,6 +4,7 @@ include_once '../Models/Marca.php';
 include_once '../Models/SolicitudMarca.php';
 include_once '../Models/Historial.php';
 include_once '../Models/Usuario.php';
+require '../vendor/autoload.php';
 $marca = new Marca();
 $solicitud_marca = new SolicitudMarca();
 $historial = new Historial();
@@ -21,10 +22,27 @@ if($_POST['funcion']=='crear_solicitud_marca'){
         $solicitud_marca->buscar($nombre);
         if(empty($solicitud_marca->objetos)) {
             /* Creación de solicitud marca */
-            $nombre_imagen = uniqid().'-'.$img;
-            $ruta          = '../Util/Img/marca/'.$nombre_imagen;
-            move_uploaded_file($_FILES['imagen_sol']['tmp_name'], $ruta);
-            $solicitud_marca->crear($nombre, $desc, $nombre_imagen, $id_usuario);
+            //$nombre_imagen = uniqid().'-'.$img;
+            //$ruta          = '../Util/Img/marca/'.$nombre_imagen;
+            //move_uploaded_file($_FILES['imagen_sol']['tmp_name'], $ruta);
+            $nombre_img = uniqid().'-'.uniqid();
+            $archivo = $nombre_img;
+            $extension = pathinfo($img, PATHINFO_EXTENSION);
+            $nombre_base = basename($archivo, '.'.$extension);
+            $handle = new \Verot\Upload\Upload($_FILES['imagen_sol']);
+            if ($handle->uploaded) {
+                $handle->file_new_name_body   = $nombre_base;
+                $handle->image_resize         = true;
+                $handle->image_x              = 200;
+                $handle->image_y              = 200;
+                $handle->process('../Util/Img/marca/');
+                if ($handle->processed) {
+                    $handle->clean();
+                } else {
+                    echo 'error : ' . $handle->error;
+                }
+            }
+            $solicitud_marca->crear($nombre, $desc, $nombre_img.'.'.$extension, $id_usuario);
             $descripcion = 'Ha creado una solicitud marca, '.$nombre;
             $historial->crear_historial($descripcion, 2, 6, $id_usuario);
             $mensaje = 'success';
@@ -46,6 +64,14 @@ if($_POST['funcion']=='read_tus_solicitudes'){
     //var_dump($solicitud_marca);
     $json=array();
     foreach ($solicitud_marca->objetos as $objeto) {
+        $fecha_hora = date_create($objeto->fecha_creacion);
+        $hora = $fecha_hora->format('H:i');
+        $fecha = date_format($fecha_hora, 'd-m-Y');
+        if($fecha_actual == $fecha) {
+            $bandera = '1';
+        } else {
+            $bandera = '0';
+        }
         if(!empty($objeto->aprobado_por)) {
             $usuario->obtener_datos($objeto->aprobado_por);
             $aprobado_por = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
@@ -62,7 +88,10 @@ if($_POST['funcion']=='read_tus_solicitudes'){
             'estado_envio'    => $objeto->estado_solicitud,
             'estado_aprobado' => $aprobado_por,
             'observacion'     => $objeto->observacion,
-            'tipo_usuario'    => $_SESSION['tipo_usuario']
+            'tipo_usuario'    => $_SESSION['tipo_usuario'],
+            'fecha'          => $fecha,
+            'hora'           => $hora,
+            'hoy'            => $bandera,
         );
     }
     $jsonstring = json_encode($json);
@@ -89,15 +118,32 @@ if($_POST['funcion']=='editar_solicitud'){
             }
             if($img != '') {
                 $datos_cambiados.= 'Su imagen fué cambiada.';
-                $nombre_imagen = uniqid().'-'.$img;
-                $ruta          = '../Util/Img/marca/'.$nombre_imagen;
-                move_uploaded_file($_FILES['imagen_mod_sol']['tmp_name'], $ruta);
+                //$nombre_imagen = uniqid().'-'.$img;
+                //$ruta          = '../Util/Img/marca/'.$nombre_imagen;
+                //move_uploaded_file($_FILES['imagen_mod_sol']['tmp_name'], $ruta);
+                $nombre_img = uniqid().'-'.uniqid();
+                $archivo = $nombre_img;
+                $extension = pathinfo($img, PATHINFO_EXTENSION);
+                $nombre_base = basename($archivo, '.'.$extension);
+                $handle = new \Verot\Upload\Upload($_FILES['imagen_mod_sol']);
+                if ($handle->uploaded) {
+                    $handle->file_new_name_body   = $nombre_base;
+                    $handle->image_resize         = true;
+                    $handle->image_x              = 200;
+                    $handle->image_y              = 200;
+                    $handle->process('../Util/Img/marca/');
+                    if ($handle->processed) {
+                        $handle->clean();
+                    } else {
+                        echo 'error : ' . $handle->error;
+                    }
+                }
                 $avatar_actual = $solicitud_marca->objetos[0]->imagen;
                 if($avatar_actual != 'marca_default.png') {
                     unlink('../Util/Img/marca/'.$avatar_actual);
                 }
             }
-            $solicitud_marca->editar($id_solicitud, $nombre, $desc, $nombre_imagen);
+            $solicitud_marca->editar($id_solicitud, $nombre, $desc, $nombre_img.'.'.$extension);
             $descripcion = 'Ha editado una solicitud marca, '.$datos_cambiados;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'success'; // se hicieron modificaciones y todo ok
@@ -108,7 +154,7 @@ if($_POST['funcion']=='editar_solicitud'){
             'mensaje'    => $mensaje,
             'nombre_sol' => $nombre,
             'desc_sol'   => $desc,
-            'img_sol'    => $nombre_imagen
+            'img_sol'    => $nombre_img.'.'.$extension
         );
         $jsonstring = json_encode($json);
         echo $jsonstring;
@@ -162,6 +208,14 @@ if($_POST['funcion']=='read_solicitudes_por_aprobar'){
     //var_dump($solicitud_marca);
     $json=array();
     foreach ($solicitud_marca->objetos as $objeto) {
+        $fecha_hora = date_create($objeto->fecha_creacion);
+        $hora = $fecha_hora->format('H:i');
+        $fecha = date_format($fecha_hora, 'd-m-Y');
+        if($fecha_actual == $fecha) {
+            $bandera = '1';
+        } else {
+            $bandera = '0';
+        }
         $json[]=array(
             'id'             => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre'         => $objeto->nombre,
@@ -169,7 +223,10 @@ if($_POST['funcion']=='read_solicitudes_por_aprobar'){
             'imagen'         => $objeto->imagen,
             'fecha_creacion' => $objeto->fecha_creacion,
             'solicitante'    => $objeto->nombres.' '.$objeto->apellidos,
-            'tipo_usuario'   => $_SESSION['tipo_usuario']
+            'tipo_usuario'   => $_SESSION['tipo_usuario'],
+            'fecha'          => $fecha,
+            'hora'           => $hora,
+            'hoy'            => $bandera,
         );
     }
     $jsonstring = json_encode($json);

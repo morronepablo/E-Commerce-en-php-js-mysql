@@ -2,6 +2,7 @@
 include_once '../Util/Config/config.php';
 include_once '../Models/Marca.php';
 include_once '../Models/Historial.php';
+require '../vendor/autoload.php';
 $marca = new Marca();
 $historial = new Historial();
 session_start();
@@ -11,6 +12,14 @@ if($_POST['funcion']=='read_all_marcas'){
     $marca->read_all_marcas();
     $json=array();
     foreach ($marca->objetos as $objeto) {
+        $fecha_hora = date_create($objeto->fecha_creacion);
+        $hora = $fecha_hora->format('H:i');
+        $fecha = date_format($fecha_hora, 'd-m-Y');
+        if($fecha_actual == $fecha) {
+            $bandera = '1';
+        } else {
+            $bandera = '0';
+        }
         $json[]=array(
             'id'             => openssl_encrypt($objeto->id, CODE, KEY),
             'nombre'         => $objeto->nombre,
@@ -18,7 +27,10 @@ if($_POST['funcion']=='read_all_marcas'){
             'imagen'         => $objeto->imagen,
             'fecha_creacion' => $objeto->fecha_creacion,
             'estado'         => $objeto->estado,
-            'tipo_usuario'   => $_SESSION['tipo_usuario']
+            'tipo_usuario'   => $_SESSION['tipo_usuario'],
+            'fecha'          => $fecha,
+            'hora'           => $hora,
+            'hoy'            => $bandera,
         );
     }
     $jsonstring = json_encode($json);
@@ -29,10 +41,26 @@ if($_POST['funcion']=='crear_marca'){
     $nombre        = $_POST['nombre'];
     $desc          = $_POST['desc'];
     $img           = $_FILES['imagen']['name'];
-    $nombre_imagen = uniqid().'-'.$img;
-    $ruta          = '../Util/Img/marca/'.$nombre_imagen;
-    move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
-    $marca->crear($nombre, $desc, $nombre_imagen);
+    //$ruta          = '../Util/Img/marca/'.$nombre_imagen;
+    //move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
+    $nombre_img = uniqid().'-'.uniqid();
+    $archivo = $nombre_img;
+    $extension = pathinfo($img, PATHINFO_EXTENSION);
+    $nombre_base = basename($archivo, '.'.$extension);
+    $handle = new \Verot\Upload\Upload($_FILES['imagen']);
+    if ($handle->uploaded) {
+        $handle->file_new_name_body   = $nombre_base;
+        $handle->image_resize         = true;
+        $handle->image_x              = 200;
+        $handle->image_y              = 200;
+        $handle->process('../Util/Img/marca/');
+        if ($handle->processed) {
+            $handle->clean();
+        } else {
+            echo 'error : ' . $handle->error;
+        }
+    }
+    $marca->crear($nombre, $desc, $nombre_img.'.'.$extension);
     $descripcion = 'Ha creado la marca, '.$nombre;
     $historial->crear_historial($descripcion, 2, 6, $id_usuario);
     $mensaje = 'success';
@@ -63,15 +91,32 @@ if($_POST['funcion']=='editar_marca'){
             }
             if($img != '') {
                 $datos_cambiados.= 'Su imagen fué cambiada.';
-                $nombre_imagen = uniqid().'-'.$img;
-                $ruta          = '../Util/Img/marca/'.$nombre_imagen;
-                move_uploaded_file($_FILES['imagen_mod']['tmp_name'], $ruta);
+                //$nombre_imagen = uniqid().'-'.$img;
+                //$ruta          = '../Util/Img/marca/'.$nombre_imagen;
+                //move_uploaded_file($_FILES['imagen_mod']['tmp_name'], $ruta);
+                $nombre_img = uniqid().'-'.uniqid();
+                $archivo = $nombre_img;
+                $extension = pathinfo($img, PATHINFO_EXTENSION);
+                $nombre_base = basename($archivo, '.'.$extension);
+                $handle = new \Verot\Upload\Upload($_FILES['imagen_mod']);
+                if ($handle->uploaded) {
+                    $handle->file_new_name_body   = $nombre_base;
+                    $handle->image_resize         = true;
+                    $handle->image_x              = 200;
+                    $handle->image_y              = 200;
+                    $handle->process('../Util/Img/marca/');
+                    if ($handle->processed) {
+                        $handle->clean();
+                    } else {
+                        echo 'error : ' . $handle->error;
+                    }
+                }
                 $avatar_actual = $marca->objetos[0]->imagen;
                 if($avatar_actual != 'marca_default.png') {
                     unlink('../Util/Img/marca/'.$avatar_actual);
                 }
             }
-            $marca->editar($id_marca, $nombre, $desc, $nombre_imagen);
+            $marca->editar($id_marca, $nombre, $desc, $nombre_img.'.'.$extension);
             $descripcion = 'Ha editado una marca, '.$datos_cambiados;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'success'; // se hicieron modificaciones y todo ok
@@ -82,7 +127,7 @@ if($_POST['funcion']=='editar_marca'){
             'mensaje'      => $mensaje,
             'nombre_marca' => $nombre,
             'desc_marca'   => $desc,
-            'img'          => $nombre_imagen
+            'img'          => $nombre_img.'.'.$extension
         );
         $jsonstring = json_encode($json);
         echo $jsonstring;

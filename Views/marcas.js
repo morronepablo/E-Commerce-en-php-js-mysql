@@ -5,6 +5,7 @@ $(document).ready(function() {
     //setTimeout(verificar_sesion, 2000);
     bsCustomFileInput.init();
     verificar_sesion();
+    moment.locale('es');
     // toastr.options = {
     //     'debug': false,
     //     'positionClass': 'toast-bottom-full-width',
@@ -423,7 +424,19 @@ $(document).ready(function() {
                                 return `<img width="100" height="100" src="../Util/Img/marca/${datos.imagen}">`;
                             }
                         },
-                        { data: "fecha_creacion" },
+                        { 
+                            "render":function(data, type, datos, meta) {
+                                let fecha = moment(datos.fecha+' '+datos.hora, 'DD/MM/YYYY HH/:mm');
+                                let horas = moment(datos.hora, 'HH/:mm');
+                                let fecha_hora;
+                                if(datos.hoy == '1') {
+                                    fecha_hora = horas.fromNow();
+                                } else {
+                                    fecha_hora = fecha.format('LLL');
+                                }
+                                return fecha_hora;
+                            }
+                        },
                         {
                             "render": function(data, type, datos, meta) {
                                 if(datos.tipo_usuario == 3) {
@@ -508,7 +521,19 @@ $(document).ready(function() {
                                 }
                             }
                         },
-                        { data: "fecha_creacion" },
+                        {
+                            "render":function(data, type, datos, meta) {
+                                let fecha = moment(datos.fecha+' '+datos.hora, 'DD/MM/YYYY HH/:mm');
+                                let horas = moment(datos.hora, 'HH/:mm');
+                                let fecha_hora;
+                                if(datos.hoy == '1') {
+                                    fecha_hora = horas.fromNow();
+                                } else {
+                                    fecha_hora = fecha.format('LLL');
+                                }
+                                return fecha_hora;
+                            }
+                        },
                         {
                             "render": function(data, type, datos, meta) {
                                 if(datos.estado_envio == '0') {
@@ -576,7 +601,19 @@ $(document).ready(function() {
                             }
                         },
                         { data: "solicitante" },
-                        { data: "fecha_creacion" },
+                        {
+                            "render":function(data, type, datos, meta) {
+                                let fecha = moment(datos.fecha+' '+datos.hora, 'DD/MM/YYYY HH/:mm');
+                                let horas = moment(datos.hora, 'HH/:mm');
+                                let fecha_hora;
+                                if(datos.hoy == '1') {
+                                    fecha_hora = horas.fromNow();
+                                } else {
+                                    fecha_hora = fecha.format('LLL');
+                                }
+                                return fecha_hora;
+                            }
+                        },
                         {
                             "render": function(data, type, datos, meta) {
                                 return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="aprobar_solicitud btn btn-success" title="Aprobar la solicitud"><i class="fas fa-check"></i></button>
