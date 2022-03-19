@@ -77,4 +77,17 @@
             );
             $query->execute($variables);
         }
+        function buscar_administradores_root() {
+            $sql = "SELECT * FROM usuario
+                        WHERE id_tipo=:var1
+                        OR id_tipo=:var2";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':var1' => 2,
+                ':var2' => 1,
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }

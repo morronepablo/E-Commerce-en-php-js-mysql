@@ -4,11 +4,15 @@ include_once '../Models/Marca.php';
 include_once '../Models/SolicitudMarca.php';
 include_once '../Models/Historial.php';
 include_once '../Models/Usuario.php';
+include_once '../Models/Mensaje.php';
+include_once '../Models/Destino.php';
 require '../vendor/autoload.php';
 $marca = new Marca();
 $solicitud_marca = new SolicitudMarca();
 $historial = new Historial();
 $usuario = new Usuario();
+$mensaje = new Mensaje();
+$destino = new Destino();
 session_start();
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $fecha_actual = date('d-m-Y');
@@ -190,9 +194,31 @@ if($_POST['funcion']=='enviar_solicitud'){
     if(is_numeric($id_solicitud)) {
         $solicitud_marca->enviar_solicitud($id_solicitud);
         /* Envio de mensajes */
-        /*
-        $descripcion = 'Ha eliminado una solicitud marca, '.$nombre;
-        $historial->crear_historial($descripcion, 3, 6, $id_usuario);*/
+        // Buscar los destinatarios
+        $usuario->buscar_administradores_root();
+        if(!empty($usuario->objetos)) {
+            $mensaje->crear($id_usuario);
+            $mensaje->ultimo_mensaje();
+            $id_mensaje = $mensaje->objetos[0]->ultimo_mensaje;
+            foreach ($usuario->objetos as $objeto) {
+                if($objeto->id_tipo == '1') {
+                    // mensaje root
+                    $asunto = "Usuario root tiene usted una solicitud marca para revisar";
+                    $contenido = "Hola usuario root ".$objeto->nombres." por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla";
+                    $destino->crear($asunto,$contenido,$objeto->id,$id_mensaje);
+                } elseif($objeto->id_tipo == '2') {
+                    // mensajes administradores
+                    $asunto = "Usuario administrador tiene usted una solicitud marca para revisar";
+                    $contenido = "Hola usuario administrador ".$objeto->nombres." por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla";
+                    $destino->crear($asunto,$contenido,$objeto->id,$id_mensaje);
+                }
+            }
+        } else {
+            echo 'error_usuarios'; // no hay a quien enviarles mensajes
+        }
+        
+        $descripcion = 'Ha enviado una solicitud marca, '.$nombre;
+        $historial->crear_historial($descripcion, 1, 6, $id_usuario);
         $mensaje = 'success'; // se hicieron modificaciones y todo ok
         $json = array(
             'mensaje' => $mensaje

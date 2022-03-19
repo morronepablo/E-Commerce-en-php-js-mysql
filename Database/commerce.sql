@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-03-2022 a las 02:54:35
+-- Tiempo de generación: 19-03-2022 a las 23:00:47
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 7.4.16
 
@@ -83,6 +83,39 @@ CREATE TABLE `categoria` (
 
 INSERT INTO `categoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
 (1, 'Celulares y Tablet', '2021-08-20 14:12:11', '2021-08-20 14:12:11', 'A');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `destino`
+--
+
+CREATE TABLE `destino` (
+  `id` int(11) NOT NULL,
+  `asunto` varchar(1000) NOT NULL,
+  `contenido` varchar(10000) NOT NULL,
+  `abierto` int(11) NOT NULL DEFAULT 0,
+  `favorito` int(11) NOT NULL DEFAULT 0,
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `id_usuario` int(11) NOT NULL,
+  `id_mensaje` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `destino`
+--
+
+INSERT INTO `destino` (`id`, `asunto`, `contenido`, `abierto`, `favorito`, `estado`, `fecha_creacion`, `fecha_edicion`, `id_usuario`, `id_mensaje`) VALUES
+(1, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Pablo Martin por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 2, 1),
+(2, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Juan por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 3, 1),
+(3, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador juan por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 4, 1),
+(4, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Martin por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 5, 1),
+(5, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Pedro por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 6, 1),
+(6, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Julio por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 7, 1),
+(7, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Maximiliano por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 8, 1),
+(8, 'Usuario administrador tiene usted una solicitud marca para revisar', 'Hola usuario administrador Victoria por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla', 0, 0, 'A', '2022-03-19 18:58:54', '2022-03-19 18:58:54', 9, 1);
 
 -- --------------------------------------------------------
 
@@ -223,7 +256,28 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (94, 'Ha rechazado una solicitud marca, Motorola', '2022-03-04 22:12:10', 1, 6, 2),
 (95, 'Ha aprobado una solicitud marca, Flecha', '2022-03-04 22:12:46', 1, 6, 2),
 (96, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su nombre de Motorola a Xiaomi, Su imagen fué cambiada.', '2022-03-04 22:50:26', 1, 6, 1),
-(97, 'Ha aprobado una solicitud marca, Xiaomi', '2022-03-04 22:51:49', 1, 6, 2);
+(97, 'Ha aprobado una solicitud marca, Xiaomi', '2022-03-04 22:51:49', 1, 6, 2),
+(98, 'Ha creado una solicitud marca, Stone', '2022-03-10 12:38:16', 2, 6, 1),
+(99, 'Ha rechazado una solicitud marca, Stone', '2022-03-10 14:06:14', 1, 6, 2),
+(100, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su descripción de Calzado Deportivo a Calzados Deportivo, ', '2022-03-10 14:10:18', 1, 6, 1),
+(101, 'Ha rechazado una solicitud marca, Stone', '2022-03-10 14:12:00', 1, 6, 2),
+(102, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su descripción de Calzados Deportivo a Calzado Deportivo, ', '2022-03-10 14:12:44', 1, 6, 1),
+(103, 'Ha aprobado una solicitud marca, Stone', '2022-03-10 14:13:26', 1, 6, 2),
+(104, 'Ha editado una marca, ha echo los siguientes cambios: cambió su nombre de Stone a Stoness, ', '2022-03-12 12:52:47', 1, 6, 2),
+(105, 'Ha creado la marca, H&M', '2022-03-12 17:37:53', 2, 6, 2),
+(106, 'Ha editado una marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-03-12 17:46:24', 1, 6, 2),
+(107, 'Ha editado una marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-03-12 17:46:42', 1, 6, 2),
+(108, 'Ha creado una solicitud marca, G-Start', '2022-03-12 18:07:05', 2, 6, 1),
+(109, 'Ha editado una solicitud marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-03-12 18:07:29', 1, 6, 1),
+(110, 'Ha editado una solicitud marca, ha echo los siguientes cambios: Su imagen fué cambiada.', '2022-03-12 18:07:46', 1, 6, 1),
+(111, 'Ha editado una marca, ha echo los siguientes cambios: cambió su nombre de H&M a H&Ms, ', '2022-03-12 18:16:19', 1, 6, 2),
+(112, 'Ha editado una marca, ha echo los siguientes cambios: cambió su nombre de H&Ms a H&M, ', '2022-03-12 18:17:00', 1, 6, 2),
+(113, 'Ha editado una solicitud marca, ha echo los siguientes cambios: cambió su nombre de G-Start a G-Star, ', '2022-03-12 18:21:33', 1, 6, 1),
+(114, 'Ha creado una solicitud marca, Lacoste', '2022-03-16 21:22:16', 2, 6, 1),
+(115, 'Ha aprobado una solicitud marca, Lacoste', '2022-03-16 21:23:41', 1, 6, 2),
+(116, 'Se removió de favoritos el producto: Samsung Galaxy A21S', '2022-03-16 21:27:35', 3, 5, 1),
+(117, 'Se agregó a favoritos el producto: Samsung Galaxy A21S', '2022-03-16 21:27:40', 2, 5, 1),
+(118, 'Ha enviado una solicitud marca, G-Star', '2022-03-19 18:58:54', 1, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -2680,7 +2734,30 @@ INSERT INTO `marca` (`id`, `nombre`, `descripcion`, `imagen`, `fecha_creacion`, 
 (6, 'Puma', 'Ropa Deportiva', '61fe9298de8ad-puma.jpg', '2022-02-05 12:07:04', '2022-02-05 12:07:04', 'A'),
 (7, 'Motorola', 'Tecnología', '6222b84499936-motorola.jpg', '2022-03-04 22:09:24', '2022-03-04 22:09:24', 'A'),
 (8, 'Flecha', 'Calzado Deportivo', '620811912cfcd-Flecha.png', '2022-03-04 22:12:46', '2022-03-04 22:12:46', 'A'),
-(9, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', '2022-03-04 22:51:49', '2022-03-04 22:51:49', 'A');
+(9, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', '2022-03-04 22:51:49', '2022-03-04 22:51:49', 'A'),
+(10, 'Stoness', 'Calzado Deportivo', '622a1b6813ba7-Stone.jpg', '2022-03-10 14:13:26', '2022-03-10 14:13:26', 'A'),
+(11, 'H&M', 'Indumentaria Hombre, Mujer', '622d06b210063-622d06b210066.png', '2022-03-12 17:37:53', '2022-03-12 17:37:53', 'A'),
+(12, 'Lacoste', 'Calzado Deportivo', '62327f37f3253-62327f37f3254.jpg', '2022-03-16 21:23:41', '2022-03-16 21:23:41', 'A');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mensaje`
+--
+
+CREATE TABLE `mensaje` (
+  `id` int(11) NOT NULL,
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `mensaje`
+--
+
+INSERT INTO `mensaje` (`id`, `estado`, `fecha_creacion`, `id_usuario`) VALUES
+(1, 'A', '2022-03-19 18:58:54', 1);
 
 -- --------------------------------------------------------
 
@@ -3013,7 +3090,10 @@ CREATE TABLE `solicitud_marca` (
 
 INSERT INTO `solicitud_marca` (`id`, `nombre`, `descripcion`, `imagen`, `observacion`, `estado`, `estado_solicitud`, `fecha_creacion`, `fecha_edicion`, `aprobado_por`, `id_usuario`) VALUES
 (1, 'Flecha', 'Calzado Deportivo', '620811912cfcd-Flecha.png', NULL, 'A', '2', '2022-02-12 16:59:13', '2022-03-04 22:12:46', 2, 1),
-(2, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', 'No se aproba la solicitud ya que existe una marca con el mismo nombre Motorola', 'A', '2', '2022-02-19 14:40:21', '2022-03-04 22:51:49', 2, 1);
+(2, 'Xiaomi', 'Tecnología', '6222c1e2aaeb3-Xiaomi-Logo.png', 'No se aproba la solicitud ya que existe una marca con el mismo nombre Motorola', 'A', '2', '2022-02-19 14:40:21', '2022-03-04 22:51:49', 2, 1),
+(3, 'Stone', 'Calzado Deportivo', '622a1b6813ba7-Stone.jpg', 'Cambie la imagen se ve en blanco y negro', 'A', '2', '2022-03-10 12:38:16', '2022-03-10 14:13:26', 2, 1),
+(4, 'G-Star', 'Indumentaria Hombre, Mujer', '622d0ba25097f-622d0ba250982.png', NULL, 'A', '1', '2022-03-12 18:07:05', '2022-03-19 18:58:54', NULL, 1),
+(5, 'Lacoste', 'Calzado Deportivo', '62327f37f3253-62327f37f3254.jpg', NULL, 'A', '2', '2022-03-16 21:22:16', '2022-03-16 21:23:41', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3194,6 +3274,14 @@ ALTER TABLE `categoria`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `destino`
+--
+ALTER TABLE `destino`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`,`id_mensaje`),
+  ADD KEY `id_mensaje` (`id_mensaje`);
+
+--
 -- Indices de la tabla `favorito`
 --
 ALTER TABLE `favorito`
@@ -3229,6 +3317,13 @@ ALTER TABLE `localidades`
 --
 ALTER TABLE `marca`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `modulo`
@@ -3361,6 +3456,12 @@ ALTER TABLE `categoria`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `destino`
+--
+ALTER TABLE `destino`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT de la tabla `favorito`
 --
 ALTER TABLE `favorito`
@@ -3370,7 +3471,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -3388,7 +3489,13 @@ ALTER TABLE `localidades`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
@@ -3448,7 +3555,7 @@ ALTER TABLE `respuesta`
 -- AUTO_INCREMENT de la tabla `solicitud_marca`
 --
 ALTER TABLE `solicitud_marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `subcategoria`
@@ -3497,6 +3604,13 @@ ALTER TABLE `caracteristica`
   ADD CONSTRAINT `caracteristica_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`);
 
 --
+-- Filtros para la tabla `destino`
+--
+ALTER TABLE `destino`
+  ADD CONSTRAINT `destino_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `destino_ibfk_2` FOREIGN KEY (`id_mensaje`) REFERENCES `mensaje` (`id`);
+
+--
 -- Filtros para la tabla `favorito`
 --
 ALTER TABLE `favorito`
@@ -3522,6 +3636,12 @@ ALTER TABLE `imagen`
 --
 ALTER TABLE `localidades`
   ADD CONSTRAINT `localidades_ibfk_1` FOREIGN KEY (`id_provincia`) REFERENCES `provincias` (`id`);
+
+--
+-- Filtros para la tabla `mensaje`
+--
+ALTER TABLE `mensaje`
+  ADD CONSTRAINT `mensaje_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `notificacion`

@@ -1291,6 +1291,13 @@ $(document).ready(function() {
                         text: 'No intente vulnerar el sistema, presione F5',
                     })
                 }
+                if(response == 'error_usuarios') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No se pudo enviar el mensaje porque no hay destinatarios',
+                    })
+                }
             }
 
         } else {
