@@ -6,11 +6,28 @@
             $db = new Conexion();
             $this->acceso = $db->pdo;
         }
-        function ultimo_mensaje() {
-            $sql = "SELECT MAX(id) as ultimo_mensaje
-                    FROM mensaje";
+        function read_mensajes_recibidos($id_usuario) {
+            $sql = "SELECT 
+                    d.id as id,
+                    d.asunto as asunto,
+                    d.contenido as contenido,
+                    d.abierto as abierto,
+                    d.favorito as favorito,
+                    d.estado as estado,
+                    d.fecha_creacion as fecha_creacion,
+                    d.fecha_edicion as fecha_edicion,
+                    u.nombres as nombres,
+                    u.apellidos as apellidos 
+                    FROM destino d
+                    JOIN mensaje m ON d.id_mensaje=m.id
+                    JOIN usuario u ON m.id_usuario=u.id
+                    WHERE d.id_usuario = :id_usuario
+                    AND d.estado='A' ORDER BY d.fecha_creacion DESC";
             $query = $this->acceso->prepare($sql);
-            $query->execute();
+            $variables = array(
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }

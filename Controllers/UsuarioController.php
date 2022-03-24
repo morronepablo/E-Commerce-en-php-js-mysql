@@ -18,6 +18,7 @@ if($_POST['funcion'] == 'login') {
             $_SESSION['user']         = $usuario->objetos[0]->user;
             $_SESSION['tipo_usuario'] = $usuario->objetos[0]->id_tipo;
             $_SESSION['avatar']       = $usuario->objetos[0]->avatar;
+            $_SESSION['nombre']       = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
             $mensaje = 'logueado';
         } else {
             $mensaje = 'error';

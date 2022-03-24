@@ -200,16 +200,74 @@ if($_POST['funcion']=='enviar_solicitud'){
             $mensaje->crear($id_usuario);
             $mensaje->ultimo_mensaje();
             $id_mensaje = $mensaje->objetos[0]->ultimo_mensaje;
+            $solicitud_marca->obtener_solicitud($id_solicitud);
+            $desc           = $solicitud_marca->objetos[0]->descripcion;
+            $img            = $solicitud_marca->objetos[0]->imagen;
+            $nombre_usuario = $_SESSION['nombre'];
             foreach ($usuario->objetos as $objeto) {
                 if($objeto->id_tipo == '1') {
                     // mensaje root
                     $asunto = "Usuario root tiene usted una solicitud marca para revisar";
-                    $contenido = "Hola usuario root ".$objeto->nombres." por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla";
+                    $contenido2 = "Hola usuario root $objeto->nombres $objeto->apellidos revise mi solicitud marca,  si es que los datos son correctos por favor apruebelo, si no indiqueme los errores para corregirla y enviarsela";
+                    $contenido = '
+                    <div class="card card-widget widget-user">
+                        <div class="widget-user-header bg-info">
+                            <h3 class="widget-user-username">'.$nombre.'</h3>
+                            <h5 class="widget-user-desc">'.$desc.'</h5>
+                        </div>
+                        <div class="widget-user-image">
+                            <img class="img-circle elevation-2" src="../../Util/Img/marca/'.$img.'" alt="imagen solicitud">
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">Solicitud marca creado por:</h5>
+                                        <span class="description-text">'.$nombre_usuario.'</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">Mensaje:</h5>
+                                        <span class="description-text">'.$contenido2.'</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ';
                     $destino->crear($asunto,$contenido,$objeto->id,$id_mensaje);
                 } elseif($objeto->id_tipo == '2') {
                     // mensajes administradores
                     $asunto = "Usuario administrador tiene usted una solicitud marca para revisar";
-                    $contenido = "Hola usuario administrador ".$objeto->nombres." por favor revise mi solicitud marca si es que todo esta correcto apruebela, si no me indica los errores para corregirla";
+                    $contenido2 = "Hola usuario administrador $objeto->nombres $objeto->apellidos revise mi solicitud marca,  si es que los datos son correctos por favor apruebelo, si no indiqueme los errores para corregirla y enviarsela";
+                    $contenido = '
+                    <div class="card card-widget widget-user">
+                        <div class="widget-user-header bg-info">
+                            <h3 class="widget-user-username">'.$nombre.'</h3>
+                            <h5 class="widget-user-desc">'.$desc.'</h5>
+                        </div>
+                        <div class="widget-user-image">
+                            <img class="img-circle elevation-2" src="../../Util/Img/marca/'.$img.'" alt="imagen solicitud">
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">Solicitud marca creado por:</h5>
+                                        <span class="description-text">'.$nombre_usuario.'</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">Mensaje:</h5>
+                                        <span class="description-text">'.$contenido2.'</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ';
                     $destino->crear($asunto,$contenido,$objeto->id,$id_mensaje);
                 }
             }

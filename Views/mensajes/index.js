@@ -359,10 +359,38 @@ $(document).ready(function() {
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
+                    read_mensajes_recibidos();
                     CloseLoader();
                 } else {
                     location.href='../login.php';
                 }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    async function read_mensajes_recibidos() {
+        funcion = "read_mensajes_recibidos";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let mensajes = JSON.parse(response);
+                console.log(mensajes);
+               
             } catch (error) {
                 console.error(error);
                 console.log(response);
