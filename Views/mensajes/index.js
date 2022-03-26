@@ -389,7 +389,64 @@ $(document).ready(function() {
             //conselo.log(response);
             try {
                 let mensajes = JSON.parse(response);
-                console.log(mensajes);
+                //console.log(mensajes);
+                $('#mensajes_recibidos').DataTable( {
+                    data: mensajes,
+                    "aaSorting": [],
+                    "searching": true,
+                    "scrollX": false,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "processing": true,
+                    columns: [
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                return `
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" value="${datos.id}">
+                                            <label for="check1"></label>
+                                        </div>
+                                `;
+                            }
+                        },
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                if(datos.favorito == '1') {
+                                    return `<i class="fas fa-star text-warning"></i>`;
+                                } else {
+                                    return `<i class="far fa-star"></i>`;
+                                }
+                            }
+                        },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                let variable;
+                                if(datos.abierto == '0') {
+                                    variable = `<a style="color: #000" href="#"><strong>${datos.emisor}</strong></a>`;
+                                } else {
+                                    variable = `<a style="color: #000" href="#">${datos.emisor}</a>`;
+                                }
+                                return variable;
+                            }
+                        },
+                        { 
+                            "render":function(data, type, datos, meta) {
+                                let variable;
+                                if(datos.abierto == '0') {
+                                    variable = `<a style="color: #000" href="#"><strong>${datos.asunto}</strong></a>`;
+                                } else {
+                                    variable = `<a style="color: #000" href="#">${datos.asunto}</a>`;
+                                }
+                                return variable;
+                            }
+                        },
+                        {
+                            "data": "fecha_creacion"
+                        }
+                    ],
+                    "destroy": true,
+                    "language": espanol
+                });
                
             } catch (error) {
                 console.error(error);
@@ -404,6 +461,44 @@ $(document).ready(function() {
         }
     }
 
+    
+    
+    //Enable check and uncheck all functionality
+    $('.checkbox-toggle').click(function () {
+        var clicks = $(this).data('clicks')
+        let inactivo = $('.checkbox-toggle').hasClass('inactivo');
+        let activo = $('.checkbox-toggle').hasClass('activo');
+        if (clicks) {
+            //Uncheck all checkboxes
+            if(inactivo == true) {
+                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+            } else {
+                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+            }
+        } else {
+            //Check all checkboxes
+            if(inactivo == false) {
+                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+            } else {
+                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+            }
+        }
+        $(this).data('clicks', !clicks)
+    })
+
+    $('#mensajes_recibidos').on('draw.dt', function() {
+        $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+        $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+        $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+    })
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){
             mensaje = 'Cargando datos...';

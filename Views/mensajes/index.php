@@ -74,7 +74,7 @@ include_once 'layouts/header.php';
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                    <table id="mensajes_recibidos" class="table table-hover">
+                    <table id="mensajes_recibidos" class="table table-hover mailbox-messages">
                         <thead>
                             <tr>
                                 <th></th>
