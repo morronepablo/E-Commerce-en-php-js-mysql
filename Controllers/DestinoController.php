@@ -26,3 +26,30 @@ if($_POST['funcion']=='read_mensajes_recibidos'){
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
+if($_POST['funcion']=='eliminar_mensajes'){
+    $id_usuario = $_SESSION['id'];
+    $eliminados = json_decode($_POST['eliminados']);
+    $bandera = '1';
+    foreach ($eliminados as $objeto) {
+        $formateado = str_replace(" ","+",$objeto);
+        $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+        if(is_numeric($id_mensaje)) {
+            $destino->eliminar_mensaje($id_mensaje);
+            $descripcion = 'Ha eliminado un mensaje';
+            $historial->crear_historial($descripcion, 3, 7, $id_usuario);
+        } else {
+            $bandera = '0';
+        }
+    }
+    if($bandera == '1') {
+        // Correcto
+        $json = array(
+            'mensaje' => 'success'
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        // Vulnero el sistema
+        echo 'error';
+    }
+}

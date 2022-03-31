@@ -43,4 +43,14 @@
             );
             $query->execute($variables);
         }
+        function eliminar_mensaje($id_mensaje) {
+            $sql = "UPDATE destino SET estado=:estado 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':estado'     => 'I',
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
     }

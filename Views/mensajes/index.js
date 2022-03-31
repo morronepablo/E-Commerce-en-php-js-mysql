@@ -403,7 +403,7 @@ $(document).ready(function() {
                             "render": function(data, type, datos, meta) {
                                 return `
                                         <div class="icheck-primary">
-                                            <input type="checkbox" value="${datos.id}">
+                                            <input class="select" type="checkbox" value="${datos.id}">
                                             <label for="check1"></label>
                                         </div>
                                 `;
@@ -461,8 +461,6 @@ $(document).ready(function() {
         }
     }
 
-    
-    
     //Enable check and uncheck all functionality
     $('.checkbox-toggle').click(function () {
         var clicks = $(this).data('clicks')
@@ -499,6 +497,55 @@ $(document).ready(function() {
         $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
         $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
     })
+
+    async function eliminar_mensajes(eliminados) {
+        funcion = "eliminar_mensajes";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&eliminados=' + JSON.stringify(eliminados)
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('Seccion de mensaje eliminado', 'Eliminados!');
+                    read_mensajes_recibidos();
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('Algunos mensajes no se borraron ya que algunos de ellos fueron vulnerados', 'Error al eliminar!');
+                    read_mensajes_recibidos();
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $('.eliminar_mensajes').click(function () {
+        let seleccionados = $('.select');
+        let eliminados = [];
+        $.each(seleccionados, function (index, input) { 
+            if($(input).prop('checked') == true) {
+                eliminados.push($(input).val());
+            }
+        });
+        if(eliminados.length != 0) {
+            eliminar_mensajes(eliminados);
+        } else {
+            toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
+        }
+    })
+
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){
             mensaje = 'Cargando datos...';
