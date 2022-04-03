@@ -70,7 +70,7 @@ include_once 'layouts/header.php';
                         <button type="button" title="Eliminar grupo seleccionado" class="btn btn-default btn-sm eliminar_mensajes">
                             <i class="far fa-trash-alt"></i>
                         </button>
-                        <button type="button" title="Actualizar mensajes" class="btn btn-default btn-sm">
+                        <button type="button" title="Actualizar mensajes" class="btn btn-default btn-sm actualizar_mensajes">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>

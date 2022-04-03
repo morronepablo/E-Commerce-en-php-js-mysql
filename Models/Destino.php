@@ -53,4 +53,24 @@
             );
             $query->execute($variables);
         }
+        function remover_favorito($id_mensaje) {
+            $sql = "UPDATE destino SET favorito=:favorito 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':favorito'   => 0,
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
+        function agregar_favorito($id_mensaje) {
+            $sql = "UPDATE destino SET favorito=:favorito 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':favorito'   => 1,
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
     }

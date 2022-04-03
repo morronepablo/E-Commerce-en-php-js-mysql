@@ -403,7 +403,7 @@ $(document).ready(function() {
                             "render": function(data, type, datos, meta) {
                                 return `
                                         <div class="icheck-primary">
-                                            <input class="select" type="checkbox" value="${datos.id}">
+                                            <input style="cursor: pointer;" class="select" type="checkbox" value="${datos.id}">
                                             <label for="check1"></label>
                                         </div>
                                 `;
@@ -412,9 +412,9 @@ $(document).ready(function() {
                         { 
                             "render": function(data, type, datos, meta) {
                                 if(datos.favorito == '1') {
-                                    return `<i class="fas fa-star text-warning"></i>`;
+                                    return `<i data-id="${datos.id}" style="cursor: pointer;" class="fav fas fa-star text-warning"></i>`;
                                 } else {
-                                    return `<i class="far fa-star"></i>`;
+                                    return `<i data-id="${datos.id}" style="cursor: pointer;" class="nofav far fa-star"></i>`;
                                 }
                             }
                         },
@@ -544,6 +544,87 @@ $(document).ready(function() {
         } else {
             toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
         }
+    })
+
+    async function remover_favorito(id) {
+        funcion = "remover_favorito";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('El mensaje se removió de favoritos', 'Removido!');
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $(document).on('click', '.fav', function() {
+        $this = $(this);
+        let id = $this.data('id');
+        $this.removeClass('fav fas fa-star text-warning').addClass('nofav far fa-star');
+        remover_favorito(id);
+    })
+
+    async function agregar_favorito(id) {
+        funcion = "agregar_favorito";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('El mensaje se agregó a favoritos', 'Agregado!');
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $(document).on('click', '.nofav', function() {
+        $this = $(this);
+        let id = $this.data('id');
+        $this.removeClass('nofav far fa-star').addClass('fav fas fa-star text-warning');
+        agregar_favorito(id);
+    })
+
+    $('.actualizar_mensajes').click(function () {
+        toastr.info('Mensajes actualizados', 'Actualizado!');
+        read_mensajes_recibidos();
     })
 
     function Loader(mensaje) {

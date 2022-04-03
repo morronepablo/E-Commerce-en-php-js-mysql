@@ -53,3 +53,33 @@ if($_POST['funcion']=='eliminar_mensajes'){
         echo 'error';
     }
 }
+if($_POST['funcion']=='remover_favorito'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_mensaje)) {
+        $destino->remover_favorito($id_mensaje);
+        $json = array(
+            'mensaje' => 'success'
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
+if($_POST['funcion']=='agregar_favorito'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_mensaje)) {
+        $destino->agregar_favorito($id_mensaje);
+        $json = array(
+            'mensaje' => 'success'
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
