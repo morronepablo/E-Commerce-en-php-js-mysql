@@ -73,4 +73,52 @@
             );
             $query->execute($variables);
         }
+        function abrir_mensaje($id_mensaje) {
+            $sql = "SELECT 
+                    d.id as id,
+                    d.asunto as asunto,
+                    d.contenido as contenido,
+                    d.abierto as abierto,
+                    d.favorito as favorito,
+                    d.estado as estado,
+                    d.fecha_creacion as fecha_creacion,
+                    d.fecha_edicion as fecha_edicion,
+                    u.nombres as nombres,
+                    u.apellidos as apellidos 
+                    FROM destino d
+                    JOIN mensaje m ON d.id_mensaje=m.id
+                    JOIN usuario u ON m.id_usuario=u.id
+                    WHERE d.id=:id_mensaje
+                    ";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
+        function mensaje_leido($id_mensaje) {
+            $sql = "UPDATE destino SET abierto=:abierto 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':abierto'    => 1,
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
+        function verificar_usuario_mensaje($id_usuario, $id_mensaje) {
+            $sql = "SELECT * 
+                    FROM destino d
+                    WHERE d.id=:id_mensaje AND d.id_usuario=:id_usuario";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_mensaje' => $id_mensaje,
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }

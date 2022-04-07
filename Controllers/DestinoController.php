@@ -83,3 +83,37 @@ if($_POST['funcion']=='agregar_favorito'){
         echo 'error';
     }
 }
+if($_POST['funcion']=='abrir_mensaje'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_SESSION['message-verification']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+    $option = $_SESSION['message-option'];
+    if(is_numeric($id_mensaje)) {
+        if($option == 'r') {
+            $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+            if(!empty($destino->objetos)) {
+                $destino->abrir_mensaje($id_mensaje);
+                $json = array(
+                    'id'             => openssl_encrypt($destino->objetos[0]->id,CODE,KEY),
+                    'asunto'         => $destino->objetos[0]->asunto,
+                    'contenido'      => $destino->objetos[0]->contenido,
+                    'abierto'        => $destino->objetos[0]->abierto,
+                    'favorito'       => $destino->objetos[0]->favorito,
+                    'estado'         => $destino->objetos[0]->estado,
+                    'fecha_creacion' => $destino->objetos[0]->fecha_creacion,
+                    'fecha_edicion'  => $destino->objetos[0]->fecha_edicion,
+                    'emisor'         => $destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos
+                );
+                $destino->mensaje_leido($id_mensaje);
+                $jsonstring = json_encode($json);
+                echo $jsonstring;
+            } else {
+                echo 'danger';
+            }
+        } else {
+            echo 'danger';
+        }
+    } else {
+        echo 'error';
+    }
+}

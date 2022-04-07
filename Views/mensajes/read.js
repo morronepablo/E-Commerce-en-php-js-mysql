@@ -359,7 +359,7 @@ $(document).ready(function() {
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
-                    read_mensajes_recibidos();
+                    abrir_mensaje();
                     CloseLoader();
                 } else {
                     location.href='../login.php';
@@ -377,8 +377,8 @@ $(document).ready(function() {
         }
     }
 
-    async function read_mensajes_recibidos() {
-        funcion = "read_mensajes_recibidos";
+    async function abrir_mensaje() {
+        funcion = "abrir_mensaje";
         let data = await fetch('../../Controllers/DestinoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -388,69 +388,16 @@ $(document).ready(function() {
             let response = await data.text();
             //conselo.log(response);
             try {
-                let mensajes = JSON.parse(response);
-                //console.log(mensajes);
-                $('#mensajes_recibidos').DataTable( {
-                    data: mensajes,
-                    "aaSorting": [],
-                    "searching": true,
-                    "scrollX": false,
-                    "autoWidth": false,
-                    "responsive": true,
-                    "processing": true,
-                    columns: [
-                        { 
-                            "render": function(data, type, datos, meta) {
-                                return `
-                                        <div class="icheck-primary">
-                                            <input style="cursor: pointer;" class="select" type="checkbox" value="${datos.id}">
-                                            <label for="check1"></label>
-                                        </div>
-                                `;
-                            }
-                        },
-                        { 
-                            "render": function(data, type, datos, meta) {
-                                if(datos.favorito == '1') {
-                                    return `<i data-id="${datos.id}" style="cursor: pointer;" class="fav fas fa-star text-warning"></i>`;
-                                } else {
-                                    return `<i data-id="${datos.id}" style="cursor: pointer;" class="nofav far fa-star"></i>`;
-                                }
-                            }
-                        },
-                        {
-                            "render": function(data, type, datos, meta) {
-                                let variable;
-                                if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}"><strong>${datos.emisor}</strong></a>`;
-                                } else {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}">${datos.emisor}</a>`;
-                                }
-                                return variable;
-                            }
-                        },
-                        { 
-                            "render":function(data, type, datos, meta) {
-                                let variable;
-                                if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}"><strong>${datos.asunto}</strong></a>`;
-                                } else {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}">${datos.asunto}</a>`;
-                                }
-                                return variable;
-                            }
-                        },
-                        {
-                            "data": "fecha_creacion"
-                        }
-                    ],
-                    "destroy": true,
-                    "language": espanol
-                });
+                let mensaje = JSON.parse(response);
+                console.log(mensaje);
+
                
             } catch (error) {
                 console.error(error);
                 console.log(response);
+                if(response == 'error' || response == 'danger') {
+                    location.href = '../../index.php';
+                }
             }
         } else {
             Swal.fire({
@@ -461,45 +408,8 @@ $(document).ready(function() {
         }
     }
 
-    //Enable check and uncheck all functionality
-    $('.checkbox-toggle').click(function () {
-        var clicks = $(this).data('clicks')
-        let inactivo = $('.checkbox-toggle').hasClass('inactivo');
-        let activo = $('.checkbox-toggle').hasClass('activo');
-        if (clicks) {
-            //Uncheck all checkboxes
-            if(inactivo == true) {
-                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
-                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
-                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
-            } else {
-                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
-                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
-                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
-            }
-        } else {
-            //Check all checkboxes
-            if(inactivo == false) {
-                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
-                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
-                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
-            } else {
-                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
-                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
-                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
-            }
-        }
-        $(this).data('clicks', !clicks)
-    })
-
-    $('#mensajes_recibidos').on('draw.dt', function() {
-        $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
-        $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
-        $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
-    })
-
-    async function eliminar_mensajes(eliminados) {
-        funcion = "eliminar_mensajes";
+    async function eliminar_mensaje(id) {
+        funcion = "eliminar_mensaje";
         let data = await fetch('../../Controllers/DestinoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
