@@ -75,7 +75,7 @@ include_once 'layouts/header.php';
                         </button>
                     </div>
                     <table id="mensajes_recibidos" class="table table-hover mailbox-messages">
-                        <thead>
+                        <thead class="table-primary">
                             <tr>
                                 <th></th>
                                 <th></th>

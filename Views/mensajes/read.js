@@ -390,8 +390,68 @@ $(document).ready(function() {
             try {
                 let mensaje = JSON.parse(response);
                 console.log(mensaje);
-
-               
+                $('#titulo_mensaje').text(mensaje.asunto);
+                switch (mensaje.option) {
+                    case 'r':
+                        $('#recibidos').addClass('active');
+                        break;
+                    case 'e':
+                        $('#enviados').addClass('active');
+                        break;
+                    case 'f':
+                        $('#favoritos').addClass('active');
+                        break;
+                    case 'p':
+                        $('#papelera').addClass('active');
+                        break;
+                
+                    default:
+                        break;
+                }
+                let template = `
+                    <div class="card-header">
+                        
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="mailbox-read-info">
+                            <h5>${mensaje.asunto}</h5>
+                            <h6>De: ${mensaje.emisor}
+                                <span class="mailbox-read-time float-right">${mensaje.fecha_creacion}</span>
+                            </h6>
+                        </div>
+                        <div class="mailbox-controls with-border text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm" data-container="body" title="Eliminar">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" data-container="body" title="Responder">
+                                    <i class="fas fa-reply"></i>
+                                </button>
+                            </div>
+                            <button type="button" class="btn btn-default btn-sm ml-2" title="Imprimir">
+                                <i class="fas fa-print"></i>
+                            </button>
+                            <div class="h4 float-right mr-2">`;
+                            if(mensaje.favorito == "1") {
+                                template += `<i data-id="${mensaje.id}" class="fav fas fa-star text-warning" style="cursor: pointer"></i>`;
+                            } else {
+                                template += `<i data-id="${mensaje.id}" class="nofav far fa-star" style="cursor: pointer"></i>`;
+                            }
+            template +=    `</div>
+                        </div>
+                        <div class="mailbox-read-message">
+                            ${mensaje.contenido}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="float-right">
+                            <button type="button" class="btn btn-default"><i class="fas fa-reply"></i></button>
+                        </div>
+                        <button type="button" class="btn btn-default"><i class="far fa-trash-alt"></i></button>
+                        <button type="button" class="btn btn-default"><i class="fas fa-print"></i></button>
+                    </div>
+                `;
+                $('#contenido_mensaje').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -440,21 +500,6 @@ $(document).ready(function() {
             })
         }
     }
-
-    $('.eliminar_mensajes').click(function () {
-        let seleccionados = $('.select');
-        let eliminados = [];
-        $.each(seleccionados, function (index, input) { 
-            if($(input).prop('checked') == true) {
-                eliminados.push($(input).val());
-            }
-        });
-        if(eliminados.length != 0) {
-            eliminar_mensajes(eliminados);
-        } else {
-            toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
-        }
-    })
 
     async function remover_favorito(id) {
         funcion = "remover_favorito";
@@ -530,11 +575,6 @@ $(document).ready(function() {
         let id = $this.data('id');
         $this.removeClass('nofav far fa-star').addClass('fav fas fa-star text-warning');
         agregar_favorito(id);
-    })
-
-    $('.actualizar_mensajes').click(function () {
-        toastr.info('Mensajes actualizados', 'Actualizado!');
-        read_mensajes_recibidos();
     })
 
     function Loader(mensaje) {

@@ -89,7 +89,7 @@ if($_POST['funcion']=='abrir_mensaje'){
     $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
     $option = $_SESSION['message-option'];
     if(is_numeric($id_mensaje)) {
-        if($option == 'r') {
+        if($option == 'r' || $option == 'e' || $option == 'f' || $option == 'p') {
             $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
             if(!empty($destino->objetos)) {
                 $destino->abrir_mensaje($id_mensaje);
@@ -102,7 +102,8 @@ if($_POST['funcion']=='abrir_mensaje'){
                     'estado'         => $destino->objetos[0]->estado,
                     'fecha_creacion' => $destino->objetos[0]->fecha_creacion,
                     'fecha_edicion'  => $destino->objetos[0]->fecha_edicion,
-                    'emisor'         => $destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos
+                    'emisor'         => $destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos,
+                    'option'         => $option
                 );
                 $destino->mensaje_leido($id_mensaje);
                 $jsonstring = json_encode($json);
