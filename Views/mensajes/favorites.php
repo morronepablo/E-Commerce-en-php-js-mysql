@@ -1,17 +1,17 @@
 <?php
 include_once 'layouts/header.php';
 ?>
-<title>Mensajes | Morrone</title>
+<title>Favoritos | Morrone</title>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Mensajes</h1>
+                <h1>Favoritos</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="../index.php">Inicio</a></li>
-                    <li class="breadcrumb-item active">Mensajes</li>
+                    <li class="breadcrumb-item active">Favoritos</li>
                 </ol>
             </div>
         </div>
@@ -33,7 +33,7 @@ include_once 'layouts/header.php';
                 <div class="card-body p-0">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link active  ">
+                            <a href="../mensajes" class="nav-link">
                                 <i class="fas fa-inbox"></i> Recibidos
                                 <span class="badge bg-primary float-right">12</span>
                             </a>
@@ -44,7 +44,7 @@ include_once 'layouts/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="favorites.php" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="far fa-star"></i> Favoritos
                             </a>
                         </li>
@@ -61,7 +61,7 @@ include_once 'layouts/header.php';
         <div class="col-md-9">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Recibidos</h3>
+                    <h3 class="card-title">Favoritos</h3>
                 </div>
                 <div class="card-body p-0">
                     <div class="mailbox-controls">
@@ -74,7 +74,7 @@ include_once 'layouts/header.php';
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                    <table id="mensajes_recibidos" class="table table-hover mailbox-messages">
+                    <table id="mensajes_favoritos" class="table table-hover mailbox-messages">
                         <thead class="table-primary">
                             <tr>
                                 <th></th>
@@ -98,4 +98,4 @@ include_once 'layouts/header.php';
 <?php
 include_once 'layouts/footer.php';
 ?>
-<script src="index.js"></script>
+<script src="favorites.js"></script>

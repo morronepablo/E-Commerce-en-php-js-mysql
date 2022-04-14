@@ -48,7 +48,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="favoritos" href="#" class="nav-link">
+                                <a id="favoritos" href="favorites.php" class="nav-link">
                                     <i class="far fa-star"></i> Favoritos
                                 </a>
                             </li>
