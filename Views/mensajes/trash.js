@@ -359,7 +359,7 @@ $(document).ready(function() {
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
-                    abrir_mensaje();
+                    read_mensajes_papelera();
                     CloseLoader();
                 } else {
                     location.href='../login.php';
@@ -377,8 +377,8 @@ $(document).ready(function() {
         }
     }
 
-    async function abrir_mensaje() {
-        funcion = "abrir_mensaje";
+    async function read_mensajes_papelera() {
+        funcion = "read_mensajes_papelera";
         let data = await fetch('../../Controllers/DestinoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -388,109 +388,69 @@ $(document).ready(function() {
             let response = await data.text();
             //conselo.log(response);
             try {
-                let mensaje = JSON.parse(response);
-                console.log(mensaje);
-                $('#titulo_mensaje').text(mensaje.asunto);
-                switch (mensaje.option) {
-                    case 'r':
-                        $('#recibidos').addClass('active');
-                        break;
-                    case 'e':
-                        $('#enviados').addClass('active');
-                        break;
-                    case 'f':
-                        $('#favoritos').addClass('active');
-                        break;
-                    case 'p':
-                        $('#papelera').addClass('active');
-                        break;
-                
-                    default:
-                        break;
-                }
-                let template = `
-                    <div class="card-header">
-                        
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="mailbox-read-info">
-                            <h5>${mensaje.asunto}</h5>
-                            <h6>De: ${mensaje.emisor}
-                                <span class="mailbox-read-time float-right">${mensaje.fecha_creacion}</span>
-                            </h6>
-                        </div>
-                        <div class="mailbox-controls with-border text-center">
-                            <div class="btn-group">`;
-                            if(mensaje.option == 'r' || mensaje.option == 'e' || mensaje.option == 'f') {
-                                // eliminacion lógica
-                                template+=`
-                                <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default btn-sm" data-container="body" title="Eliminar">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                                `;
-                            } else {
-                                // eliminacion física
-                                template+=`
-                                <button id="${mensaje.id}" type="button" class="eliminar_mensaje_definitivamente btn btn-default btn-sm" data-container="body" title="Eliminar">
-                                    <i class="far fa-trash-alt"></i> Eliminar definitivamente
-                                </button>
+                let mensajes = JSON.parse(response);
+                //console.log(mensajes);
+                $('#mensajes_papelera').DataTable( {
+                    data: mensajes,
+                    "aaSorting": [],
+                    "searching": true,
+                    "scrollX": false,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "processing": true,
+                    columns: [
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                return `
+                                        <div class="icheck-primary">
+                                            <input style="cursor: pointer;" class="select" type="checkbox" value="${datos.id}">
+                                            <label for="check1"></label>
+                                        </div>
                                 `;
                             }
-                            template+=`
-                                <button type="button" class="btn btn-default btn-sm" data-container="body" title="Responder">
-                                    <i class="fas fa-reply"></i>
-                                </button>
-                            </div>
-                            <button type="button" class="btn btn-default btn-sm ml-2" title="Imprimir">
-                                <i class="fas fa-print"></i>
-                            </button>
-                            <div class="h4 float-right mr-2">`;
-                            if(mensaje.option == 'r' || mensaje.option == 'e' || mensaje.option == 'f') {
-                                if(mensaje.favorito == "1") {
-                                    template += `<i data-id="${mensaje.id}" class="fav fas fa-star text-warning" style="cursor: pointer"></i>`;
+                        },
+                        { 
+                            "render": function(data, type, datos, meta) {
+                                if(datos.favorito == '1') {
+                                    return `<i class="fas fa-star text-warning"></i>`;
                                 } else {
-                                    template += `<i data-id="${mensaje.id}" class="nofav far fa-star" style="cursor: pointer"></i>`;
-                                }
-                            } else {
-                                if(mensaje.favorito == "1") {
-                                    template += `<i class="fas fa-star text-warning"></i>`;
-                                } else {
-                                    template += `<i class="far fa-star"></i>`;
+                                    return `<i class="far fa-star"></i>`;
                                 }
                             }
-                            
-            template +=    `</div>
-                        </div>
-                        <div class="mailbox-read-message">
-                            ${mensaje.contenido}
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="float-right">
-                            <button type="button" class="btn btn-default"><i class="fas fa-reply"></i></button>
-                        </div>`;
-                        if(mensaje.option == 'r' || mensaje.option == 'e' || mensaje.option == 'f') {
-                            // eliminacion lógica
-                            template+=`
-                            <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default"><i class="far fa-trash-alt"></i></button>
-                            `;
-                        } else {
-                            // eliminacion física
-                            template+=`
-                            <button id="${mensaje.id}" type="button" class="eliminar_mensaje_definitivamente btn btn-default"><i class="far fa-trash-alt"></i>Eliminar definitivamente</button>
-                            `;
+                        },
+                        {
+                            "render": function(data, type, datos, meta) {
+                                let variable;
+                                if(datos.abierto == '0') {
+                                    variable = `<a style="color: #000" href="read.php?option=p&&id=${datos.id}"><strong>${datos.emisor}</strong></a>`;
+                                } else {
+                                    variable = `<a style="color: #000" href="read.php?option=p&&id=${datos.id}">${datos.emisor}</a>`;
+                                }
+                                return variable;
+                            }
+                        },
+                        { 
+                            "render":function(data, type, datos, meta) {
+                                let variable;
+                                if(datos.abierto == '0') {
+                                    variable = `<a style="color: #000" href="read.php?option=p&&id=${datos.id}"><strong>${datos.asunto}</strong></a>`;
+                                } else {
+                                    variable = `<a style="color: #000" href="read.php?option=p&&id=${datos.id}">${datos.asunto}</a>`;
+                                }
+                                return variable;
+                            }
+                        },
+                        {
+                            "data": "fecha_creacion"
                         }
-                        
-                    template+=`<button type="button" class="btn btn-default"><i class="fas fa-print"></i></button>
-                    </div>
-                `;
-                $('#contenido_mensaje').html(template);
+                    ],
+                    "destroy": true,
+                    "language": espanol
+                });
+               
             } catch (error) {
                 console.error(error);
                 console.log(response);
-                if(response == 'error' || response == 'danger') {
-                    location.href = '../../index.php';
-                }
             }
         } else {
             Swal.fire({
@@ -501,120 +461,49 @@ $(document).ready(function() {
         }
     }
 
-    async function eliminar_mensaje(id) {
-        funcion = "eliminar_mensaje";
-        let data = await fetch('../../Controllers/DestinoController.php',{
-            method: 'POST',
-            headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id=' + id
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //conselo.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                if(respuesta.mensaje == 'success') {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Se eliminó el mensaje',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        switch (respuesta.option) {
-                            case 'r':
-                                location.href = '../mensajes';
-                                break;
-                            case 'e':
-                                location.href = '';
-                                break;
-                            case 'f':
-                                location.href = 'favorites.php';
-                                break;
-                        
-                            default:
-                                break;
-                        }
-                    })
-                }
-            } catch (error) {
-                console.error(error);
-                console.log(response);
-                if(response == 'error') {
-                    toastr.error('No intente vulnerar el sistema', 'Error al eliminar!');
-                } else {
-                    toastr.error('Hubo error al eliminar', 'Error al eliminar!');
-                }
+    //Enable check and uncheck all functionality
+    $('.checkbox-toggle').click(function () {
+        var clicks = $(this).data('clicks')
+        let inactivo = $('.checkbox-toggle').hasClass('inactivo');
+        let activo = $('.checkbox-toggle').hasClass('activo');
+        if (clicks) {
+            //Uncheck all checkboxes
+            if(inactivo == true) {
+                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+            } else {
+                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
             }
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
+            //Check all checkboxes
+            if(inactivo == false) {
+                $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+                $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+            } else {
+                $('.checkbox-toggle').removeClass('inactivo').addClass('activo');
+                $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+                $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+            }
         }
-    }
-
-    $(document).on('click', '.eliminar_mensaje', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id = $(elemento).attr('id');
-        eliminar_mensaje(id);
+        $(this).data('clicks', !clicks)
     })
 
-    async function eliminar_mensaje_definitivamente(id) {
-        funcion = "eliminar_mensaje_definitivamente";
-        let data = await fetch('../../Controllers/DestinoController.php',{
-            method: 'POST',
-            headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id=' + id
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //conselo.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                if(respuesta.mensaje == 'success') {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Se eliminó el mensaje',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        location.href = 'trash.php';
-                    })
-                }
-            } catch (error) {
-                console.error(error);
-                console.log(response);
-                if(response == 'error') {
-                    toastr.error('No intente vulnerar el sistema', 'Error al eliminar!');
-                } else {
-                    toastr.error('Hubo error al eliminar', 'Error al eliminar!');
-                }
-            }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
-        }
-    }
-
-
-    $(document).on('click', '.eliminar_mensaje_definitivamente', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id = $(elemento).attr('id');
-        eliminar_mensaje_definitivamente(id);
+    $('#mensajes_recibidos').on('draw.dt', function() {
+        $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
+        $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+        $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
     })
 
-    async function remover_favorito(id) {
-        funcion = "remover_favorito";
+    async function eliminar_mensajes_definitivamente(eliminados) {
+        funcion = "eliminar_mensajes_definitivamente";
         let data = await fetch('../../Controllers/DestinoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id=' + id
+            body: 'funcion=' + funcion + '&&eliminados=' + JSON.stringify(eliminados)
         })
         if(data.ok) {
             let response = await data.text();
@@ -622,13 +511,15 @@ $(document).ready(function() {
             try {
                 let respuesta = JSON.parse(response);
                 if(respuesta.mensaje == 'success') {
-                    toastr.success('El mensaje se removió de favoritos', 'Removido!');
+                    toastr.success('Seccion de mensaje eliminado', 'Eliminados!');
+                    read_mensajes_papelera();
                 }
             } catch (error) {
                 console.error(error);
                 console.log(response);
                 if(response == 'error') {
-                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                    toastr.error('Algunos mensajes no se borraron ya que algunos de ellos fueron vulnerados', 'Error al eliminar!');
+                    read_mensajes_papelera();
                 }
             }
         } else {
@@ -640,49 +531,24 @@ $(document).ready(function() {
         }
     }
 
-    $(document).on('click', '.fav', function() {
-        $this = $(this);
-        let id = $this.data('id');
-        $this.removeClass('fav fas fa-star text-warning').addClass('nofav far fa-star');
-        remover_favorito(id);
+    $('.eliminar_mensajes').click(function () {
+        let seleccionados = $('.select');
+        let eliminados = [];
+        $.each(seleccionados, function (index, input) { 
+            if($(input).prop('checked') == true) {
+                eliminados.push($(input).val());
+            }
+        });
+        if(eliminados.length != 0) {
+            eliminar_mensajes_definitivamente(eliminados);
+        } else {
+            toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
+        }
     })
 
-    async function agregar_favorito(id) {
-        funcion = "agregar_favorito";
-        let data = await fetch('../../Controllers/DestinoController.php',{
-            method: 'POST',
-            headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id=' + id
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //conselo.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                if(respuesta.mensaje == 'success') {
-                    toastr.success('El mensaje se agregó a favoritos', 'Agregado!');
-                }
-            } catch (error) {
-                console.error(error);
-                console.log(response);
-                if(response == 'error') {
-                    toastr.error('No intente vulnerar el sistema', 'Error!');
-                }
-            }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
-        }
-    }
-
-    $(document).on('click', '.nofav', function() {
-        $this = $(this);
-        let id = $this.data('id');
-        $this.removeClass('nofav far fa-star').addClass('fav fas fa-star text-warning');
-        agregar_favorito(id);
+    $('.actualizar_mensajes').click(function () {
+        toastr.info('Mensajes actualizados', 'Actualizado!');
+        read_mensajes_papelera();
     })
 
     function Loader(mensaje) {

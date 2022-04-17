@@ -1,17 +1,17 @@
 <?php
 include_once 'layouts/header.php';
 ?>
-<title>Favoritos | Morrone</title>
+<title>Papelara | Morrone</title>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Favoritos</h1>
+                <h1>Papelara</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="../index.php">Inicio</a></li>
-                    <li class="breadcrumb-item active">Favoritos</li>
+                    <li class="breadcrumb-item active">Papelara</li>
                 </ol>
             </div>
         </div>
@@ -44,12 +44,12 @@ include_once 'layouts/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="favorites.php" class="nav-link">
                                 <i class="far fa-star"></i> Favoritos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="trash.php" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="far fa-trash-alt"></i> Papelera
                             </a>
                         </li>
@@ -61,20 +61,20 @@ include_once 'layouts/header.php';
         <div class="col-md-9">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Favoritos</h3>
+                    <h3 class="card-title">Papelera</h3>
                 </div>
                 <div class="card-body p-0">
                     <div class="mailbox-controls">
                         <button type="button" title="Seleccionador grupal" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
                         </button>
                         <button type="button" title="Eliminar grupo seleccionado" class="btn btn-default btn-sm eliminar_mensajes">
-                            <i class="far fa-trash-alt"></i>
+                            <i class="far fa-trash-alt"></i> Eliminar definitivamente
                         </button>
                         <button type="button" title="Actualizar mensajes" class="btn btn-default btn-sm actualizar_mensajes">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                    <table id="mensajes_favoritos" class="table table-hover mailbox-messages">
+                    <table id="mensajes_papelera" class="table table-hover mailbox-messages">
                         <thead class="table-primary">
                             <tr>
                                 <th></th>
@@ -98,4 +98,4 @@ include_once 'layouts/header.php';
 <?php
 include_once 'layouts/footer.php';
 ?>
-<script src="favorites.js"></script>
+<script src="trash.js"></script>

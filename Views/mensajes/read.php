@@ -53,7 +53,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="papelera" href="#" class="nav-link">
+                                <a id="papelera" href="trash.php" class="nav-link">
                                     <i class="far fa-trash-alt"></i> Papelera
                                 </a>
                             </li>
