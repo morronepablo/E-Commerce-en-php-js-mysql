@@ -183,3 +183,17 @@ if($_POST['funcion'] == 'cambiar_contra') {
     $jsonstring = json_encode($json);
     echo $jsonstring;
 }
+if($_POST['funcion'] == 'llenar_destinatarios') {
+    $id_usuario = $_SESSION['id'];
+    $usuario->llenar_destinatarios($id_usuario);
+    foreach ($usuario->objetos as $objeto) {
+        $json[] = array(
+            'id'              => openssl_encrypt($objeto->id,CODE,KEY),
+            'username'        => $objeto->user,
+            'nombre_completo' => $objeto->nombres.' '.$objeto->apellidos
+        );
+    }
+    
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}

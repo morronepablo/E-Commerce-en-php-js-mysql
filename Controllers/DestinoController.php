@@ -166,7 +166,7 @@ if($_POST['funcion']=='read_mensajes_papelera'){
             'id'             => openssl_encrypt($objeto->id,CODE,KEY),
             'asunto'         => $objeto->asunto,
             'contenido'      => $objeto->contenido,
-            'abierto'       => $objeto->abierto,
+            'abierto'        => $objeto->abierto,
             'favorito'       => $objeto->favorito,
             'estado'         => $objeto->estado,
             'fecha_creacion' => $objeto->fecha_creacion,

@@ -2,6 +2,57 @@ $(document).ready(function() {
     moment.locale('es');
     Loader();
     verificar_sesion();
+    $('#modal_crear_mensaje').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+    $('#para').select2(
+        {
+            placeholder: 'Seleccione un destinatario',
+            language: {
+                noResults: function() {
+                    return "No hay resultado";
+                },
+                searching: function() {
+                    return "Buscando...";
+                }
+            }
+        }
+    );
+
+    async function llenar_destinatarios() {
+        funcion = "llenar_destinatarios";
+        let data = await fetch('../../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let destinatarios = JSON.parse(response);
+                let template = '';
+                destinatarios.forEach(destinatario => {
+                    template += `
+                        <option value="${destinatario.id}">${destinatario.nombre_completo}</option>
+                    `;
+                });
+                $('#para').html(template);
+                $('#para').val('').trigger('change');
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
 
     async function read_notificaciones() {
         funcion = "read_notificaciones";
@@ -359,6 +410,7 @@ $(document).ready(function() {
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
+                    llenar_destinatarios();
                     read_mensajes_recibidos();
                     CloseLoader();
                 } else {
@@ -626,6 +678,54 @@ $(document).ready(function() {
         toastr.info('Mensajes actualizados', 'Actualizado!');
         read_mensajes_recibidos();
     })
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert('validado')
+            /*let funcion = 'rechazar_solicitud';
+            let datos   = new FormData($('#form-marca_rechazar_sol')[0]);
+            datos.append('funcion', funcion);
+            rechazar_solicitud(datos);*/
+        }
+    });
+
+    $('#form-mensaje').validate({
+        rules: {
+            para: {
+                required: true,
+            },
+            asunto: {
+                required: true,
+            },
+            contenido: {
+                required: true,
+            }
+        },
+        messages: {
+            para: {
+                required: "* Este campo es obligatorio"
+            },
+            asunto: {
+                required: "* Este campo es obligatorio"
+            },
+            contenido: {
+                required: "* Este campo es obligatorio"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

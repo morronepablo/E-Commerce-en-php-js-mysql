@@ -90,4 +90,15 @@
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }
+        function llenar_destinatarios($id_usuario) {
+            $sql = "SELECT * FROM usuario
+                        WHERE usuario.id!=:id_usuario";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }
