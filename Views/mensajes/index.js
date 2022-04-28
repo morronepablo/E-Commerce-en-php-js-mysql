@@ -474,9 +474,9 @@ $(document).ready(function() {
                             "render": function(data, type, datos, meta) {
                                 let variable;
                                 if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}"><strong>${datos.emisor}</strong></a>`;
+                                    variable = `<a style="color: #000" href="read.php?option=${datos.r}&&id=${datos.id}"><strong>${datos.emisor}</strong></a>`;
                                 } else {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}">${datos.emisor}</a>`;
+                                    variable = `<a style="color: #000" href="read.php?option=${datos.r}&&id=${datos.id}">${datos.emisor}</a>`;
                                 }
                                 return variable;
                             }
@@ -485,9 +485,9 @@ $(document).ready(function() {
                             "render":function(data, type, datos, meta) {
                                 let variable;
                                 if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}"><strong>${datos.asunto}</strong></a>`;
+                                    variable = `<a style="color: #000" href="read.php?option=${datos.r}&&id=${datos.id}"><strong>${datos.asunto}</strong></a>`;
                                 } else {
-                                    variable = `<a style="color: #000" href="read.php?option=r&&id=${datos.id}">${datos.asunto}</a>`;
+                                    variable = `<a style="color: #000" href="read.php?option=${datos.r}&&id=${datos.id}">${datos.asunto}</a>`;
                                 }
                                 return variable;
                             }
@@ -679,13 +679,45 @@ $(document).ready(function() {
         read_mensajes_recibidos();
     })
 
+    async function crear_mensaje(datos) {
+        let data = await fetch('../../Controllers/MensajeController.php',{
+            method: 'POST',
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('Mensaje enviado', 'Enviado!');
+                    $('#form-mensaje').trigger('reset');
+                    $('#para').val('').trigger('change');
+                    $('#modal_crear_mensaje').modal('hide');
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     $.validator.setDefaults({
         submitHandler: function () {
-            alert('validado')
-            /*let funcion = 'rechazar_solicitud';
-            let datos   = new FormData($('#form-marca_rechazar_sol')[0]);
+            
+            let funcion = 'crear_mensaje';
+            let datos   = new FormData($('#form-mensaje')[0]);
             datos.append('funcion', funcion);
-            rechazar_solicitud(datos);*/
+            crear_mensaje(datos);
         }
     });
 
@@ -726,6 +758,11 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+
+    $('#cerrar_modal_crear_mensaje').click(function () {
+        $('#form-mensaje').trigger('reset');
+        $('#para').val('').trigger('change');
+    })
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

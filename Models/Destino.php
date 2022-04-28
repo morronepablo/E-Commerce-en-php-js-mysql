@@ -22,7 +22,7 @@
                     JOIN mensaje m ON d.id_mensaje=m.id
                     JOIN usuario u ON m.id_usuario=u.id
                     WHERE d.id_usuario = :id_usuario
-                    AND d.estado='A' ORDER BY d.fecha_creacion DESC";
+                    AND d.estado='A' AND d.estado_perm='A' ORDER BY d.fecha_creacion DESC";
             $query = $this->acceso->prepare($sql);
             $variables = array(
                 ':id_usuario' => $id_usuario
@@ -179,5 +179,31 @@
                 ':id_mensaje' => $id_mensaje,
             );
             $query->execute($variables);
+        }
+        function read_mensajes_enviados($id_usuario) {
+            $sql = "SELECT 
+                    d.id as id,
+                    d.asunto as asunto,
+                    (SELECT CONCAT(u.nombres,' ',u.apellidos) FROM usuario u WHERE u.id=d.id_usuario) as destino,
+                    d.contenido as contenido,
+                    d.abierto_emisor as abierto,
+                    d.favorito_emisor as favorito,
+                    d.estado_emisor as estado,
+                    d.fecha_creacion as fecha_creacion,
+                    d.fecha_edicion as fecha_edicion,
+                    u.nombres as nombres,
+                    u.apellidos as apellidos 
+                    FROM destino d
+                    JOIN mensaje m ON d.id_mensaje=m.id
+                    JOIN usuario u ON m.id_usuario=u.id
+                    WHERE m.id_usuario=:id_usuario
+                    AND d.estado_emisor='A' AND d.estado_emisor_perm='A' ORDER BY d.fecha_creacion DESC";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
         }
     }

@@ -7,15 +7,12 @@ include_once 'layouts/header.php';
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Mensaje nuevo</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="form-mensaje" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="para">Para:</label>
-                        <select name="para" id="para" class="form-control" style="width: 100%;"></select>
+                        <select name="para" id="para" class="form-control select2-info" data-dropdown-css-class="select2-info" style="width: 100%;"></select>
                     </div>
                     <div class="form-group">
                         <label for="asunto">Asunto:</label>
@@ -28,7 +25,7 @@ include_once 'layouts/header.php';
                     
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" id="cerrar_modal_crear_mensaje" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
@@ -93,7 +90,7 @@ include_once 'layouts/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="sent.php" class="nav-link">
                                 <i class="far fa-envelope"></i> Enviados
                             </a>
                         </li>

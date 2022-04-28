@@ -43,7 +43,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="enviados" href="#" class="nav-link">
+                                <a id="enviados" href="sent.php" class="nav-link">
                                     <i class="far fa-envelope"></i> Enviados
                                 </a>
                             </li>

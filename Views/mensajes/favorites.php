@@ -39,7 +39,7 @@ include_once 'layouts/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="sent.php" class="nav-link">
                                 <i class="far fa-envelope"></i> Enviados
                             </a>
                         </li>
