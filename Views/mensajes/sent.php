@@ -1,7 +1,7 @@
 <?php
 include_once 'layouts/header.php';
 ?>
-<!-- Modal Crear Marca -->
+<!-- Modal Crear Mensaje -->
 <div class="modal fade modal-right" id="modal_crear_mensaje" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -130,7 +130,7 @@ include_once 'layouts/header.php';
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th>Emisor</th>
+                                <th>Destinatario</th>
                                 <th>Asunto</th>
                                 <th>Fecha</th>
                             </tr>

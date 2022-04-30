@@ -124,11 +124,15 @@
         function read_mensajes_favoritos($id_usuario) {
             $sql = "SELECT 
                     d.id as id,
+                    (SELECT CONCAT(u.nombres,' ',u.apellidos) FROM usuario u WHERE u.id=d.id_usuario) as destino,
                     d.asunto as asunto,
                     d.contenido as contenido,
                     d.abierto as abierto,
+                    d.abierto_emisor as abierto_emisor,
                     d.favorito as favorito,
+                    d.favorito_emisor as favorito_emisor,
                     d.estado as estado,
+                    d.estado_emisor as estado_emisor,
                     d.fecha_creacion as fecha_creacion,
                     d.fecha_edicion as fecha_edicion,
                     u.nombres as nombres,
@@ -136,8 +140,8 @@
                     FROM destino d
                     JOIN mensaje m ON d.id_mensaje=m.id
                     JOIN usuario u ON m.id_usuario=u.id
-                    WHERE d.id_usuario = :id_usuario
-                    AND d.estado='A' AND d.favorito=:favorito ORDER BY d.fecha_creacion DESC";
+                    WHERE ((d.id_usuario = :id_usuario AND d.estado='A' AND d.estado_perm='A' AND d.favorito=:favorito) OR (m.id_usuario=:id_usuario AND d.estado_emisor='A' AND d.estado_emisor_perm='A' AND d.favorito_emisor=:favorito))
+                    ORDER BY d.fecha_creacion DESC";
             $query = $this->acceso->prepare($sql);
             $variables = array(
                 ':id_usuario' => $id_usuario,
@@ -150,11 +154,15 @@
         function read_mensajes_papelera($id_usuario) {
             $sql = "SELECT 
                     d.id as id,
+                    (SELECT CONCAT(u.nombres,' ',u.apellidos) FROM usuario u WHERE u.id=d.id_usuario) as destino,
                     d.asunto as asunto,
                     d.contenido as contenido,
                     d.abierto as abierto,
+                    d.abierto_emisor as abierto_emisor,
                     d.favorito as favorito,
+                    d.favorito_emisor as favorito_emisor,
                     d.estado as estado,
+                    d.estado_emisor as estado_emisor,
                     d.fecha_creacion as fecha_creacion,
                     d.fecha_edicion as fecha_edicion,
                     u.nombres as nombres,
@@ -162,8 +170,8 @@
                     FROM destino d
                     JOIN mensaje m ON d.id_mensaje=m.id
                     JOIN usuario u ON m.id_usuario=u.id
-                    WHERE d.id_usuario = :id_usuario
-                    AND d.estado='I' ORDER BY d.fecha_creacion DESC";
+                    WHERE ((d.id_usuario = :id_usuario AND d.estado='I' AND d.estado_perm='A') OR (m.id_usuario=:id_usuario AND d.estado_emisor='I' AND d.estado_emisor_perm='A'))
+                    ORDER BY d.fecha_creacion DESC";
             $query = $this->acceso->prepare($sql);
             $variables = array(
                 ':id_usuario' => $id_usuario

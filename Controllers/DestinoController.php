@@ -148,16 +148,34 @@ if($_POST['funcion']=='read_mensajes_favoritos'){
     $destino->read_mensajes_favoritos($id_usuario);
     $json = array();
     foreach ($destino->objetos as $objeto) {
+        $destino->verificar_usuario_mensaje($id_usuario, $objeto->id);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $favorito = $objeto->favorito;
+            $abierto  = $objeto->abierto;
+        } else {
+            // Mensaje enviado
+            $favorito = $objeto->favorito_emisor;
+            $abierto  = $objeto->abierto_emisor;
+        }
+        if($_SESSION['nombre'] == $objeto->nombres.' '.$objeto->apellidos) {
+            // Mensaje Enviado
+            $E_D = 'Para: '.$objeto->destino;
+        } else {
+            // Mensaje Recibido
+            $E_D = 'De: '.$objeto->nombres.' '.$objeto->apellidos;
+        }
         $json[] = array(
             'id'             => openssl_encrypt($objeto->id,CODE,KEY),
             'asunto'         => $objeto->asunto,
             'contenido'      => $objeto->contenido,
-            'abierto'       => $objeto->abierto,
-            'favorito'       => $objeto->favorito,
+            'abierto'        => $abierto,
+            'favorito'       => $favorito,
             'estado'         => $objeto->estado,
             'fecha_creacion' => $objeto->fecha_creacion,
             'fecha_edicion'  => $objeto->fecha_edicion,
-            'emisor'         => $objeto->nombres.' '.$objeto->apellidos
+            'E_D'            => $E_D,
+            'f'              => openssl_encrypt(3,CODE,KEY)
         );
     }
     $jsonstring = json_encode($json);
@@ -168,16 +186,34 @@ if($_POST['funcion']=='read_mensajes_papelera'){
     $destino->read_mensajes_papelera($id_usuario);
     $json = array();
     foreach ($destino->objetos as $objeto) {
+        $destino->verificar_usuario_mensaje($id_usuario, $objeto->id);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $favorito = $objeto->favorito;
+            $abierto  = $objeto->abierto;
+        } else {
+            // Mensaje enviado
+            $favorito = $objeto->favorito_emisor;
+            $abierto  = $objeto->abierto_emisor;
+        }
+        if($_SESSION['nombre'] == $objeto->nombres.' '.$objeto->apellidos) {
+            // Mensaje Enviado
+            $E_D = 'Para: '.$objeto->destino;
+        } else {
+            // Mensaje Recibido
+            $E_D = 'De: '.$objeto->nombres.' '.$objeto->apellidos;
+        }
         $json[] = array(
             'id'             => openssl_encrypt($objeto->id,CODE,KEY),
             'asunto'         => $objeto->asunto,
             'contenido'      => $objeto->contenido,
-            'abierto'        => $objeto->abierto,
-            'favorito'       => $objeto->favorito,
+            'abierto'        => $abierto,
+            'favorito'       => $favorito,
             'estado'         => $objeto->estado,
             'fecha_creacion' => $objeto->fecha_creacion,
             'fecha_edicion'  => $objeto->fecha_edicion,
-            'emisor'         => $objeto->nombres.' '.$objeto->apellidos
+            'E_D'            => $E_D,
+            'p'              => openssl_encrypt(4,CODE,KEY)
         );
     }
     $jsonstring = json_encode($json);
