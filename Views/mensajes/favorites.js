@@ -545,7 +545,7 @@ $(document).ready(function() {
         $(this).data('clicks', !clicks)
     })
 
-    $('#mensajes_recibidos').on('draw.dt', function() {
+    $('#mensajes_favoritos').on('draw.dt', function() {
         $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
         $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
         $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')

@@ -35,7 +35,14 @@ if($_POST['funcion']=='eliminar_mensajes'){
         $formateado = str_replace(" ","+",$objeto);
         $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
         if(is_numeric($id_mensaje)) {
-            $destino->eliminar_mensaje($id_mensaje);
+            $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+            if(!empty($destino->objetos)) {
+                // Mensaje recibido
+                $destino->eliminar_mensaje($id_mensaje);
+            } else {
+                // Mensaje enviado
+                $destino->eliminar_mensaje_emisor($id_mensaje);
+            }
             $descripcion = 'Ha eliminado un mensaje';
             $historial->crear_historial($descripcion, 3, 7, $id_usuario);
         } else {
@@ -59,7 +66,14 @@ if($_POST['funcion']=='remover_favorito'){
     $formateado = str_replace(" ","+",$_POST['id']);
     $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
     if(is_numeric($id_mensaje)) {
-        $destino->remover_favorito($id_mensaje);
+        $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $destino->remover_favorito($id_mensaje);
+        } else {
+            // Mensaje enviado
+            $destino->remover_favorito_emisor($id_mensaje);
+        }
         $json = array(
             'mensaje' => 'success'
         );
@@ -74,7 +88,15 @@ if($_POST['funcion']=='agregar_favorito'){
     $formateado = str_replace(" ","+",$_POST['id']);
     $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
     if(is_numeric($id_mensaje)) {
-        $destino->agregar_favorito($id_mensaje);
+        $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $destino->agregar_favorito($id_mensaje);
+        } else {
+            // Mensaje enviado
+            $destino->agregar_favorito_emisor($id_mensaje);
+        }
+        //$destino->agregar_favorito($id_mensaje);
         $json = array(
             'mensaje' => 'success'
         );
@@ -284,4 +306,38 @@ if($_POST['funcion']=='read_mensajes_enviados'){
     }
     $jsonstring = json_encode($json);
     echo $jsonstring;
+}
+if($_POST['funcion']=='restaurar_mensajes'){
+    $id_usuario = $_SESSION['id'];
+    $eliminados = json_decode($_POST['eliminados']);
+    $bandera = '1';
+    foreach ($eliminados as $objeto) {
+        $formateado = str_replace(" ","+",$objeto);
+        $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+        if(is_numeric($id_mensaje)) {
+            $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+            if(!empty($destino->objetos)) {
+                // Mensaje recibido
+                $destino->restaurar_mensaje($id_mensaje);
+            } else {
+                // Mensaje enviado
+                $destino->restaurar_mensaje_emisor($id_mensaje);
+            }
+            $descripcion = 'Ha restaurado un mensaje';
+            $historial->crear_historial($descripcion, 3, 7, $id_usuario);
+        } else {
+            $bandera = '0';
+        }
+    }
+    if($bandera == '1') {
+        // Correcto
+        $json = array(
+            'mensaje' => 'success'
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        // Vulnero el sistema
+        echo 'error';
+    }
 }

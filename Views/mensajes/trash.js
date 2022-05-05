@@ -545,7 +545,7 @@ $(document).ready(function() {
         $(this).data('clicks', !clicks)
     })
 
-    $('#mensajes_recibidos').on('draw.dt', function() {
+    $('#mensajes_papelera').on('draw.dt', function() {
         $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
         $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
         $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
@@ -594,6 +594,54 @@ $(document).ready(function() {
         });
         if(eliminados.length != 0) {
             eliminar_mensajes_definitivamente(eliminados);
+        } else {
+            toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
+        }
+    })
+
+    async function restaurar_mensajes(eliminados) {
+        funcion = "restaurar_mensajes";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&eliminados=' + JSON.stringify(eliminados)
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('Seccion de mensaje restaurada', 'Restaurado!');
+                    read_mensajes_papelera();
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('Algunos mensajes no se restauraron ya que algunos de ellos fueron vulnerados', 'Error al restaurar!');
+                    read_mensajes_papelera();
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $('.restaurar_mensajes').click(function () {
+        let seleccionados = $('.select');
+        let eliminados = [];
+        $.each(seleccionados, function (index, input) { 
+            if($(input).prop('checked') == true) {
+                eliminados.push($(input).val());
+            }
+        });
+        if(eliminados.length != 0) {
+            restaurar_mensajes(eliminados);
         } else {
             toastr.warning('Seleccione los mensajes que desea eliminar', 'No se eliminó');
         }

@@ -544,7 +544,7 @@ $(document).ready(function() {
         $(this).data('clicks', !clicks)
     })
 
-    $('#mensajes_recibidos').on('draw.dt', function() {
+    $('#mensajes_enviados').on('draw.dt', function() {
         $('.checkbox-toggle').removeClass('activo').addClass('inactivo');
         $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
         $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
@@ -564,14 +564,14 @@ $(document).ready(function() {
                 let respuesta = JSON.parse(response);
                 if(respuesta.mensaje == 'success') {
                     toastr.success('Seccion de mensaje eliminado', 'Eliminados!');
-                    read_mensajes_recibidos();
+                    read_mensajes_enviados();
                 }
             } catch (error) {
                 console.error(error);
                 console.log(response);
                 if(response == 'error') {
                     toastr.error('Algunos mensajes no se borraron ya que algunos de ellos fueron vulnerados', 'Error al eliminar!');
-                    read_mensajes_recibidos();
+                    read_mensajes_enviados();
                 }
             }
         } else {
@@ -676,7 +676,7 @@ $(document).ready(function() {
 
     $('.actualizar_mensajes').click(function () {
         toastr.info('Mensajes actualizados', 'Actualizado!');
-        read_mensajes_recibidos();
+        read_mensajes_enviados();
     })
 
     async function crear_mensaje(datos) {

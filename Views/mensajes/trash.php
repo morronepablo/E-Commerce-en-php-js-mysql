@@ -118,6 +118,9 @@ include_once 'layouts/header.php';
                     <div class="mailbox-controls">
                         <button type="button" title="Seleccionador grupal" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
                         </button>
+                        <button type="button" title="Restaurar grupo seleccionado" class="btn btn-default btn-sm restaurar_mensajes">
+                            <i class="fas fa-trash-restore"></i> Restaurar mensajes
+                        </button>
                         <button type="button" title="Eliminar grupo seleccionado" class="btn btn-default btn-sm eliminar_mensajes">
                             <i class="far fa-trash-alt"></i> Eliminar definitivamente
                         </button>

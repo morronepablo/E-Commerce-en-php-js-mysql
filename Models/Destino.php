@@ -43,12 +43,42 @@
             );
             $query->execute($variables);
         }
+        function eliminar_mensaje_emisor($id_mensaje) {
+            $sql = "UPDATE destino SET estado_emisor=:estado 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':estado'     => 'I',
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
         function eliminar_mensaje($id_mensaje) {
             $sql = "UPDATE destino SET estado=:estado 
                     WHERE id=:id_mensaje";
             $query = $this->acceso->prepare($sql);
             $variables = array(
                 ':estado'     => 'I',
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
+        function restaurar_mensaje_emisor($id_mensaje) {
+            $sql = "UPDATE destino SET estado_emisor=:estado_emisor 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':estado_emisor' => 'A',
+                ':id_mensaje'    => $id_mensaje
+            );
+            $query->execute($variables);
+        }
+        function restaurar_mensaje($id_mensaje) {
+            $sql = "UPDATE destino SET estado=:estado 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':estado'     => 'A',
                 ':id_mensaje' => $id_mensaje
             );
             $query->execute($variables);
@@ -63,8 +93,28 @@
             );
             $query->execute($variables);
         }
+        function remover_favorito_emisor($id_mensaje) {
+            $sql = "UPDATE destino SET favorito_emisor=:favorito 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':favorito'   => 0,
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
         function agregar_favorito($id_mensaje) {
             $sql = "UPDATE destino SET favorito=:favorito 
+                    WHERE id=:id_mensaje";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':favorito'   => 1,
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+        }
+        function agregar_favorito_emisor($id_mensaje) {
+            $sql = "UPDATE destino SET favorito_emisor=:favorito 
                     WHERE id=:id_mensaje";
             $query = $this->acceso->prepare($sql);
             $variables = array(
