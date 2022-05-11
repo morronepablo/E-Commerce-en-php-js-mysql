@@ -5,6 +5,38 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
     $_SESSION['message-option'] = $_GET['option'];
     include_once 'layouts/header.php';
 ?>
+    <!-- Modal Crear Mensaje -->
+    <div class="modal fade modal-right" id="modal_crear_mensaje" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Mensaje nuevo</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="form-mensaje" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="para">Para:</label>
+                            <select name="para" id="para" class="form-control select2-info" data-dropdown-css-class="select2-info" style="width: 100%;"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="asunto">Asunto:</label>
+                            <input type="text" name="asunto" class="form-control" id="sunto" placeholder="Ingrese asunto">
+                        </div>
+                        <div class="form-group">
+                            <label for="contenido">Contenido:</label>
+                            <textarea type="text" style="height: 200px;" name="contenido" id="contenido" class="form-control" placeholder="Ingrese contenido"></textarea>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrar_modal_crear_mensaje" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fin Modal -->
     <title>Read | Morrone</title>
     <section class="content-header">
         <div class="container-fluid">
@@ -21,10 +53,32 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
             </div>
         </div><!-- /.container-fluid -->
     </section>
+    <style>
+        .modal.modal-right .modal-dialog {
+            top: 145px;
+            max-width: 500px;
+            max-height: 500px;
+            min-height: calc(100vh - 0);
+        }
+
+        .modal.modal-right.show .modal-dialog {
+            transform: translate(0, 0);
+        }
+
+        .modal.modal-right .modal-content {
+            height: calc(100vh - 0);
+            overflow-y: auto;
+        }
+
+        .modal.modal-right .modal-dialog {
+            transform: translate(100%, 0);
+            margin: 0 0 0 auto;
+        }
+    </style>
     <section class="content">
         <div class="row">
             <div class="col-md-3">
-                <button class="btn btn-outline-info btn-block mb-3"><i class="fas fa-plus mr-2"></i>Redactar</button>
+                <button data-bs-toggle="modal" data-bs-target="#modal_crear_mensaje" class="btn btn-outline-info btn-block mb-3"><i class="fas fa-plus mr-2"></i>Redactar</button>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Carpetas</h3>
@@ -63,7 +117,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
             </div>
             <div class="col-md-9">
                 <div id="contenido_mensaje" class="card card-info">
-                    
+
                 </div>
             </div>
         </div>

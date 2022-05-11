@@ -2,6 +2,57 @@ $(document).ready(function() {
     moment.locale('es');
     Loader();
     verificar_sesion();
+    $('#modal_crear_mensaje').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+    $('#para').select2(
+        {
+            placeholder: 'Seleccione un destinatario',
+            language: {
+                noResults: function() {
+                    return "No hay resultado";
+                },
+                searching: function() {
+                    return "Buscando...";
+                }
+            }
+        }
+    );
+
+    async function llenar_destinatarios() {
+        funcion = "llenar_destinatarios";
+        let data = await fetch('../../Controllers/UsuarioController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let destinatarios = JSON.parse(response);
+                let template = '';
+                destinatarios.forEach(destinatario => {
+                    template += `
+                        <option value="${destinatario.id}">${destinatario.nombre_completo}</option>
+                    `;
+                });
+                $('#para').html(template);
+                $('#para').val('').trigger('change');
+
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
 
     async function read_notificaciones() {
         funcion = "read_notificaciones";
@@ -359,6 +410,7 @@ $(document).ready(function() {
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
+                    llenar_destinatarios();
                     abrir_mensaje();
                     CloseLoader();
                 } else {
@@ -386,7 +438,7 @@ $(document).ready(function() {
         })
         if(data.ok) {
             let response = await data.text();
-            console.log(response);
+            //console.log(response);
             try {
                 let mensaje = JSON.parse(response);
                 //console.log(mensaje);
@@ -415,7 +467,7 @@ $(document).ready(function() {
                     <div class="card-body p-0">
                         <div class="mailbox-read-info">
                             <h5>${mensaje.asunto}</h5>
-                            <h6>De: ${mensaje.emisor}
+                            <h6>${mensaje.E_D}
                                 <span class="mailbox-read-time float-right">${mensaje.fecha_creacion}</span>
                             </h6>
                         </div>
@@ -445,7 +497,7 @@ $(document).ready(function() {
                                 <i class="fas fa-print"></i>
                             </button>
                             <div class="h4 float-right mr-2">`;
-                            if(mensaje.option == 'r' || mensaje.option == 'e' || mensaje.option == 'f') {
+                            if(mensaje.option == '1' || mensaje.option == '2' || mensaje.option == '3') {
                                 if(mensaje.favorito == "1") {
                                     template += `<i data-id="${mensaje.id}" class="fav fas fa-star text-warning" style="cursor: pointer"></i>`;
                                 } else {
@@ -469,7 +521,7 @@ $(document).ready(function() {
                         <div class="float-right">
                             <button type="button" class="btn btn-default"><i class="fas fa-reply"></i></button>
                         </div>`;
-                        if(mensaje.option == 'r' || mensaje.option == 'e' || mensaje.option == 'f') {
+                        if(mensaje.option == '1' || mensaje.option == '2' || mensaje.option == '3') {
                             // eliminacion lógica
                             template+=`
                             <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default"><i class="far fa-trash-alt"></i></button>
@@ -489,7 +541,7 @@ $(document).ready(function() {
                 console.error(error);
                 console.log(response);
                 if(response == 'error' || response == 'danger') {
-                    //location.href = '../../index.php';
+                    location.href = '../../index.php';
                 }
             }
         } else {
@@ -602,7 +654,6 @@ $(document).ready(function() {
         }
     }
 
-
     $(document).on('click', '.eliminar_mensaje_definitivamente', (e) => {
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('id');
@@ -683,6 +734,91 @@ $(document).ready(function() {
         let id = $this.data('id');
         $this.removeClass('nofav far fa-star').addClass('fav fas fa-star text-warning');
         agregar_favorito(id);
+    })
+
+    async function crear_mensaje(datos) {
+        let data = await fetch('../../Controllers/MensajeController.php',{
+            method: 'POST',
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    toastr.success('Mensaje enviado', 'Enviado!');
+                    $('#form-mensaje').trigger('reset');
+                    $('#para').val('').trigger('change');
+                    $('#modal_crear_mensaje').modal('hide');
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            
+            let funcion = 'crear_mensaje';
+            let datos   = new FormData($('#form-mensaje')[0]);
+            datos.append('funcion', funcion);
+            crear_mensaje(datos);
+        }
+    });
+
+    $('#form-mensaje').validate({
+        rules: {
+            para: {
+                required: true,
+            },
+            asunto: {
+                required: true,
+            },
+            contenido: {
+                required: true,
+            }
+        },
+        messages: {
+            para: {
+                required: "* Este campo es obligatorio"
+            },
+            asunto: {
+                required: "* Este campo es obligatorio"
+            },
+            contenido: {
+                required: "* Este campo es obligatorio"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
+
+    $('#cerrar_modal_crear_mensaje').click(function () {
+        $('#form-mensaje').trigger('reset');
+        $('#para').val('').trigger('change');
     })
 
     function Loader(mensaje) {

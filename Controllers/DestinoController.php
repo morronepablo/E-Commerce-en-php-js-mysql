@@ -2,7 +2,8 @@
 include_once '../Util/Config/config.php';
 include_once '../Models/Destino.php';
 include_once '../Models/Historial.php';
-$destino = new Destino();
+$destino   = new Destino();
+$destino_2 = new Destino();
 $historial = new Historial();
 session_start();
 
@@ -117,20 +118,36 @@ if($_POST['funcion']=='abrir_mensaje'){
             if($option == '1' || $option == '2' || $option == '3' || $option == '4') {
                 $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
                 if(!empty($destino->objetos)) {
-                    $destino->abrir_mensaje($id_mensaje);
+                    // Mensaje recibido
+                    $favorito = $destino->objetos[0]->favorito;
+                    $destino_2->mensaje_leido($id_mensaje);
+                } else {
+                    // Mensaje enviado
+                    $destino->verificar_usuario_mensaje_emisor($id_usuario, $id_mensaje);
+                    $favorito = $destino->objetos[0]->favorito_emisor;
+                    $destino_2->mensaje_leido_emisor($id_mensaje);
+                }
+                if(!empty($destino->objetos)) {
+                    $destino->abrir_mensaje($id_mensaje, $id_usuario);
+                    if($_SESSION['nombre']==$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos) {
+                        // Mensaje Enviado
+                        $E_D = 'Para: '.$destino->objetos[0]->destino;
+                    } else {
+                        // Mensaje Recibido
+                        $E_D = 'De: '.$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos;
+                    }
                     $json = array(
                         'id'             => openssl_encrypt($destino->objetos[0]->id,CODE,KEY),
                         'asunto'         => $destino->objetos[0]->asunto,
                         'contenido'      => $destino->objetos[0]->contenido,
                         'abierto'        => $destino->objetos[0]->abierto,
-                        'favorito'       => $destino->objetos[0]->favorito,
+                        'favorito'       => $favorito,
                         'estado'         => $destino->objetos[0]->estado,
                         'fecha_creacion' => $destino->objetos[0]->fecha_creacion,
                         'fecha_edicion'  => $destino->objetos[0]->fecha_edicion,
-                        'emisor'         => $destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos,
+                        'E_D'            => $E_D,
                         'option'         => $option
                     );
-                    $destino->mensaje_leido($id_mensaje);
                     $jsonstring = json_encode($json);
                     echo $jsonstring;
                 } else {
@@ -249,7 +266,14 @@ if($_POST['funcion']=='eliminar_mensajes_definitivamente'){
         $formateado = str_replace(" ","+",$objeto);
         $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
         if(is_numeric($id_mensaje)) {
-            $destino->eliminar_mensaje_definitivamente($id_mensaje);
+            $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+            if(!empty($destino->objetos)) {
+                // Mensaje recibido
+                $destino->eliminar_mensaje_definitivamente($id_mensaje);
+            } else {
+                // Mensaje enviado
+                $destino->eliminar_mensaje_definitivamente_emisor($id_mensaje);
+            }
             $descripcion = 'Ha eliminado un mensaje definitivamente';
             $historial->crear_historial($descripcion, 3, 7, $id_usuario);
         } else {
