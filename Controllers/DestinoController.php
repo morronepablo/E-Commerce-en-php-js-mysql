@@ -122,34 +122,44 @@ if($_POST['funcion']=='abrir_mensaje'){
                     $favorito = $destino->objetos[0]->favorito;
                     $destino_2->mensaje_leido($id_mensaje);
                 } else {
-                    // Mensaje enviado
+                    // Puede ser mensaje enviado
                     $destino->verificar_usuario_mensaje_emisor($id_usuario, $id_mensaje);
-                    $favorito = $destino->objetos[0]->favorito_emisor;
-                    $destino_2->mensaje_leido_emisor($id_mensaje);
+                    if(!empty($destino->objetos)) {
+                        // el mensaje si es enviado por nosotros
+                        $favorito = $destino->objetos[0]->favorito_emisor;
+                        $destino_2->mensaje_leido_emisor($id_mensaje);
+                    }
                 }
                 if(!empty($destino->objetos)) {
                     $destino->abrir_mensaje($id_mensaje, $id_usuario);
-                    if($_SESSION['nombre']==$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos) {
-                        // Mensaje Enviado
-                        $E_D = 'Para: '.$destino->objetos[0]->destino;
+                    if(!empty($destino->objetos)) {
+                        if($_SESSION['nombre']==$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos) {
+                            // Mensaje Enviado
+                            $E_D = 'Para: '.$destino->objetos[0]->destino;
+                            $estado_E_D = '1';
+                        } else {
+                            // Mensaje Recibido
+                            $E_D = 'De: '.$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos;
+                            $estado_E_D = '0';
+                        }
+                        $json = array(
+                            'id'             => openssl_encrypt($destino->objetos[0]->id,CODE,KEY),
+                            'asunto'         => $destino->objetos[0]->asunto,
+                            'contenido'      => $destino->objetos[0]->contenido,
+                            'abierto'        => $destino->objetos[0]->abierto,
+                            'favorito'       => $favorito,
+                            'estado'         => $destino->objetos[0]->estado,
+                            'fecha_creacion' => $destino->objetos[0]->fecha_creacion,
+                            'fecha_edicion'  => $destino->objetos[0]->fecha_edicion,
+                            'E_D'            => $E_D,
+                            'option'         => $option,
+                            'estado_E_D'     => $estado_E_D
+                        );
+                        $jsonstring = json_encode($json);
+                        echo $jsonstring;
                     } else {
-                        // Mensaje Recibido
-                        $E_D = 'De: '.$destino->objetos[0]->nombres.' '.$destino->objetos[0]->apellidos;
+                        echo 'danger';
                     }
-                    $json = array(
-                        'id'             => openssl_encrypt($destino->objetos[0]->id,CODE,KEY),
-                        'asunto'         => $destino->objetos[0]->asunto,
-                        'contenido'      => $destino->objetos[0]->contenido,
-                        'abierto'        => $destino->objetos[0]->abierto,
-                        'favorito'       => $favorito,
-                        'estado'         => $destino->objetos[0]->estado,
-                        'fecha_creacion' => $destino->objetos[0]->fecha_creacion,
-                        'fecha_edicion'  => $destino->objetos[0]->fecha_edicion,
-                        'E_D'            => $E_D,
-                        'option'         => $option
-                    );
-                    $jsonstring = json_encode($json);
-                    echo $jsonstring;
                 } else {
                     echo 'danger';
                 }
@@ -167,9 +177,17 @@ if($_POST['funcion']=='eliminar_mensaje'){
     $id_usuario = $_SESSION['id'];
     $formateado = str_replace(" ","+",$_POST['id']);
     $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
-    $option = $_SESSION['message-option'];
+    $formateado = str_replace(" ","+",$_SESSION['message-option']);
+    $option     = openssl_decrypt($formateado, CODE, KEY);
     if(is_numeric($id_mensaje)) {
-        $destino->eliminar_mensaje($id_mensaje);
+        $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $destino->eliminar_mensaje($id_mensaje);
+        } else {
+            // Mensaje enviado
+            $destino->eliminar_mensaje_emisor($id_mensaje);
+        }
         $descripcion = 'Ha eliminado un mensaje';
         $historial->crear_historial($descripcion, 3, 7, $id_usuario);
         $json = array(
@@ -362,6 +380,21 @@ if($_POST['funcion']=='restaurar_mensajes'){
         echo $jsonstring;
     } else {
         // Vulnero el sistema
+        echo 'error';
+    }
+}
+if($_POST['funcion']=='traer_informacion_mensaje'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_mensaje)) {
+        $destino->traer_informacion_mensaje($id_mensaje);
+        $json = array(
+            'id_usuario' => openssl_encrypt($destino->objetos[0]->id_usuario,CODE,KEY)
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
         echo 'error';
     }
 }

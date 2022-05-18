@@ -472,45 +472,29 @@ $(document).ready(function() {
                             </h6>
                         </div>
                         <div class="mailbox-controls with-border text-center">
-                            <div class="btn-group">`;
-                            if(mensaje.option == '1' || mensaje.option == '2' || mensaje.option == '3') {
-                                // eliminacion lógica
-                                template+=`
+                            <div class="btn-group">
                                 <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default btn-sm" data-container="body" title="Eliminar">
                                     <i class="far fa-trash-alt"></i>
-                                </button>
-                                `;
-                            } else {
-                                // eliminacion física
-                                template+=`
-                                <button id="${mensaje.id}" type="button" class="eliminar_mensaje_definitivamente btn btn-default btn-sm" data-container="body" title="Eliminar">
-                                    <i class="far fa-trash-alt"></i> Eliminar definitivamente
-                                </button>
-                                `;
+                                </button>`;
+                            if(mensaje.option == '1' || mensaje.option == '3') {
+                                if(mensaje.estado_E_D == '0') {
+                                    template+=`
+                                    <button type="button" id="${mensaje.id}" data-bs-toggle="modal" data-bs-target="#modal_crear_mensaje" class="btn btn-default btn-sm responder_mensaje" data-container="body" title="Responder">
+                                        <i class="fas fa-reply"></i>
+                                    </button>`;
+                                }
                             }
                             template+=`
-                                <button type="button" class="btn btn-default btn-sm" data-container="body" title="Responder">
-                                    <i class="fas fa-reply"></i>
-                                </button>
                             </div>
                             <button type="button" class="btn btn-default btn-sm ml-2" title="Imprimir">
                                 <i class="fas fa-print"></i>
                             </button>
                             <div class="h4 float-right mr-2">`;
-                            if(mensaje.option == '1' || mensaje.option == '2' || mensaje.option == '3') {
-                                if(mensaje.favorito == "1") {
-                                    template += `<i data-id="${mensaje.id}" class="fav fas fa-star text-warning" style="cursor: pointer"></i>`;
-                                } else {
-                                    template += `<i data-id="${mensaje.id}" class="nofav far fa-star" style="cursor: pointer"></i>`;
-                                }
+                            if(mensaje.favorito == "1") {
+                                template += `<i data-id="${mensaje.id}" class="fav fas fa-star text-warning" style="cursor: pointer"></i>`;
                             } else {
-                                if(mensaje.favorito == "1") {
-                                    template += `<i class="fas fa-star text-warning"></i>`;
-                                } else {
-                                    template += `<i class="far fa-star"></i>`;
-                                }
-                            }
-                            
+                                template += `<i data-id="${mensaje.id}" class="nofav far fa-star" style="cursor: pointer"></i>`;
+                            }   
             template +=    `</div>
                         </div>
                         <div class="mailbox-read-message">
@@ -518,22 +502,19 @@ $(document).ready(function() {
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="float-right">
-                            <button type="button" class="btn btn-default"><i class="fas fa-reply"></i></button>
-                        </div>`;
-                        if(mensaje.option == '1' || mensaje.option == '2' || mensaje.option == '3') {
-                            // eliminacion lógica
-                            template+=`
-                            <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default"><i class="far fa-trash-alt"></i></button>
-                            `;
-                        } else {
-                            // eliminacion física
-                            template+=`
-                            <button id="${mensaje.id}" type="button" class="eliminar_mensaje_definitivamente btn btn-default"><i class="far fa-trash-alt"></i>Eliminar definitivamente</button>
-                            `;
+                        <div class="float-right">`;
+                        if(mensaje.option == '1' || mensaje.option == '3') {
+                            if(mensaje.estado_E_D == '0') {
+                                template+=`
+                                <button type="button" id="${mensaje.id}" data-bs-toggle="modal" data-bs-target="#modal_crear_mensaje" class="btn btn-default btn-sm responder_mensaje" data-container="body" title="Responder">
+                                    <i class="fas fa-reply"></i>
+                                </button>`;
+                            }
                         }
-                        
-                    template+=`<button type="button" class="btn btn-default"><i class="fas fa-print"></i></button>
+                    template+=`
+                    </div>
+                        <button id="${mensaje.id}" type="button" class="eliminar_mensaje btn btn-default"><i class="far fa-trash-alt"></i></button>
+                        <button type="button" class="btn btn-default"><i class="fas fa-print"></i></button>
                     </div>
                 `;
                 $('#contenido_mensaje').html(template);
@@ -574,13 +555,13 @@ $(document).ready(function() {
                         timer: 1500
                     }).then(function() {
                         switch (respuesta.option) {
-                            case 'r':
+                            case '1':
                                 location.href = '../mensajes';
                                 break;
-                            case 'e':
-                                location.href = '';
+                            case '2':
+                                location.href = 'sent.php';
                                 break;
-                            case 'f':
+                            case '3':
                                 location.href = 'favorites.php';
                                 break;
                         
@@ -819,6 +800,43 @@ $(document).ready(function() {
     $('#cerrar_modal_crear_mensaje').click(function () {
         $('#form-mensaje').trigger('reset');
         $('#para').val('').trigger('change');
+    })
+
+    async function traer_informacion_mensaje(id) {
+        funcion = "traer_informacion_mensaje";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                $('#para').val(respuesta.id_usuario).trigger('change');
+                $('#para').prop("disabled", true);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $(document).on('click', '.responder_mensaje', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('id');
+        //console.log(id);
+        traer_informacion_mensaje(id);
     })
 
     function Loader(mensaje) {
