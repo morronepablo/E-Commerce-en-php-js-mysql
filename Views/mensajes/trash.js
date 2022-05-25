@@ -475,9 +475,9 @@ $(document).ready(function() {
                             "render": function(data, type, datos, meta) {
                                 let variable;
                                 if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=${datos.p}&&id=${datos.id}"><strong>${datos.E_D}</strong></a>`;
+                                    variable = `<a id="${datos.id}" E_D="${datos.E_D}" asunto="${datos.asunto}" favorito="${datos.favorito}" class="enviar_info_modal" href="" data-bs-toggle="modal" data-bs-target="#modal_ver_mensaje_trash" style="color: #000"><strong>${datos.E_D}</strong></a>`;
                                 } else {
-                                    variable = `<a style="color: #000" href="read.php?option=${datos.p}&&id=${datos.id}">${datos.E_D}</a>`;
+                                    variable = `<a id="${datos.id}" E_D="${datos.E_D}" asunto="${datos.asunto}" favorito="${datos.favorito}" class="enviar_info_modal" href="" data-bs-toggle="modal" data-bs-target="#modal_ver_mensaje_trash" style="color: #000">${datos.E_D}</a>`;
                                 }
                                 return variable;
                             }
@@ -486,9 +486,9 @@ $(document).ready(function() {
                             "render":function(data, type, datos, meta) {
                                 let variable;
                                 if(datos.abierto == '0') {
-                                    variable = `<a style="color: #000" href="read.php?option=${datos.p}&&id=${datos.id}"><strong>${datos.asunto}</strong></a>`;
+                                    variable = `<a id="${datos.id}" E_D="${datos.E_D}" asunto="${datos.asunto}" favorito="${datos.favorito}" class="enviar_info_modal" href="" data-bs-toggle="modal" data-bs-target="#modal_ver_mensaje_trash" style="color: #000"><strong>${datos.asunto}</strong></a>`;
                                 } else {
-                                    variable = `<a style="color: #000" href="read.php?option=${datos.p}&&id=${datos.id}">${datos.asunto}</a>`;
+                                    variable = `<a id="${datos.id}" E_D="${datos.E_D}" asunto="${datos.asunto}" favorito="${datos.favorito}" class="enviar_info_modal" href="" data-bs-toggle="modal" data-bs-target="#modal_ver_mensaje_trash" style="color: #000">${datos.asunto}</a>`;
                                 }
                                 return variable;
                             }
@@ -735,6 +735,16 @@ $(document).ready(function() {
     $('#cerrar_modal_crear_mensaje').click(function () {
         $('#form-mensaje').trigger('reset');
         $('#para').val('').trigger('change');
+    })
+
+    $(document).on('click', '.enviar_info_modal', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('id');
+        let E_D = $(elemento).attr('E_D');
+        let asunto = $(elemento).attr('asunto');
+        let favorito = $(elemento).attr('favorito');
+        $('#asunto_modal').text(asunto);
+        $('#E_D_modal').text(E_D);
     })
 
     function Loader(mensaje) {

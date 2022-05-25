@@ -14,6 +14,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                 </div>
                 <div class="modal-body">
                     <form id="form-mensaje" enctype="multipart/form-data">
+                        <input type="hidden" id="usuario_destino" name="usuario_destino">
                         <div class="form-group">
                             <label for="para">Para:</label>
                             <select name="para" id="para" class="form-control select2-info" data-dropdown-css-class="select2-info" style="width: 100%;"></select>

@@ -12,7 +12,11 @@ session_start();
 
 if($_POST['funcion']=='crear_mensaje'){
     $id_usuario   = $_SESSION['id'];
-    $para         = $_POST['para'];
+    if(!empty($_POST['para'])) {
+        $para = $_POST['para'];
+    } else {
+        $para = $_POST['usuario_destino'];
+    }
     $asunto       = $_POST['asunto'];
     $contenido    = $_POST['contenido'];
     $formateado   = str_replace(" ","+",$para);

@@ -33,6 +33,29 @@ include_once 'layouts/header.php';
     </div>
 </div>
 <!-- Fin Modal -->
+<!-- Modal Ver Mensaje Eliminado -->
+<div class="modal fade" id="modal_ver_mensaje_trash" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="asunto_modal"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label id="E_D_modal"></label>
+                </div>    
+                <div class="form-group">
+                    <label for="contenido_modal">Contenido:</label>
+                    <span id="contenido_modal">dfgdsgdsgdsgdfsgd</span>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cerrar_modal_crear_mensaje" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal -->
 <title>Papelara | Morrone</title>
 <section class="content-header">
     <div class="container-fluid">

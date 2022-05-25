@@ -729,6 +729,7 @@ $(document).ready(function() {
                 let respuesta = JSON.parse(response);
                 if(respuesta.mensaje == 'success') {
                     toastr.success('Mensaje enviado', 'Enviado!');
+                    $('#para').prop("disabled", false);
                     $('#form-mensaje').trigger('reset');
                     $('#para').val('').trigger('change');
                     $('#modal_crear_mensaje').modal('hide');
@@ -798,6 +799,7 @@ $(document).ready(function() {
     });
 
     $('#cerrar_modal_crear_mensaje').click(function () {
+        $('#para').prop("disabled", false);
         $('#form-mensaje').trigger('reset');
         $('#para').val('').trigger('change');
     })
@@ -815,6 +817,7 @@ $(document).ready(function() {
             try {
                 let respuesta = JSON.parse(response);
                 $('#para').val(respuesta.id_usuario).trigger('change');
+                $('#usuario_destino').val(respuesta.id_usuario);
                 $('#para').prop("disabled", true);
             } catch (error) {
                 console.error(error);
