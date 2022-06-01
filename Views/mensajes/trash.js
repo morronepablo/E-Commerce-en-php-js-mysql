@@ -737,6 +737,37 @@ $(document).ready(function() {
         $('#para').val('').trigger('change');
     })
 
+    async function obtener_contenido_mensaje(id) {
+        funcion = "obtener_contenido_mensaje";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                //console.log(respuesta);
+                $('#contenido_modal').html(respuesta.contenido);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('Error', 'Error!');
+                    //read_mensajes_papelera();
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     $(document).on('click', '.enviar_info_modal', (e) => {
         let elemento = $(this)[0].activeElement;
         let id = $(elemento).attr('id');
@@ -745,6 +776,127 @@ $(document).ready(function() {
         let favorito = $(elemento).attr('favorito');
         $('#asunto_modal').text(asunto);
         $('#E_D_modal').text(E_D);
+        obtener_contenido_mensaje(id);
+        let template = `
+        <div class="mailbox-controls with-border text-center">
+            <div class="btn-group">
+                <button id="${id}" type="button" class="eliminar_mensaje_definitivamente btn btn-default btn-sm" data-container="body" title="Eliminar Definitivamente">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+                <button id="${id}" type="button" class="restaurar_mensaje btn btn-default btn-sm ml-2" data-container="body" title="Restaurar mensaje">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
+            </div>
+            <button type="button" class="btn btn-default btn-sm ml-2" title="Imprimir">
+                <i class="fas fa-print"></i>
+            </button>
+            <div class="h4 float-right mr-2">`;
+            if(favorito == "1") {
+                template += `<i class="fas fa-star text-warning" style="cursor: pointer"></i>`;
+            } else {
+                template += `<i class="far fa-star" style="cursor: pointer"></i>`;
+            }   
+        template += `
+            </div>
+        </div>
+        `;
+        $('#botones_trash').html(template);
+    })
+
+    async function eliminar_mensaje_definitivamente(id) {
+        funcion = "eliminar_mensaje_definitivamente";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se eliminó el mensaje definitivamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        read_mensajes_papelera();
+                        $('#modal_ver_mensaje_trash').modal('hide');
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error al eliminar!');
+                } else {
+                    toastr.error('Hubo error al eliminar', 'Error al eliminar!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $(document).on('click', '.eliminar_mensaje_definitivamente', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('id');
+        eliminar_mensaje_definitivamente(id);
+    })
+
+    async function restaurar_mensaje(id) {
+        funcion = "restaurar_mensaje";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion=' + funcion + '&&id=' + id
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se restauró el mensaje',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        read_mensajes_papelera();
+                        $('#modal_ver_mensaje_trash').modal('hide');
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    toastr.error('No intente vulnerar el sistema', 'Error al restaurar!');
+                } else {
+                    toastr.error('Hubo error al restaurar', 'Error al restaurar!');
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
+    $(document).on('click', '.restaurar_mensaje', (e) => {
+        let elemento = $(this)[0].activeElement;
+        let id = $(elemento).attr('id');
+        restaurar_mensaje(id);
     })
 
     function Loader(mensaje) {

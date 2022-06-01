@@ -315,7 +315,14 @@ if($_POST['funcion']=='eliminar_mensaje_definitivamente'){
     $formateado = str_replace(" ","+",$_POST['id']);
     $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
     if(is_numeric($id_mensaje)) {
-        $destino->eliminar_mensaje_definitivamente($id_mensaje);
+        $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $destino->eliminar_mensaje_definitivamente($id_mensaje);
+        } else {
+            // Mensaje enviado
+            $destino->eliminar_mensaje_definitivamente_emisor($id_mensaje);
+        }
         $descripcion = 'Ha eliminado un mensaje definitivamente';
         $historial->crear_historial($descripcion, 3, 7, $id_usuario);
         $json = array(
@@ -391,6 +398,45 @@ if($_POST['funcion']=='traer_informacion_mensaje'){
         $destino->traer_informacion_mensaje($id_mensaje);
         $json = array(
             'id_usuario' => openssl_encrypt($destino->objetos[0]->id_usuario,CODE,KEY)
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
+if($_POST['funcion']=='obtener_contenido_mensaje'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY);
+    if(is_numeric($id_mensaje)) {
+        $destino->obtener_contenido_mensaje($id_mensaje);
+        $json = array(
+            'contenido' => $destino->objetos[0]->contenido
+        );
+        $jsonstring = json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
+    }
+}
+if($_POST['funcion']=='restaurar_mensaje'){
+    $id_usuario = $_SESSION['id'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_mensaje = openssl_decrypt($formateado, CODE, KEY); 
+    if(is_numeric($id_mensaje)) {
+        $destino->verificar_usuario_mensaje($id_usuario, $id_mensaje);
+        if(!empty($destino->objetos)) {
+            // Mensaje recibido
+            $destino->restaurar_mensaje($id_mensaje);
+        } else {
+            // Mensaje enviado
+            $destino->restaurar_mensaje_emisor($id_mensaje);
+        }
+        $descripcion = 'Ha restaurado un mensaje';
+        $historial->crear_historial($descripcion, 1, 7, $id_usuario);
+        $json = array(
+            'mensaje' => 'success'
         );
         $jsonstring = json_encode($json);
         echo $jsonstring;

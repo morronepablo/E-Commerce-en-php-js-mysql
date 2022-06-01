@@ -319,4 +319,17 @@
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }
+        function obtener_contenido_mensaje($id_mensaje) {
+            $sql = "SELECT d.contenido 
+                    FROM destino d
+                    WHERE d.id=:id_mensaje
+                    ";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_mensaje' => $id_mensaje
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }

@@ -44,9 +44,12 @@ include_once 'layouts/header.php';
                 <div class="form-group">
                     <label id="E_D_modal"></label>
                 </div>    
+                <div id="botones_trash" class="form-group">
+                    
+                </div>    
                 <div class="form-group">
                     <label for="contenido_modal">Contenido:</label>
-                    <span id="contenido_modal">dfgdsgdsgdsgdfsgd</span>
+                    <span id="contenido_modal"></span>
                 </div>    
             </div>
             <div class="modal-footer">

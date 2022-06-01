@@ -594,53 +594,6 @@ $(document).ready(function() {
         eliminar_mensaje(id);
     })
 
-    async function eliminar_mensaje_definitivamente(id) {
-        funcion = "eliminar_mensaje_definitivamente";
-        let data = await fetch('../../Controllers/DestinoController.php',{
-            method: 'POST',
-            headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'funcion=' + funcion + '&&id=' + id
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //conselo.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                if(respuesta.mensaje == 'success') {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Se eliminó el mensaje',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        location.href = 'trash.php';
-                    })
-                }
-            } catch (error) {
-                console.error(error);
-                console.log(response);
-                if(response == 'error') {
-                    toastr.error('No intente vulnerar el sistema', 'Error al eliminar!');
-                } else {
-                    toastr.error('Hubo error al eliminar', 'Error al eliminar!');
-                }
-            }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
-        }
-    }
-
-    $(document).on('click', '.eliminar_mensaje_definitivamente', (e) => {
-        let elemento = $(this)[0].activeElement;
-        let id = $(elemento).attr('id');
-        eliminar_mensaje_definitivamente(id);
-    })
-
     async function remover_favorito(id) {
         funcion = "remover_favorito";
         let data = await fetch('../../Controllers/DestinoController.php',{
