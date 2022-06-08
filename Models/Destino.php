@@ -332,4 +332,20 @@
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }
+        function obtener_contadores_mensajes($id_usuario) {
+            $sql = "SELECT 
+                    COUNT(*) as contador_mensaje
+                    FROM destino d
+                    JOIN mensaje m ON d.id_mensaje=m.id
+                    JOIN usuario u ON m.id_usuario=u.id
+                    WHERE d.id_usuario = :id_usuario
+                    AND d.estado='A' AND d.estado_perm='A' AND d.abierto='0'";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_usuario' => $id_usuario
+            );
+            $query->execute($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
     }

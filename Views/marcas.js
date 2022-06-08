@@ -376,10 +376,12 @@ $(document).ready(function() {
                         read_all_marcas();
                         if(sesion.tipo_usuario == 1 || sesion.tipo_usuario ==2) {
                             read_solicitudes_por_aprobar();
+                            obtener_contadores();
                             CloseLoader();
                             $('#btn_adm').show();
                         } else if(sesion.tipo_usuario == 3) {
                             read_tus_solicitudes();
+                            obtener_contadores();
                             CloseLoader();
                             $('#btn_ven').show();
                         }
@@ -1510,6 +1512,52 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+
+    async function obtener_contadores() {
+        let funcion = "obtener_contadores";
+        let data = await fetch('../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let contadores = JSON.parse(response);
+                //console.log(contadores.contador_mensaje);
+                let template = ``;
+                let template_1 = ``;
+                if(contadores.contador_mensaje > 0) {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    <span class="badge bg-warning float-right">${contadores.contador_mensaje}</span>
+                    `;
+                    template_1 += `
+                    Mensajes <span class="badge badge-warning right">${contadores.contador_mensaje}</span>
+                    `;
+                } else {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    `;
+                    template_1 += `
+                    Mensajes
+                    `;
+                }
+                $('#recibidos').html(template);
+                $('#nav_cont_mens').html(template_1);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

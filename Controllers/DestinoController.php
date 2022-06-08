@@ -444,3 +444,12 @@ if($_POST['funcion']=='restaurar_mensaje'){
         echo 'error';
     }
 }
+if($_POST['funcion']=='obtener_contadores'){
+    $id_usuario = $_SESSION['id'];
+    $destino->obtener_contadores_mensajes($id_usuario);
+    $json = array(
+        'contador_mensaje' => $destino->objetos[0]->contador_mensaje
+    );
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
+}

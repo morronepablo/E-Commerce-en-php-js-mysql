@@ -412,6 +412,7 @@ $(document).ready(function() {
                     read_favoritos();
                     llenar_destinatarios();
                     read_mensajes_enviados();
+                    obtener_contadores();
                     CloseLoader();
                 } else {
                     location.href='../login.php';
@@ -677,6 +678,7 @@ $(document).ready(function() {
     $('.actualizar_mensajes').click(function () {
         toastr.info('Mensajes actualizados', 'Actualizado!');
         read_mensajes_enviados();
+        obtener_contadores();
     })
 
     async function crear_mensaje(datos) {
@@ -763,6 +765,52 @@ $(document).ready(function() {
         $('#form-mensaje').trigger('reset');
         $('#para').val('').trigger('change');
     })
+
+    async function obtener_contadores() {
+        let funcion = "obtener_contadores";
+        let data = await fetch('../../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let contadores = JSON.parse(response);
+                //console.log(contadores.contador_mensaje);
+                let template = ``;
+                let template_1 = ``;
+                if(contadores.contador_mensaje > 0) {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    <span class="badge bg-warning float-right">${contadores.contador_mensaje}</span>
+                    `;
+                    template_1 += `
+                    Mensajes <span class="badge badge-warning right">${contadores.contador_mensaje}</span>
+                    `;
+                } else {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    `;
+                    template_1 += `
+                    Mensajes
+                    `;
+                }
+                $('#recibidos').html(template);
+                $('#nav_cont_mens').html(template_1);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
 
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){

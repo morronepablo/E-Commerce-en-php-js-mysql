@@ -110,9 +110,8 @@ include_once 'layouts/header.php';
                 <div class="card-body p-0">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item">
-                            <a href="../mensajes" class="nav-link">
-                                <i class="fas fa-inbox"></i> Recibidos
-                                <span class="badge bg-primary float-right">12</span>
+                            <a id="recibidos" href="../mensajes" class="nav-link">
+                                
                             </a>
                         </li>
                         <li class="nav-item">

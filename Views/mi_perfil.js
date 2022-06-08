@@ -17,6 +17,7 @@ $(document).ready(function() {
             }
         }
     });
+    
     $('#localidad').select2({
         placeholder: 'Seleccione una localidad',
         language: {
@@ -645,6 +646,7 @@ $(document).ready(function() {
                     mostrar_card_direcciones();
                     mostrar_historial();
                     llenar_provincias();
+                    obtener_contadores();
                     CloseLoader();
                 } else {
                     //llenar_menu_lateral();
@@ -889,6 +891,7 @@ $(document).ready(function() {
             })
         }
     })
+
     async function editar_datos(datos){
         let data = await fetch('../Controllers/UsuarioController.php',{
             method: 'POST',
@@ -938,6 +941,7 @@ $(document).ready(function() {
             })
         }
     }
+
     $.validator.setDefaults({
         submitHandler: function () {
             funcion = "editar_datos";
@@ -946,6 +950,7 @@ $(document).ready(function() {
             editar_datos(datos);
         }
     });
+
     jQuery.validator.addMethod("letras", 
         function(value, element) {
             return /^[A-Za-z ]+$/.test(value);
@@ -1016,6 +1021,7 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+
     async function cambiar_contra(funcion, pass_old, pass_new){
         let data = await fetch('../Controllers/UsuarioController.php',{
             method: 'POST',
@@ -1065,6 +1071,7 @@ $(document).ready(function() {
             })
         }
     }
+
     $.validator.setDefaults({
         submitHandler: function () {
             funcion = "cambiar_contra";
@@ -1072,14 +1079,15 @@ $(document).ready(function() {
             let pass_new = $('#pass_new').val();
             cambiar_contra(funcion, pass_old, pass_new);
         }
-      });
+    });
       
-      jQuery.validator.addMethod("letras", 
-        function(value, element) {
-            return /^[A-Za-z ]+$/.test(value);
-        }
-      , "* Este campo solo permite letras");
-      $('#form-contra').validate({
+    jQuery.validator.addMethod("letras", 
+    function(value, element) {
+        return /^[A-Za-z ]+$/.test(value);
+    }
+    , "* Este campo solo permite letras");
+
+    $('#form-contra').validate({
         rules: {
           pass_old: {
             required: true,
@@ -1126,6 +1134,53 @@ $(document).ready(function() {
           $(element).addClass('is-valid');
         }
     });
+
+    async function obtener_contadores() {
+        let funcion = "obtener_contadores";
+        let data = await fetch('../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let contadores = JSON.parse(response);
+                //console.log(contadores.contador_mensaje);
+                let template = ``;
+                let template_1 = ``;
+                if(contadores.contador_mensaje > 0) {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    <span class="badge bg-warning float-right">${contadores.contador_mensaje}</span>
+                    `;
+                    template_1 += `
+                    Mensajes <span class="badge badge-warning right">${contadores.contador_mensaje}</span>
+                    `;
+                } else {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    `;
+                    template_1 += `
+                    Mensajes
+                    `;
+                }
+                $('#recibidos').html(template);
+                $('#nav_cont_mens').html(template_1);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){
             mensaje = 'Cargando datos...';
@@ -1137,6 +1192,7 @@ $(document).ready(function() {
             showConfirmButton: false
         })
     }
+
     function CloseLoader(mensaje, tipo) {
         if(mensaje == '' || mensaje == null){
             Swal.close();

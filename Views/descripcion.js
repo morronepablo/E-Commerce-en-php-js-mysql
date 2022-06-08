@@ -19,6 +19,7 @@ $(document).ready(function() {
         'timeOut': 2000,
         'extendedTimeOut': 1000
     }
+
     async function read_notificaciones() {
         funcion = "read_notificaciones";
         let data = await fetch('../Controllers/NotificacionController.php',{
@@ -380,6 +381,7 @@ $(document).ready(function() {
                 }
                 //setTimeout(llenar_productos(),10000);
                 verificar_producto();
+                obtener_contadores();
                 CloseLoader();
 
             } catch (error) {
@@ -783,11 +785,13 @@ $(document).ready(function() {
             })
         }
     }
+
     $(document).on('click', '.imagen_pasarelas', (e) => {
         let elemento = $(this)[0].activeElement;
         let img = $(elemento).attr('prod_img');
         $('#imagen_principal').attr('src', '../Util/Img/producto/' + img);
     })
+
     async function realizar_pregunta(pregunta) {
         funcion = "realizar_pregunta";
         let data = await fetch('../Controllers/PreguntaController.php',{
@@ -818,11 +822,13 @@ $(document).ready(function() {
 
         }
     }
+
     $(document).on('submit', '#form_pregunta', (e) => {
         let pregunta = $('#pregunta').val();
         realizar_pregunta(pregunta);
         e.preventDefault();
     })
+
     async function realizar_respuesta(respuesta, id_pregunta) {
         funcion = "realizar_respuesta";
         let data = await fetch('../Controllers/RespuestaController.php',{
@@ -852,6 +858,7 @@ $(document).ready(function() {
 
         }
     }
+
     $(document).on('click', '.enviar_respuesta', (e) => {
         let elemento = $(this)[0].activeElement.parentElement.parentElement;
         let respuesta = $(elemento).children('input.respuesta').val();
@@ -863,6 +870,7 @@ $(document).ready(function() {
         }
         e.preventDefault();
     })
+
     async function cambiar_estado_favorito(id_favorito, estado_favorito) {
         funcion = "cambiar_estado_favorito";
         let data = await fetch('../Controllers/FavoritoController.php',{
@@ -900,12 +908,60 @@ $(document).ready(function() {
 
         }
     }
+
     $(document).on('click', '.bandera_favorito', (e) => {
         let elemento = $(this)[0].activeElement;
         let id_favorito = $(elemento).attr('id_favorito');
         let estado_favorito = $(elemento).attr('estado_fav');
         cambiar_estado_favorito(id_favorito, estado_favorito)
     })
+
+    async function obtener_contadores() {
+        let funcion = "obtener_contadores";
+        let data = await fetch('../Controllers/DestinoController.php',{
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'funcion='+funcion
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //conselo.log(response);
+            try {
+                let contadores = JSON.parse(response);
+                //console.log(contadores.contador_mensaje);
+                let template = ``;
+                let template_1 = ``;
+                if(contadores.contador_mensaje > 0) {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    <span class="badge bg-warning float-right">${contadores.contador_mensaje}</span>
+                    `;
+                    template_1 += `
+                    Mensajes <span class="badge badge-warning right">${contadores.contador_mensaje}</span>
+                    `;
+                } else {
+                    template += `
+                    <i class="fas fa-inbox"></i> Recibidos
+                    `;
+                    template_1 += `
+                    Mensajes
+                    `;
+                }
+                $('#recibidos').html(template);
+                $('#nav_cont_mens').html(template_1);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+        }
+    }
+
     function Loader(mensaje) {
         if(mensaje == '' || mensaje == null){
             mensaje = 'Cargando datos...';
@@ -917,6 +973,7 @@ $(document).ready(function() {
             showConfirmButton: false
         })
     }
+
     function CloseLoader(mensaje, tipo) {
         if(mensaje == '' || mensaje == null){
             Swal.close();
