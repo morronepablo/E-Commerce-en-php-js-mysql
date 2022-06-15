@@ -326,12 +326,49 @@ if($_POST['funcion']=='aprobar_solicitud'){
         $marca->buscar($nombre);
         if(empty($marca->objetos)) {
             // Se aprueba la solicitud
+            $mensaje->crear($id_usuario);
+            $mensaje->ultimo_mensaje();
+            $id_mensaje = $mensaje->objetos[0]->ultimo_mensaje;
+            $nombre_usuario = $_SESSION['nombre'];
             $solicitud_marca->aprobar_solicitud($id_solicitud, $id_usuario);
             // Se crea la marca
             $solicitud_marca->obtener_solicitud($id_solicitud);
             $desc   = $solicitud_marca->objetos[0]->descripcion;
             $imagen = $solicitud_marca->objetos[0]->imagen;
+            $usuario_solicitud = $solicitud_marca->objetos[0]->id_usuario;
+            $usuario->obtener_datos($usuario_solicitud);
+            $nombres_apellidos = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
             $marca->crear($nombre, $desc, $imagen);
+            $asunto = "Aprobé su solicitud marca: ".$nombre;
+            $contenido2 = "Hola usuario vendedor ".$nombres_apellidos." He aprobado su solicitud marca, todo estubo correcto y la imagen está legible.";
+            $contenido = '
+            <div class="card card-widget widget-user">
+                <div class="widget-user-header bg-success">
+                    <h3 class="widget-user-username">'.$nombre.'</h3>
+                    <h5 class="widget-user-desc">'.$desc.'</h5>
+                </div>
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="../../Util/Img/marca/'.$imagen.'" alt="imagen solicitud">
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">Solicitud aprobada por:</h5>
+                                <span class="description-text">'.$nombre_usuario.'</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">Mensaje:</h5>
+                                <span class="description-text">'.$contenido2.'</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
+            $destino->crear($asunto, $contenido, $usuario_solicitud, $id_mensaje);
             $descripcion = 'Ha aprobado una solicitud marca, '.$nombre;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'success'; // se hicieron modificaciones y todo ok
@@ -340,6 +377,46 @@ if($_POST['funcion']=='aprobar_solicitud'){
             // Rechazar la solicitud marca
             $observacion = "No se aproba la solicitud ya que existe una marca con el mismo nombre ".$nombre;
             $solicitud_marca->rechazar_solicitud($id_solicitud, $id_usuario, $observacion);
+            $mensaje->crear($id_usuario);
+            $mensaje->ultimo_mensaje();
+            $id_mensaje = $mensaje->objetos[0]->ultimo_mensaje;
+            $nombre_usuario = $_SESSION['nombre'];
+            $solicitud_marca->obtener_solicitud($id_solicitud);
+            $desc   = $solicitud_marca->objetos[0]->descripcion;
+            $imagen = $solicitud_marca->objetos[0]->imagen;
+            $usuario_solicitud = $solicitud_marca->objetos[0]->id_usuario;
+            $usuario->obtener_datos($usuario_solicitud);
+            $nombres_apellidos = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
+            $asunto = "Rechacé su solicitud marca: ".$nombre;
+            $contenido2 = "Hola usuario vendedor ".$nombres_apellidos.' '.$observacion;
+            $contenido = '
+            <div class="card card-widget widget-user">
+                <div class="widget-user-header bg-danger">
+                    <h3 class="widget-user-username">'.$nombre.'</h3>
+                    <h5 class="widget-user-desc">'.$desc.'</h5>
+                </div>
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="../../Util/Img/marca/'.$imagen.'" alt="imagen solicitud">
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">Solicitud rechazada por:</h5>
+                                <span class="description-text">'.$nombre_usuario.'</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 border-right">
+                            <div class="description-block">
+                                <h5 class="description-header">Mensaje:</h5>
+                                <span class="description-text">'.$contenido2.'</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ';
+            $destino->crear($asunto, $contenido, $usuario_solicitud, $id_mensaje);
             $descripcion = 'Ha rechazado una solicitud marca, '.$nombre;
             $historial->crear_historial($descripcion, 1, 6, $id_usuario);
             $mensaje = 'danger';
@@ -362,6 +439,47 @@ if($_POST['funcion']=='rechazar_solicitud'){
     $observaciones = $_POST['observaciones'];
     if(is_numeric($id_solicitud)) {
         $solicitud_marca->rechazar_solicitud($id_solicitud, $id_usuario, $observaciones);
+        $mensaje->crear($id_usuario);
+        $mensaje->ultimo_mensaje();
+        $id_mensaje = $mensaje->objetos[0]->ultimo_mensaje;
+
+        $nombre_usuario = $_SESSION['nombre'];
+        $solicitud_marca->obtener_solicitud($id_solicitud);
+        $desc   = $solicitud_marca->objetos[0]->descripcion;
+        $imagen = $solicitud_marca->objetos[0]->imagen;
+        $usuario_solicitud = $solicitud_marca->objetos[0]->id_usuario;
+        $usuario->obtener_datos($usuario_solicitud);
+        $nombres_apellidos = $usuario->objetos[0]->nombres.' '.$usuario->objetos[0]->apellidos;
+        $asunto = "Rechacé su solicitud marca: ".$nombre;
+        $contenido2 = "Hola usuario vendedor ".$nombres_apellidos.' '.$observaciones;
+        $contenido = '
+        <div class="card card-widget widget-user">
+            <div class="widget-user-header bg-danger">
+                <h3 class="widget-user-username">'.$nombre.'</h3>
+                <h5 class="widget-user-desc">'.$desc.'</h5>
+            </div>
+            <div class="widget-user-image">
+                <img class="img-circle elevation-2" src="../../Util/Img/marca/'.$imagen.'" alt="imagen solicitud">
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-sm-6 border-right">
+                        <div class="description-block">
+                            <h5 class="description-header">Solicitud rechazada por:</h5>
+                            <span class="description-text">'.$nombre_usuario.'</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 border-right">
+                        <div class="description-block">
+                            <h5 class="description-header">Mensaje:</h5>
+                            <span class="description-text">'.$contenido2.'</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ';
+        $destino->crear($asunto, $contenido, $usuario_solicitud, $id_mensaje);
         $descripcion = 'Ha rechazado una solicitud marca, '.$nombre;
         $historial->crear_historial($descripcion, 1, 6, $id_usuario);
         $mensaje = 'success'; // se hicieron modificaciones y todo ok

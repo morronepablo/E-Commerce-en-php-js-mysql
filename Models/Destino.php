@@ -1,4 +1,4 @@
-<?php
+    <?php
     include_once 'Conexion.php';
     class Destino {
         var $objetos;

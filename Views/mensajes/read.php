@@ -93,8 +93,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
                                 <a id="recibidos" href="../mensajes/" class="nav-link">
-                                    <i class="fas fa-inbox"></i> Recibidos
-                                    <span class="badge bg-primary float-right">12</span>
+                                    
                                 </a>
                             </li>
                             <li class="nav-item">
