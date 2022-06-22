@@ -6,7 +6,7 @@ if (!empty($_GET['id']) && $_GET['name']) {
     if(!empty($_GET['noti'])) {
         $_SESSION['noti'] = $_GET['noti'];
     }
-    include_once 'Layouts/general/header.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/header.php';
 ?>
     <title><?php echo $_GET['name']; ?> | Morrone</title>
     <style>
@@ -22,7 +22,7 @@ if (!empty($_GET['id']) && $_GET['name']) {
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="../index.php">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="/commerce/">Inicio</a></li>
                         <li class="breadcrumb-item active"><?php echo $_GET['name']; ?></li>
                     </ol>
                 </div>
@@ -99,9 +99,9 @@ if (!empty($_GET['id']) && $_GET['name']) {
     </section>
     <!-- /.content -->
 <?php
-    include_once 'Layouts/general/footer.php';
+  include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/footer.php';
 } else {
-    header('Location: ../index.php');
+    header('Location: /commerce/');
 }
 ?>
-<script src="descripcion.js"></script>
+<script src="/commerce/Views/descripcion.js"></script>

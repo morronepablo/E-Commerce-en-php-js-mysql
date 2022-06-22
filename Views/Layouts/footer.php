@@ -17,18 +17,22 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="Util/Js/jquery.min.js"></script>
+<script src="/commerce/Util/Js/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="Util/Js/bootstrap.bundle.min.js"></script>
+<script src="/commerce/Util/Js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="Util/Js/adminlte.min.js"></script>
+<script src="/commerce/Util/Js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="Util/Js/demo.js"></script>
-
-<script src="Util/Js/bootstrap.min.js"></script>
-<script src="Util/Js/sweetalert2.min.js"></script>
-<script src="Util/Js/moment.min.js"></script>
-<script src="Util/Js/toastr.min.js "></script>
+<script src="/commerce/Util/Js/demo.js"></script>
+<script src="/commerce/Util/Js/bootstrap.min.js"></script>
+<script src="/commerce/Util/Js/sweetalert2.min.js"></script>
+<script src="/commerce/Util/Js/moment.min.js"></script>
+<script src="/commerce/Util/Js/toastr.min.js "></script>
+<script src="/commerce/Util/Js/jquery.validate.min.js"></script>
+<script src="/commerce/Util/Js/additional-methods.min.js"></script>
+<script src="/commerce/Util/Js/select2.min.js"></script>
+<script src="/commerce/Util/Js/bs-custom-file-input.min.js"></script>
+<script src="/commerce/Util/Js/datatables.min.js "></script>
 
 </body>
 </html>

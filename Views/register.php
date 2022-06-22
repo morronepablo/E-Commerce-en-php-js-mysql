@@ -1,3 +1,7 @@
+<?php
+  session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +12,13 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="../Util/Css/css/all.min.css">
+  <link rel="stylesheet" href="/commerce/Util/Css/css/all.min.css">
   <!-- icheck bootstrap -->
   <!-- Theme style -->
-  <link rel="stylesheet" href="../Util/Css/adminlte.min.css">
-  <link rel="stylesheet" href="../Util/Css/toastr.min.css">
-  <link rel="stylesheet" href="../Util/Css/sweetalert2.min.css">
+  <link rel="stylesheet" href="/commerce/Util/Css/adminlte.min.css">
+  <link rel="stylesheet" href="/commerce/Util/Css/toastr.min.css">
+  <link rel="stylesheet" href="/commerce/Util/Css/sweetalert2.min.css">
+  <link rel="icon" type="image/png" href="/commerce/Util/img/logo.png">
 </head>
 <div class="modal fade" id="terminos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -43,8 +48,8 @@
 <body class="hold-transition login-page">
 <div class="mt-5">
   <div class="login-logo">
-    <img src="../Util/Img/logo.png" class="profile-user-img img-fluid img-circle" alt="">
-    <a href="../index.php"><b>Morrone</b> SHOP</a>
+    <img src="/commerce/Util/Img/logo.png" class="profile-user-img img-fluid img-circle" alt="">
+    <a href="/commerce/"><b>Morrone</b> SHOP</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -113,15 +118,15 @@
 <!-- /.login-box -->
 
 <!-- jQuery -->
-<script src="../Util/Js/jquery.min.js"></script>
+<script src="/commerce/Util/Js/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="../Util/Js/bootstrap.bundle.min.js"></script>
+<script src="/commerce/Util/Js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="../Util/Js/adminlte.min.js"></script>
-<script src="../Util/Js/toastr.min.js"></script>
-<script src="../Util/Js/jquery.validate.min.js"></script>
-<script src="../Util/Js/additional-methods.min.js"></script>
-<script src="../Util/Js/sweetalert2.min.js"></script>
-<script src="register.js"></script>
+<script src="/commerce/Util/Js/adminlte.min.js"></script>
+<script src="/commerce/Util/Js/toastr.min.js"></script>
+<script src="/commerce/Util/Js/jquery.validate.min.js"></script>
+<script src="/commerce/Util/Js/additional-methods.min.js"></script>
+<script src="/commerce/Util/Js/sweetalert2.min.js"></script>
+<script src="/commerce/Views/register.js"></script>
 </body>
 </html>

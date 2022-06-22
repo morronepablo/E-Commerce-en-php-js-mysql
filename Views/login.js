@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     async function verificar_sesion() {
         funcion = "verificar_sesion";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -16,7 +16,7 @@ $(document).ready(function() {
             //conselo.log(response);
             try {
                 if(response != '') {
-                    location.href = '../index.php';
+                    location.href = '/commerce/';
                 }
                 CloseLoader();
 
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     async function login(user, pass) {
         funcion = "login";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&user='+user+'&&pass='+pass
@@ -47,7 +47,7 @@ $(document).ready(function() {
                 let respuesta = JSON.parse(response);
                 if(respuesta.mensaje == 'logueado') {
                     toastr.success('¡ Logueado !');
-                    location.href = '../index.php';
+                    location.href = '/commerce/';
                 } else if(respuesta.mensaje == 'error') {
                     toastr.error('¡ Usuario o contraseña incorrectas !');
                 }

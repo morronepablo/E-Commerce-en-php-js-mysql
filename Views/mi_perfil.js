@@ -32,7 +32,7 @@ $(document).ready(function() {
 
     async function read_notificaciones() {
         funcion = "read_notificaciones";
-        let data = await fetch('../Controllers/NotificacionController.php',{
+        let data = await fetch('/commerce/Controllers/NotificacionController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion=' + funcion
@@ -81,9 +81,9 @@ $(document).ready(function() {
                     }
                     template += `
                     <div class="dropdown-divider"></div>
-                        <a href="../${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
+                        <a href="/commerce/${notificacion.url_1}&&noti=${notificacion.id}" class="dropdown-item">
                             <div class="media">
-                                <img src="../Util/Img/producto/${notificacion.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="/commerce/Util/Img/producto/${notificacion.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         ${notificacion.titulo}
@@ -98,7 +98,7 @@ $(document).ready(function() {
                     `;
                 });
                 template += `
-                <a href="../Views/notificaciones.php" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                <a href="/commerce/Views/notificaciones.php" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
                 </div>`;
                 $('#notificacion').html(template);
             } catch (error) {
@@ -119,7 +119,7 @@ $(document).ready(function() {
 
     async function read_favoritos() {
         funcion = "read_favoritos";
-        let data = await fetch('../Controllers/FavoritoController.php',{
+        let data = await fetch('/commerce/Controllers/FavoritoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion=' + funcion
@@ -166,9 +166,9 @@ $(document).ready(function() {
                     }
                     template += `
                     <div class="dropdown-divider"></div>
-                        <a href="../${favorito.url}" class="dropdown-item">
+                        <a href="/commerce/${favorito.url}" class="dropdown-item">
                             <div class="media">
-                                <img src="../Util/Img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="/commerce/Util/Img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         ${favorito.titulo}
@@ -183,7 +183,7 @@ $(document).ready(function() {
                     `;
                 });
                 template += `
-                    <a href="../Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
+                    <a href="/commerce/Views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus favoritos</a>
                 </div>`;
                 $('#nav_cont_fav').html(template1);
                 $('#favorito').html(template);
@@ -208,12 +208,12 @@ $(document).ready(function() {
         if(usuario === undefined || usuario == '' || usuario == null) {
             template = `
             <li class="nav-item">
-              <a class="nav-link" href="../Views/register.php" role="button">
+              <a class="nav-link" href="/commerce/Views/register.php" role="button">
                 <i class="fas fa-user-plus"></i> Registrarse
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../Views/login.php" role="button">
+              <a class="nav-link" href="/commerce/Views/login.php" role="button">
                 <i class="far fa-user"></i> Iniciar sesión
               </a>
             </li>
@@ -228,7 +228,7 @@ $(document).ready(function() {
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <a href="#" class="dropdown-item">
                   <div class="media">
-                    <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                    <img src="/commerce//commerce/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                     <div class="media-body">
                       <h3 class="dropdown-item-title">
                         Brad Diesel
@@ -242,7 +242,7 @@ $(document).ready(function() {
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <div class="media">
-                    <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                    <img src="/commerce//commerce/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                     <div class="media-body">
                       <h3 class="dropdown-item-title">
                         John Pierce
@@ -256,7 +256,7 @@ $(document).ready(function() {
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <div class="media">
-                    <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                    <img src="/commerce//commerce/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                     <div class="media-body">
                       <h3 class="dropdown-item-title">
                         Nora Silvester
@@ -279,13 +279,13 @@ $(document).ready(function() {
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img  src="../Util/Img/Users/${usuario.avatar}" width="30" height="30" class="img-fluid img-circle" alt="">
+                <img  src="/commerce/Util/Img/Users/${usuario.avatar}" width="30" height="30" class="img-fluid img-circle" alt="">
                 <span>${usuario.user}</span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="../Views/mi_perfil.php"><i class="fas fa-user-cog"></i> Mi perfil</a></li>
+                <li><a class="dropdown-item" href="/commerce/Views/mi_perfil.php"><i class="fas fa-user-cog"></i> Mi perfil</a></li>
                 <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-basket"></i> Mi pedidos</a></li>
-                <li><a class="dropdown-item" href="../Controllers/logout.php"><i class="fas fa-user-times"></i> Cerrar sesión</a></li>
+                <li><a class="dropdown-item" href="/commerce/Controllers/logout.php"><i class="fas fa-user-times"></i> Cerrar sesión</a></li>
               </ul>
             </li>
             `;
@@ -302,7 +302,7 @@ $(document).ready(function() {
             template = `
             <li class="nav-header">PERFIL</li>
             <li id="nav_notificaciones" class="nav-item">
-                <a id="active_nav_notificaciones" href="../Views/notificaciones.php" class="nav-link">
+                <a id="active_nav_notificaciones" href="/commerce/Views/notificaciones.php" class="nav-link">
                 <i class="nav-icon far fa-bell"></i>
                 <p id="nav_cont_noti">
                     Notificaciones
@@ -310,7 +310,7 @@ $(document).ready(function() {
                 </a>
             </li>
             <li id="nav_favoritos" class="nav-item">
-                <a id="active_nav_favoritos" href="../Views/favoritos.php" class="nav-link">
+                <a id="active_nav_favoritos" href="/commerce/Views/favoritos.php" class="nav-link">
                 <i class="nav-icon far fa-heart"></i>
                 <p id="nav_cont_fav">
                     Favoritos
@@ -318,7 +318,7 @@ $(document).ready(function() {
                 </a>
             </li>
             <li id="nav_mensajes" class="nav-item">
-                <a id="active_nav_mensajes" href="../Views/mensajes" class="nav-link">
+                <a id="active_nav_mensajes" href="/commerce/Views/mensajes" class="nav-link">
                 <i class="nav-icon far fa-envelope"></i>
                 <p id="nav_cont_mens">
                     Mensajes
@@ -328,7 +328,7 @@ $(document).ready(function() {
             if(usuario.tipo_usuario == 1) {
                 template+=`<li class="nav-header">PRODUCTO</li>
                 <li id="nav_marcas" class="nav-item">
-                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <a id="active_nav_marcas" href="/commerce/Views/marcas.php" class="nav-link">
                     <i class="nav-icon fas fa-apple-alt"></i>
                     <p id="nav_cont_marc">
                         Marcas
@@ -340,7 +340,7 @@ $(document).ready(function() {
             if(usuario.tipo_usuario == 2) {
                 template+=`<li class="nav-header">PRODUCTO</li>
                 <li id="nav_marcas" class="nav-item">
-                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <a id="active_nav_marcas" href="/commerce/Views/marcas.php" class="nav-link">
                     <i class="nav-icon fas fa-apple-alt"></i>
                     <p id="nav_cont_marc">
                         Marcas
@@ -352,7 +352,7 @@ $(document).ready(function() {
             if(usuario.tipo_usuario == 3) {
                 template+=`<li class="nav-header">PRODUCTO</li>
                 <li id="nav_marcas" class="nav-item">
-                    <a id="active_nav_marcas" href="../Views/marcas.php" class="nav-link">
+                    <a id="active_nav_marcas" href="/commerce/Views/marcas.php" class="nav-link">
                     <i class="nav-icon fas fa-apple-alt"></i>
                     <p id="nav_cont_marc">
                         Marcas
@@ -368,7 +368,7 @@ $(document).ready(function() {
 
     async function mostrar_card_usuario() {
         funcion = "obtener_datos";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -385,7 +385,7 @@ $(document).ready(function() {
                     <h5 class="widget-user-desc">${usuario.tipo_usuario}</h5>
                 </div>
                 <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="../Util/Img/Users/${usuario.avatar}" alt="User Avatar">
+                    <img class="img-circle elevation-2" src="/commerce/Util/Img/Users/${usuario.avatar}" alt="User Avatar">
                 </div>
                 <div class="card-footer">
                     <div class="row">
@@ -430,7 +430,7 @@ $(document).ready(function() {
                             </ul>
                         </div>
                         <div class="col-4 text-center">
-                            <img src="../Util/Img/datos.png" alt="user-avatar" class="img-circle img-fluid">
+                            <img src="/commerce/Util/Img/datos.png" alt="user-avatar" class="img-circle img-fluid">
                         </div>
                     </div>
                 </div>
@@ -457,7 +457,7 @@ $(document).ready(function() {
 
     async function mostrar_card_direcciones() {
         funcion = "llenar_direcciones";
-        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioLocalidadController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -523,7 +523,7 @@ $(document).ready(function() {
 
     async function mostrar_historial() {
         funcion = "llenar_historial";
-        let data = await fetch('../Controllers/HistorialController.php',{
+        let data = await fetch('/commerce/Controllers/HistorialController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -590,7 +590,7 @@ $(document).ready(function() {
 
     async function llenar_provincias() {
         funcion = "llenar_provincias";
-        let data = await fetch('../Controllers/ProvinciaController.php',{
+        let data = await fetch('/commerce/Controllers/ProvinciaController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -625,7 +625,7 @@ $(document).ready(function() {
 
     async function verificar_sesion() {
         funcion = "verificar_sesion";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -638,7 +638,7 @@ $(document).ready(function() {
                     let sesion = JSON.parse(response);
                     llenar_menu_superior(sesion);
                     llenar_menu_lateral(sesion);
-                    $('#avatar_menu').attr('src', '../Util/Img/Users/' + sesion.avatar);
+                    $('#avatar_menu').attr('src', '/commerce/Util/Img/Users/' + sesion.avatar);
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();
                     read_favoritos();
@@ -651,7 +651,7 @@ $(document).ready(function() {
                 } else {
                     //llenar_menu_lateral();
                     //llenar_menu_superior();
-                    location.href='login.php';
+                    location.href='/commerce/Views/login.php';
                 }
                 //setTimeout(llenar_productos(),10000);
             } catch (error) {
@@ -673,7 +673,7 @@ $(document).ready(function() {
             id_provincia = '';
         }
         funcion = "llenar_localidad";
-        let data = await fetch('../Controllers/LocalidadController.php',{
+        let data = await fetch('/commerce/Controllers/LocalidadController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&id_provincia='+id_provincia
@@ -716,7 +716,7 @@ $(document).ready(function() {
     });
 
     async function crear_direccion(id_localidad, direccion, referencia) {
-        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioLocalidadController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&id_localidad='+id_localidad+'&&direccion='+direccion+'&&referencia='+referencia
@@ -775,7 +775,7 @@ $(document).ready(function() {
     async function eliminar_direccion(id) {
         funcion = "eliminar_direccion";
         let respuesta = '';
-        let data = await fetch('../Controllers/UsuarioLocalidadController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioLocalidadController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&id='+id
@@ -857,7 +857,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.editar_datos', async (e) => {
         funcion = "obtener_datos";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -893,7 +893,7 @@ $(document).ready(function() {
     })
 
     async function editar_datos(datos){
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             body: datos
         })
@@ -1023,7 +1023,7 @@ $(document).ready(function() {
     });
 
     async function cambiar_contra(funcion, pass_old, pass_new){
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&pass_old='+pass_old+'&&pass_new='+pass_new
@@ -1137,7 +1137,7 @@ $(document).ready(function() {
 
     async function obtener_contadores() {
         let funcion = "obtener_contadores";
-        let data = await fetch('../Controllers/DestinoController.php',{
+        let data = await fetch('/commerce/Controllers/DestinoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion

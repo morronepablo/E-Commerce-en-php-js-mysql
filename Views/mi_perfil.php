@@ -1,5 +1,6 @@
 <?php
-    include_once 'Layouts/general/header.php';
+  session_start();
+  include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/header.php';
 ?>
     <!-- Modal -->
     <div class="modal fade" id="modal_contra" role="dialog">
@@ -170,7 +171,7 @@
                     </ul>
                   </div>
                   <div class="col-4 text-center">
-                    <img src="../Util/Img/credito.png" alt="user-avatar" class="img-circle img-fluid">
+                    <img src="/commerce/Util/Img/credito.png" alt="user-avatar" class="img-circle img-fluid">
                   </div>
                 </div>
               </div>
@@ -192,7 +193,7 @@
                     <!-- Post -->
                     <div class="post">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                        <img class="img-circle img-bordered-sm" src="/commerce/dist/img/user1-128x128.jpg" alt="user image">
                         <span class="username">
                           <a href="#">Jonathan Burke Jr.</a>
                           <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -225,7 +226,7 @@
                     <!-- Post -->
                     <div class="post clearfix">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image">
+                        <img class="img-circle img-bordered-sm" src="/commerce/dist/img/user7-128x128.jpg" alt="User Image">
                         <span class="username">
                           <a href="#">Sarah Ross</a>
                           <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -255,7 +256,7 @@
                     <!-- Post -->
                     <div class="post">
                       <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="../../dist/img/user6-128x128.jpg" alt="User Image">
+                        <img class="img-circle img-bordered-sm" src="/commerce/dist/img/user6-128x128.jpg" alt="User Image">
                         <span class="username">
                           <a href="#">Adam Jones</a>
                           <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
@@ -265,19 +266,19 @@
                       <!-- /.user-block -->
                       <div class="row mb-3">
                         <div class="col-sm-6">
-                          <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo">
+                          <img class="img-fluid" src="/commerce/dist/img/photo1.png" alt="Photo">
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-6">
                           <div class="row">
                             <div class="col-sm-6">
-                              <img class="img-fluid mb-3" src="../../dist/img/photo2.png" alt="Photo">
-                              <img class="img-fluid" src="../../dist/img/photo3.jpg" alt="Photo">
+                              <img class="img-fluid mb-3" src="/commerce/dist/img/photo2.png" alt="Photo">
+                              <img class="img-fluid" src="/commerce/dist/img/photo3.jpg" alt="Photo">
                             </div>
                             <!-- /.col -->
                             <div class="col-sm-6">
-                              <img class="img-fluid mb-3" src="../../dist/img/photo4.jpg" alt="Photo">
-                              <img class="img-fluid" src="../../dist/img/photo1.png" alt="Photo">
+                              <img class="img-fluid mb-3" src="/commerce/dist/img/photo4.jpg" alt="Photo">
+                              <img class="img-fluid" src="/commerce/dist/img/photo1.png" alt="Photo">
                             </div>
                             <!-- /.col -->
                           </div>
@@ -372,7 +373,7 @@
       </div><!-- /.container-fluid -->
     </section>
 <?php
-    include_once 'Layouts/general/footer.php';
+  include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/footer.php';
 ?>
 
-<script src="mi_perfil.js"></script>
+<script src="/commerce/Views/mi_perfil.js"></script>

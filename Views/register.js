@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     async function verificar_sesion() {
         funcion = "verificar_sesion";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion
@@ -16,7 +16,7 @@ $(document).ready(function() {
             //conselo.log(response);
             try {
                 if(response != '') {
-                    location.href = '../index.php';
+                    location.href = '/commerce/';
                 }
                 CloseLoader();
 
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     async function registrarse(username, pass, nombres, apellidos, dni, email, telefono) {
         funcion = "registrar_usuario";
-        let data = await fetch('../Controllers/UsuarioController.php',{
+        let data = await fetch('/commerce/Controllers/UsuarioController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion='+funcion+'&&username='+username+'&&pass='+pass+'&&nombres='+nombres+'&&apellidos='+apellidos+'&&dni='+dni+'&&email='+email+'&&telefono='+telefono
@@ -55,7 +55,7 @@ $(document).ready(function() {
                     timer: 2500
                 }).then(function() {
                     $('#form-register').trigger('reset');
-                    location.href = '../Views/login.php';
+                    location.href = '/commerce/Views/login.php';
                 })
               } 
               CloseLoader();
@@ -97,7 +97,7 @@ $(document).ready(function() {
             let bandera;
             $.ajax({
                 type: "POST",
-                url: "../Controllers/UsuarioController.php",
+                url: "/commerce/Controllers/UsuarioController.php",
                 data: 'funcion=' + funcion + '&&value=' + value,
                 async: false,
                 success: function(response) {
