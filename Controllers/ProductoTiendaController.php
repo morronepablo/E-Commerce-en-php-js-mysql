@@ -1,14 +1,14 @@
 <?php
-include_once '../Models/ProductoTienda.php';
-include_once '../Util/Config/config.php';
-include_once '../Models/Resena.php';
-include_once '../Models/Imagen.php';
-include_once '../Models/Tienda.php';
-include_once '../Models/Caracteristicas.php';
-include_once '../Models/Pregunta.php';
-include_once '../Models/Respuesta.php';
-include_once '../Models/Notificacion.php';
-include_once '../Models/Favorito.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/ProductoTienda.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Resena.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Imagen.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Tienda.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Caracteristicas.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Pregunta.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Respuesta.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Notificacion.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Favorito.php';
 $producto_tienda = new ProductoTienda();
 $resena = new Resena();
 $img = new Imagen();

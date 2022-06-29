@@ -1,8 +1,8 @@
 <?php
-include_once '../Models/ProductoTienda.php';
-include_once '../Util/Config/config.php';
-include_once '../Models/Favorito.php';
-include_once '../Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/ProductoTienda.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Favorito.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
 $producto_tienda = new ProductoTienda();
 $favorito = new Favorito();
 $historial = new Historial();

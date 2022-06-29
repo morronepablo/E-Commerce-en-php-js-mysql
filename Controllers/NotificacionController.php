@@ -1,7 +1,7 @@
 <?php
-include_once '../Util/Config/config.php';
-include_once '../Models/Notificacion.php';
-include_once '../Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Notificacion.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
 $notificacion = new Notificacion();
 $historial = new Historial();
 session_start();

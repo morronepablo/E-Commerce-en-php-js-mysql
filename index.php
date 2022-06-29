@@ -63,3 +63,4 @@
   include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/footer.php';
 ?>
 <script src="/commerce/index.js"></script>
+      

@@ -1,5 +1,5 @@
 <?php
-include_once '../Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
 $historial = new Historial();
 session_start();
 if($_POST['funcion'] == 'llenar_historial') {

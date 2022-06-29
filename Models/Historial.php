@@ -1,5 +1,5 @@
 <?php
-    include_once 'Conexion.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Conexion.php';
     class Historial {
         var $objetos;
         public function __construct() {

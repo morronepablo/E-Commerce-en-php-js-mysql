@@ -1,6 +1,8 @@
 <?php
 include_once '../Models/Localidad.php';
 include_once '../Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Localidad.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
 $localidad = new Localidad();
 session_start();
 if($_POST['funcion']=='llenar_localidad'){

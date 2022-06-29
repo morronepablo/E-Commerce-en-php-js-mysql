@@ -1,5 +1,6 @@
 <?php
-include_once 'layouts/header.php';
+    session_start();
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/header.php';
 ?>
 <!-- Modal Crear Marca -->
 <div class="modal fade modal-right" id="modal_crear_mensaje" role="dialog">
@@ -42,7 +43,7 @@ include_once 'layouts/header.php';
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="../index.php">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="/commerce/">Inicio</a></li>
                     <li class="breadcrumb-item active">Mensajes</li>
                 </ol>
             </div>
@@ -89,17 +90,17 @@ include_once 'layouts/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="sent.php" class="nav-link">
+                            <a href="/commerce/Views/mensajes/sent.php" class="nav-link">
                                 <i class="far fa-envelope"></i> Enviados
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="favorites.php" class="nav-link">
+                            <a href="/commerce/Views/mensajes/favorites.php" class="nav-link">
                                 <i class="far fa-star"></i> Favoritos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="trash.php" class="nav-link">
+                            <a href="/commerce/Views/mensajes/trash.php" class="nav-link">
                                 <i class="far fa-trash-alt"></i> Papelera
                             </a>
                         </li>
@@ -146,6 +147,6 @@ include_once 'layouts/header.php';
 
 
 <?php
-include_once 'layouts/footer.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/footer.php';
 ?>
-<script src="index.js"></script>
+<script src="/commerce/Views/mensajes/index.js"></script>

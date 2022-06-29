@@ -1,8 +1,8 @@
 <?php
-include_once '../Util/Config/config.php';
-include_once '../Models/Marca.php';
-include_once '../Models/Historial.php';
-require '../vendor/autoload.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Marca.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/vendor/autoload.php';
 $marca = new Marca();
 $historial = new Historial();
 session_start();

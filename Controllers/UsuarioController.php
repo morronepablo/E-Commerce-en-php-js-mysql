@@ -1,8 +1,9 @@
 <?php
-include_once '../Models/Usuario.php';
-include_once '../Models/Historial.php';
-include_once '../Util/Config/config.php';
-require '../vendor/autoload.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Usuario.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+require $_SERVER["DOCUMENT_ROOT"].'/commerce/vendor/autoload.php';
+
 $usuario = new Usuario();
 $historial = new Historial();
 session_start();
@@ -117,10 +118,10 @@ if($_POST['funcion'] == 'editar_datos') {
             $nombre = uniqid().'-'.uniqid();
             $archivo = $nombre;
             $extension = pathinfo($avatar, PATHINFO_EXTENSION);
-            $nombre_base = basename($archivo, '.'.$extension);
+            $nombre_base = $archivo.'.'.$extension;
             $handle = new \Verot\Upload\Upload($_FILES['avatar_mod']);
             if ($handle->uploaded) {
-                $handle->file_new_name_body   = $nombre_base;
+                $handle->file_new_name_body   = $archivo;
                 $handle->image_resize         = true;
                 $handle->image_x              = 200;
                 $handle->image_y              = 200;
@@ -131,7 +132,7 @@ if($_POST['funcion'] == 'editar_datos') {
                     echo 'error : ' . $handle->error;
                 }
             }
-
+            
             $usuario->obtener_datos($id_usuario);
             foreach ($usuario->objetos as $objeto) {
                 $avatar_actual = $objeto->avatar;
@@ -139,6 +140,7 @@ if($_POST['funcion'] == 'editar_datos') {
                     unlink('../Util/Img/Users/'.$avatar_actual);
                 }
             }
+            $nombre = $archivo.'.'.$extension;
             $_SESSION['avatar'] = $nombre;
         } else {
             $nombre = '';

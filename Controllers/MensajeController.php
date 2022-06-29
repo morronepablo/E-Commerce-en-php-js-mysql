@@ -1,9 +1,9 @@
 <?php
-include_once '../Util/Config/config.php';
-include_once '../Models/Destino.php';
-include_once '../Models/Mensaje.php';
-include_once '../Models/Historial.php';
-include_once '../Models/Usuario.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Destino.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Mensaje.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Usuario.php';
 $destino   = new Destino();
 $mensaje   = new Mensaje();
 $historial = new Historial();

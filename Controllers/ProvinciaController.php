@@ -1,6 +1,6 @@
 <?php
-include_once '../Models/Provincia.php';
-include_once '../Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Provincia.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
 $provincia = new Provincia();
 session_start();
 if($_POST['funcion']=='llenar_provincias'){

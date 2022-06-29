@@ -1,7 +1,7 @@
 <?php
-include_once '../Models/UsuarioLocalidad.php';
-include_once '../Models/Historial.php';
-include_once '../Util/Config/config.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/UsuarioLocalidad.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Models/Historial.php';
+include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Util/Config/config.php';
 $usuario_localidad = new UsuarioLocalidad();
 $historial = new Historial();
 session_start();

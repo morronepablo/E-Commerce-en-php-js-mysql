@@ -3,7 +3,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
     session_start();
     $_SESSION['message-verification'] = $_GET['id'];
     $_SESSION['message-option'] = $_GET['option'];
-    include_once 'layouts/header.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/header.php';
 ?>
     <!-- Modal Crear Mensaje -->
     <div class="modal fade modal-right" id="modal_crear_mensaje" role="dialog">
@@ -47,7 +47,7 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="../index.php">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="/commerce/">Inicio</a></li>
                         <li class="breadcrumb-item active">Read</li>
                     </ol>
                 </div>
@@ -92,22 +92,22 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
                     <div class="card-body p-0">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item">
-                                <a id="recibidos" href="../mensajes/" class="nav-link">
+                                <a id="recibidos" href="/commerce/Views/mensajes/" class="nav-link">
                                     
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="enviados" href="sent.php" class="nav-link">
+                                <a id="enviados" href="/commerce/Views/mensajes/sent.php" class="nav-link">
                                     <i class="far fa-envelope"></i> Enviados
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="favoritos" href="favorites.php" class="nav-link">
+                                <a id="favoritos" href="/commerce/Views/mensajes/favorites.php" class="nav-link">
                                     <i class="far fa-star"></i> Favoritos
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a id="papelera" href="trash.php" class="nav-link">
+                                <a id="papelera" href="/commerce/Views/mensajes/trash.php" class="nav-link">
                                     <i class="far fa-trash-alt"></i> Papelera
                                 </a>
                             </li>
@@ -125,9 +125,9 @@ if (!empty($_GET['id']) && !empty($_GET['option'])) {
 
 
 <?php
-    include_once 'layouts/footer.php';
+    include_once $_SERVER["DOCUMENT_ROOT"].'/commerce/Views/Layouts/footer.php';
 } else {
-    header('Location: ../../index.php');
+    header('Location: /commerce/');
 }
 ?>
-<script src="read.js"></script>
+<script src="/commerce/Views/mensajes/read.js"></script>
