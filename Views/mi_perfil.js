@@ -335,6 +335,14 @@ $(document).ready(function() {
                     </p>
                     </a>
                 </li>
+                <li id="nav_productos" class="nav-item">
+                    <a id="active_nav_productos" href="/commerce/Views/productos" class="nav-link">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p id="">
+                        Productos
+                    </p>
+                    </a>
+                </li>
                 `;
             }
             if(usuario.tipo_usuario == 2) {
@@ -347,6 +355,14 @@ $(document).ready(function() {
                     </p>
                     </a>
                 </li>
+                <li id="nav_productos" class="nav-item">
+                    <a id="active_nav_productos" href="/commerce/Views/productos" class="nav-link">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p id="">
+                        Productos
+                    </p>
+                    </a>
+                </li>
                 `;
             }
             if(usuario.tipo_usuario == 3) {
@@ -356,6 +372,14 @@ $(document).ready(function() {
                     <i class="nav-icon fas fa-apple-alt"></i>
                     <p id="nav_cont_marc">
                         Marcas
+                    </p>
+                    </a>
+                </li>
+                <li id="nav_productos" class="nav-item">
+                    <a id="active_nav_productos" href="/commerce/Views/productos" class="nav-link">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p id="">
+                        Productos
                     </p>
                     </a>
                 </li>

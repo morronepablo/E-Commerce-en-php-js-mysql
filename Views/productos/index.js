@@ -6,15 +6,6 @@ $(document).ready(function() {
     bsCustomFileInput.init();
     verificar_sesion();
     moment.locale('es');
-    // toastr.options = {
-    //     'debug': false,
-    //     'positionClass': 'toast-bottom-full-width',
-    //     'onclick': null,
-    //     'fadeIn': 300,
-    //     'fadeOut': 1000,
-    //     'timeOut': 5000,
-    //     'extendedTimeOut': 1000
-    // }
     
     async function read_notificaciones() {
         funcion = "read_notificaciones";
@@ -392,19 +383,19 @@ $(document).ready(function() {
                     if(sesion.tipo_usuario != 4) {
                         llenar_menu_superior(sesion);
                         llenar_menu_lateral(sesion);
-                        $('#active_nav_marcas').addClass('active');
+                        $('#active_nav_productos').addClass('active');
                         $('#avatar_menu').attr('src', '/commerce/Util/Img/Users/' + sesion.avatar);
                         $('#usuario_menu').text(sesion.user);
                         read_notificaciones();
                         read_favoritos();
-                        read_all_marcas();
+                        read_all_productos();
                         if(sesion.tipo_usuario == 1 || sesion.tipo_usuario ==2) {
-                            read_solicitudes_por_aprobar();
+                            //read_solicitudes_por_aprobar();
                             obtener_contadores();
                             CloseLoader();
                             $('#btn_adm').show();
                         } else if(sesion.tipo_usuario == 3) {
-                            read_tus_solicitudes();
+                            //  read_tus_solicitudes();
                             obtener_contadores();
                             CloseLoader();
                             $('#btn_ven').show();
@@ -428,9 +419,9 @@ $(document).ready(function() {
         }
     }
 
-    async function read_all_marcas() {
-        let funcion = "read_all_marcas";
-        let data = await fetch('/commerce/Controllers/MarcaController.php',{
+    async function read_all_productos() {
+        let funcion = "read_all_productos";
+        let data = await fetch('/commerce/Controllers/ProductoController.php',{
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
             body: 'funcion=' + funcion
@@ -439,11 +430,11 @@ $(document).ready(function() {
             let response = await data.text();
             //console.log(response);
             try {
-                let marcas = JSON.parse(response);
-                console.log(marcas);
+                let productos = JSON.parse(response);
+                console.log(productos);
                 
-                $('#marca').DataTable( {
-                    data: marcas,
+                $('#productos').DataTable( {
+                    data: productos,
                     "aaSorting": [],
                     "searching": true,
                     "scrollX": false,
@@ -451,35 +442,47 @@ $(document).ready(function() {
                     "responsive": true,
                     "processing": true,
                     columns: [
-                        { data: "nombre" },
-                        { data: "descripcion" },
                         {
                             "render": function(data, type, datos, meta) {
-                                return `<img width="100" height="100" src="/commerce/Util/Img/marca/${datos.imagen}">`;
-                            }
-                        },
-                        { 
-                            "render":function(data, type, datos, meta) {
-                                let fecha = moment(datos.fecha+' '+datos.hora, 'DD/MM/YYYY HH/:mm');
-                                let horas = moment(datos.hora, 'HH/:mm');
-                                let fecha_hora;
-                                if(datos.hoy == '1') {
-                                    fecha_hora = horas.fromNow();
-                                } else {
-                                    fecha_hora = fecha.format('LLL');
-                                }
-                                return fecha_hora;
-                            }
-                        },
-                        {
-                            "render": function(data, type, datos, meta) {
-                                if(datos.tipo_usuario == 3) {
-                                    return `<button class="alerta_usuario btn btn-info" title="Editar marca" type="button"><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="alerta_usuario btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
-                                } else {
-                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
-                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
-                                }
+                                let template = `
+                                <div class="card card-widget widget-user-2">
+                                    <div class="widget-user-header bg-success">
+                                        <div class="widget-user-image">
+                                            <img class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover;" src="/commerce/Util/Img/marca/${datos.imagen_marca}" alt="User Avatar">
+                                        </div>
+                                        <h3 class="widget-user-username">Nadia Carmichael</h3>
+                                        <h5 class="widget-user-desc">Lead Developer</h5>
+                                    </div>
+                                    <div class="card-footer p-0">
+                                        <div class="card-body pt-2">
+                                            <div class="row">
+                                                <div class="col-7">
+                                                    <h2 class="lead"><b>Nicole Pearson</b></h2>
+                                                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
+                                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-5 text-center">
+                                                    <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="text-right">
+                                                <a href="#" class="btn btn-sm bg-teal">
+                                                    <i class="fas fa-comments"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-user"></i> View Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                                return template;
                             }
                         }
                     ],
