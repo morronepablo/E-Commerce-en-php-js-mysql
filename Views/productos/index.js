@@ -448,10 +448,10 @@ $(document).ready(function() {
                                 <div class="card card-widget widget-user-2">
                                     <div class="widget-user-header bg-success">
                                         <div class="widget-user-image">
-                                            <img class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover;" src="/commerce/Util/Img/marca/${datos.imagen_marca}" alt="User Avatar">
+                                            <img class="img-circle elevation-2" style="width: 60px; height: 60px; object-fit: contain; background-color: white;" src="/commerce/Util/Img/marca/${datos.imagen_marca}" alt="User Avatar">
                                         </div>
-                                        <h3 class="widget-user-username">Nadia Carmichael</h3>
-                                        <h5 class="widget-user-desc">Lead Developer</h5>
+                                        <h3 class="widget-user-username">${datos.nombre}</h3>
+                                        <h5 class="widget-user-desc">${datos.marca}</h5>
                                     </div>
                                     <div class="card-footer p-0">
                                         <div class="card-body pt-2">
