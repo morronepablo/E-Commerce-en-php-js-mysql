@@ -42,12 +42,12 @@
 </div>
 <!-- Fin Modal -->
 
-<!-- Modal Editar Marca -->
-<div class="modal fade" id="modal_editar_marca" role="dialog">
-    <div class="modal-dialog">
+<!-- Modal Editar Producto -->
+<div class="modal fade" id="modal_editar_producto" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Editar marca</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -55,11 +55,11 @@
             <div class="modal-body">
                 <div class="card card-widget widget-user">
                     <div class="widget-user-header bg-info">
-                        <h3 id="widget_nombre_marca" class="widget-user-username"></h3>
-                        <h5 id="widget_desc_marca" class="widget-user-desc"></h5>
+                        <h3 id="widget_nombre_producto" class="widget-user-username"></h3>
+                        <h5 id="widget_marca" class="widget-user-desc"></h5>
                     </div>
                     <div class="widget-user-image">
-                        <img id="widget_imagen_marca" class="img-circle elevation-2" src="" alt="imagen marca">
+                        <img style="width: 100px; height: 100px; object-fit: cover;" id="widget_imagen_producto" class="img-circle elevation-2" src="" alt="imagen producto">
                     </div>
                     <div class="card-footer">
                         <div class="row">
@@ -84,15 +84,23 @@
                         </div>
                     </div>
                 </div>
-                <form id="form-marca_mod" enctype="multipart/form-data">
-                    <input type="hidden" id="id_marca_mod" name="id_marca_mod">
+                <form id="form-producto_mod" enctype="multipart/form-data">
+                    <input type="hidden" id="id_producto_mod" name="id_producto_mod">
                     <div class="form-group">
                         <label for="nombre_mod">Nombre</label>
                         <input type="text" name="nombre_mod" class="form-control" id="nombre_mod" placeholder="Ingrese nombre">
                     </div>
                     <div class="form-group">
-                        <label for="desc_mod">Descripción</label>
-                        <input type="text" name="desc_mod" class="form-control" id="desc_mod" placeholder="Ingrese una descripción">
+                        <label for="nombre_corto_mod">Nombre corto</label>
+                        <input type="text" name="nombre_corto_mod" class="form-control" id="nombre_corto_mod" placeholder="Ingrese nombre corto">
+                    </div>
+                    <div class="form-group">
+                        <label for="sku_mod">SKU</label>
+                        <input type="text" name="sku_mod" class="form-control" id="sku_mod" placeholder="Ingrese SKU">
+                    </div>
+                    <div class="form-group">
+                        <label for="detalles_mod">Detalles</label>
+                        <textarea type="text" class="form-control" style="height: 200px" name="detalles_mod" id="detalles_mod" placeholder="Ingrese detalles"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Imagen</label>

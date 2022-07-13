@@ -456,27 +456,38 @@ $(document).ready(function() {
                                     <div class="card-footer p-0">
                                         <div class="card-body pt-2">
                                             <div class="row">
-                                                <div class="col-7">
-                                                    <h2 class="lead"><b>Nicole Pearson</b></h2>
-                                                    <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p>
+                                                <div class="col-md-7">
                                                     <ul class="ml-4 mb-0 fa-ul text-muted">
-                                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: Demo Street 123, Demo City 04312, NJ</li>
-                                                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
+                                                        <li class="text-muted"><span class="fa-li"><i class="fas fa-lg fa-heading"></i></span> Nombre corto: ${datos.nombre_corto}</li>
+                                                        <li class="text-muted"><span class="fa-li"><i class="fas fa-lg fa-barcode"></i></span> SKU: ${datos.sku}</li>
+                                                        <li class="text-muted"><span class="fa-li"><i class="fas fa-lg fa-calendar"></i></span> Fecha de creación: ${datos.fecha_creacion}</li>
+                                                        <li class="text-muted"><span class="fa-li"><i class="fas fa-lg fa-calendar-plus"></i></span> Ultima edición: ${datos.fecha_edicion}</li>
                                                     </ul>
+                                                    <p class="text-muted text-sm"><b>Detalles: </b> ${datos.detalles}</p>
                                                 </div>
-                                                <div class="col-5 text-center">
-                                                    <img src="../../dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
+                                                <div class="col-md-5 text-center">
+                                                    <img width="250px" height="250px" src="/commerce/Util/Img/producto/${datos.imagen_principal}" alt="user-avatar" class="img-fluid">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="card-footer">
-                                            <div class="text-right">
-                                                <a href="#" class="btn btn-sm bg-teal">
-                                                    <i class="fas fa-comments"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-user"></i> View Profile
-                                                </a>
+                                            <div class="text-right">`;
+                                                if(datos.tipo_usuario == 3) {
+                                                    template+= `<button class="alerta_usuario btn btn-info" title="Editar producto" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                                        <button class="alerta_usuario btn btn-danger" title="Eliminar producto" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                                } else {
+                                                    template+= `<button id="${datos.id}" 
+                                                                        nombre="${datos.nombre}" 
+                                                                        nombre_corto="${datos.nombre_corto}" 
+                                                                        sku="${datos.sku}" 
+                                                                        detalles="${datos.detalles}" 
+                                                                        imagen_principal="${datos.imagen_principal}" 
+                                                                        marca="${datos.marca}" 
+                                                                        imagen_marca="${datos.imagen_marca}" 
+                                                                        class="edit btn btn-info" title="Editar producto" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_producto"><i class="fas fa-pencil-alt"></i></button>
+                                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar producto" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                                }
+                                template+= `
                                             </div>
                                         </div>
                                     </div>
@@ -503,6 +514,168 @@ $(document).ready(function() {
 
         }
     }
+
+    $(document).on('click', '.alerta_usuario', (e) => {
+        toastr.error('No tienes permiso para realizar esta acción', 'Error!');
+    });
+
+    $(document).on('click', '.edit', (e) => {
+        let elemento         = $(this)[0].activeElement;
+        let id               = $(elemento).attr('id');
+        let nombre           = $(elemento).attr('nombre');
+        let nombre_corto     = $(elemento).attr('nombre_corto');
+        let sku              = $(elemento).attr('sku');
+        let detalles         = $(elemento).attr('detalles');
+        let imagen_principal = $(elemento).attr('imagen_principal');
+        let imagen_marca     = $(elemento).attr('imagen_marca');
+        let marca            = $(elemento).attr('marca');
+        //console.log(id,nombre,img);
+        $('#widget_nombre_producto').text(nombre_corto);
+        let template = `
+            ${marca} <img width="30px" height="30px" src="/commerce/Util/Img/marca/${imagen_marca}" class="img-circle">
+        `;
+        $('#widget_marca').html(template);
+        $('#widget_imagen_producto').attr('src', '/commerce/Util/Img/producto/' + imagen_principal);
+        $('#id_producto_mod').val(id);
+        $('#nombre_mod').val(nombre);
+        $('#nombre_corto_mod').val(nombre_corto);
+        $('#sku_mod').val(sku);
+        $('#detalles_mod').val(detalles);
+    });
+
+    async function editar_producto(datos) {
+        let data = await fetch('/commerce/Controllers/MarcaController.php',{
+            method: 'POST',   //No va un headers cuando se envia un FormData
+            body: datos
+        })
+        if(data.ok) {
+            let response = await data.text();
+            //console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if(respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado la marca',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function() {
+                        $('#widget_nombre_marca').text(respuesta.nombre_marca);
+                        $('#widget_desc_marca').text(respuesta.desc_marca);
+                        if(respuesta.img != '') {
+                            $('#widget_imagen_marca').attr('src', '/commerce/Util/Img/marca/'+respuesta.img);
+                        }
+                        read_all_marcas();
+                        $('#form-marca_mod').trigger('reset');
+                        $('#modal_editar_marca').modal('hide')
+                    })
+                } else if (respuesta.mensaje == 'danger') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No alteró ningun cambio!',
+                        text: 'Modifique algun cambio para realizar la edición.',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if(response == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado!',
+                        text: 'No intente vulnerar el sistema, presione F5',
+                    })
+                }
+            }
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Hubo un conflicto de código: ' + data.status,
+            })
+
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion = 'editar_producto';
+            let datos   = new FormData($('#form-producto_mod')[0]);
+            datos.append('funcion', funcion);
+            alert('validado');
+            //editar_producto(datos);
+        }
+    });
+
+    $('#form-producto_mod').validate({
+        rules: {
+            nombre_mod: {
+                required: true,
+                minlength: 2
+            },
+            nombre_corto_mod: {
+                required: true,
+                minlength: 2
+            },
+            sku_mod: {
+                required: true,
+                minlength: 5
+            },
+            detalles_mod: {
+                required: true,
+                minlength: 10,
+                maxlength: 1000
+            },
+            imagen_mod: {
+                extension: "png|jpg|jpeg|bmp"
+            }
+        },
+        messages: {
+            nombre_mod: {
+                required: "* Este campo es obligatorio",
+                minlength: "* Esta campo acepta mínimo 2 caracteres"
+            },
+            nombre_corto_mod: {
+                required: "* Este campo es obligatorio",
+                minlength: "* Esta campo acepta mínimo 2 caracteres"
+            },
+            sku_mod: {
+                required: "* Este campo es obligatorio",
+                minlength: "* Esta campo acepta mínimo 5 caracteres"
+            },
+            detalles_mod: {
+                required: "* Este campo es obligatorio",
+                minlength: "* Esta campo acepta mínimo 10 caracteres",
+                maxlength: "* Esta campo acepta máximo 1000 caracteres"
+            },
+            imagen_mod: {
+                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+          $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+          $(element).addClass('is-valid');
+        }
+    });
+
+
+
+
+
+
+
+
 
     async function read_tus_solicitudes() {
         let funcion = "read_tus_solicitudes";
@@ -767,124 +940,6 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.edit', (e) => {
-        let elemento    = $(this)[0].activeElement;
-        let id          = $(elemento).attr('id');
-        let nombre      = $(elemento).attr('nombre');
-        let descripcion = $(elemento).attr('desc');
-        let img         = $(elemento).attr('img');
-        //console.log(id,nombre,img);
-        $('#widget_nombre_marca').text(nombre);
-        $('#widget_desc_marca').text(descripcion);
-        $('#widget_imagen_marca').attr('src', '/commerce/Util/Img/marca/'+img);
-        $('#nombre_mod').val(nombre);
-        $('#desc_mod').val(descripcion);
-        $('#id_marca_mod').val(id);
-    });
-
-    async function editar_marca(datos) {
-        let data = await fetch('/commerce/Controllers/MarcaController.php',{
-            method: 'POST',   //No va un headers cuando se envia un FormData
-            body: datos
-        })
-        if(data.ok) {
-            let response = await data.text();
-            //console.log(response);
-            try {
-                let respuesta = JSON.parse(response);
-                if(respuesta.mensaje == 'success') {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Se ha editado la marca',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(function() {
-                        $('#widget_nombre_marca').text(respuesta.nombre_marca);
-                        $('#widget_desc_marca').text(respuesta.desc_marca);
-                        if(respuesta.img != '') {
-                            $('#widget_imagen_marca').attr('src', '/commerce/Util/Img/marca/'+respuesta.img);
-                        }
-                        read_all_marcas();
-                        $('#form-marca_mod').trigger('reset');
-                        $('#modal_editar_marca').modal('hide')
-                    })
-                } else if (respuesta.mensaje == 'danger') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'No alteró ningun cambio!',
-                        text: 'Modifique algun cambio para realizar la edición.',
-                    })
-                }
-            } catch (error) {
-                console.error(error);
-                console.log(response);
-                if(response == 'error') {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Cuidado!',
-                        text: 'No intente vulnerar el sistema, presione F5',
-                    })
-                }
-            }
-
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.statusText,
-                text: 'Hubo un conflicto de código: ' + data.status,
-            })
-
-        }
-    }
-
-    $.validator.setDefaults({
-        submitHandler: function () {
-            let funcion = 'editar_marca';
-            let datos   = new FormData($('#form-marca_mod')[0]);
-            datos.append('funcion', funcion);
-            editar_marca(datos);
-        }
-    });
-
-    $('#form-marca_mod').validate({
-        rules: {
-            nombre_mod: {
-                required: true,
-            },
-            desc_mod: {
-                required: true,
-            },
-            imagen_mod: {
-                extension: "png|jpg|jpeg|bmp"
-            }
-        },
-        messages: {
-            nombre_mod: {
-                required: "* Este campo es obligatorio"
-            },
-            desc_mod: {
-                required: "* Este campo es obligatorio"
-            },
-            imagen_mod: {
-                extension: "* Debe elegir el formato de archivo png, jpg, jpeg, bmp"
-            }
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-          error.addClass('invalid-feedback');
-          element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-          $(element).addClass('is-invalid');
-          $(element).removeClass('is-valid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-          $(element).removeClass('is-invalid');
-          $(element).addClass('is-valid');
-        }
-    });
-
     async function eliminar_marca(id, nombre) {
         let funcion = "eliminar_marca";
         let respuesta = '';
@@ -968,10 +1023,6 @@ $(document).ready(function() {
             }
         })
 
-    });
-
-    $(document).on('click', '.alerta_usuario', (e) => {
-        toastr.error('No tienes permiso para realizar esta acción', 'Error!');
     });
 
     $(document).on('click', '.alerta_solicitud_enviada', (e) => {
