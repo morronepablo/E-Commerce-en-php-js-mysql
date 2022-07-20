@@ -537,6 +537,7 @@ $(document).ready(function() {
         $('#widget_marca').html(template);
         $('#widget_imagen_producto').attr('src', '/commerce/Util/Img/producto/' + imagen_principal);
         $('#id_producto_mod').val(id);
+        $('#nombre_mod_oculto').val(nombre);
         $('#nombre_mod').val(nombre);
         $('#nombre_corto_mod').val(nombre_corto);
         $('#sku_mod').val(sku);
@@ -544,7 +545,7 @@ $(document).ready(function() {
     });
 
     async function editar_producto(datos) {
-        let data = await fetch('/commerce/Controllers/MarcaController.php',{
+        let data = await fetch('/commerce/Controllers/ProductoController.php',{
             method: 'POST',   //No va un headers cuando se envia un FormData
             body: datos
         })
@@ -553,29 +554,37 @@ $(document).ready(function() {
             //console.log(response);
             try {
                 let respuesta = JSON.parse(response);
+                console.log(respuesta);
                 if(respuesta.mensaje == 'success') {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Se ha editado la marca',
+                        title: 'Se ha editado el producto',
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function() {
-                        $('#widget_nombre_marca').text(respuesta.nombre_marca);
-                        $('#widget_desc_marca').text(respuesta.desc_marca);
+                        $('#widget_nombre_producto').text(respuesta.nombre_producto);
                         if(respuesta.img != '') {
-                            $('#widget_imagen_marca').attr('src', '/commerce/Util/Img/marca/'+respuesta.img);
+                            $('#widget_imagen_producto').attr('src', '/commerce/Util/Img/producto/'+respuesta.img);
                         }
-                        read_all_marcas();
-                        $('#form-marca_mod').trigger('reset');
-                        $('#modal_editar_marca').modal('hide')
+                        read_all_productos();
+                        $('#form-producto_mod').trigger('reset');
+                        $('#modal_editar_producto').modal('hide')
                     })
                 } else if (respuesta.mensaje == 'danger') {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'No alteró ningun cambio!',
-                        text: 'Modifique algun cambio para realizar la edición.',
+                        title: 'No alteró ningún cambio!',
+                        text: 'Modifique algún cambio para realizar la edición.',
                     })
+                    $('#modal_editar_producto').modal('hide')
+                } else if (respuesta.mensaje == 'error_producto') {
+                    Swal.fire({
+                        icon: 'e    rror',
+                        title: 'Hay problemas al intentar editar el nombre del producto!',
+                        text: 'El nombre del producto que editó, es igual a un producto que ya existe.',
+                    })
+                    $('#nombre_mod').val(respuesta.nombre_producto);
                 }
             } catch (error) {
                 console.error(error);
@@ -583,8 +592,13 @@ $(document).ready(function() {
                 if(response == 'error') {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Cuidado!',
-                        text: 'No intente vulnerar el sistema, presione F5',
+                        title: 'Error!',
+                        text: 'No intente vulnerar el sistema',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function(){
+                        // se realiza un F5 automatico
+                        window.location.href = window.location.href;
                     })
                 }
             }
@@ -604,8 +618,7 @@ $(document).ready(function() {
             let funcion = 'editar_producto';
             let datos   = new FormData($('#form-producto_mod')[0]);
             datos.append('funcion', funcion);
-            alert('validado');
-            //editar_producto(datos);
+            editar_producto(datos);
         }
     });
 

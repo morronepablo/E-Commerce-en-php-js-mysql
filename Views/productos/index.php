@@ -86,6 +86,7 @@
                 </div>
                 <form id="form-producto_mod" enctype="multipart/form-data">
                     <input type="hidden" id="id_producto_mod" name="id_producto_mod">
+                    <input type="hidden" id="nombre_mod_oculto" name="nombre_mod_oculto">
                     <div class="form-group">
                         <label for="nombre_mod">Nombre</label>
                         <input type="text" name="nombre_mod" class="form-control" id="nombre_mod" placeholder="Ingrese nombre">

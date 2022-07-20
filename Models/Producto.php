@@ -27,6 +27,69 @@
             $this->objetos = $query->fetchAll();
             return $this->objetos;
         }
+        function buscar_menos_id($nombre, $id_producto) {
+            $sql = "SELECT *
+                    FROM producto p
+                    WHERE p.nombre=:nombre AND p.id!=:id_producto
+                    AND p.estado='A'";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':nombre'       => $nombre,
+                ':id_producto'  => $id_producto
+            );
+            $query->execute ($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
+        function obtener_producto($id_producto) {
+            $sql = "SELECT *
+                    FROM producto p
+                    WHERE p.id=:id_producto AND p.estado='A'";
+            $query = $this->acceso->prepare($sql);
+            $variables = array(
+                ':id_producto' => $id_producto
+            );
+            $query->execute ($variables);
+            $this->objetos = $query->fetchAll();
+            return $this->objetos;
+        }
+        function editar($id_producto, $nombre, $nombre_corto, $sku, $detalles, $img) {
+            if($img != '') {
+                $sql = "UPDATE producto SET 
+                        nombre=:nombre, 
+                        nombre_corto=:nombre_corto, 
+                        sku=:sku,
+                        detalles=:detalles,
+                        imagen_principal=:imagen_principal
+                        WHERE id=:id_producto";
+                $query = $this->acceso->prepare($sql);
+                $variables = array(
+                    ':nombre'           => $nombre,
+                    ':nombre_corto'     => $nombre_corto,
+                    ':sku'              => $sku,
+                    ':detalles'         => $detalles,
+                    ':imagen_principal' => $img,
+                    ':id_producto'      => $id_producto
+                );
+                $query->execute ($variables);
+            } else {
+                $sql = "UPDATE producto SET 
+                        nombre=:nombre, 
+                        nombre_corto=:nombre_corto, 
+                        sku=:sku,
+                        detalles=:detalles
+                        WHERE id=:id_producto";
+                $query = $this->acceso->prepare($sql);
+                $variables = array(
+                    ':nombre'           => $nombre,
+                    ':nombre_corto'     => $nombre_corto,
+                    ':sku'              => $sku,
+                    ':detalles'         => $detalles,
+                    ':id_producto'      => $id_producto
+                );
+                $query->execute ($variables);
+            }
+        }
         /*********************************************************** */
         function crear($nombre, $desc, $nombre_imagen) {
             $sql = "INSERT INTO marca (nombre, descripcion, imagen)
@@ -39,42 +102,8 @@
             );
             $query->execute ($variables);
         }
-        function obtener_marca($id_marca) {
-            $sql = "SELECT *
-                    FROM marca
-                    WHERE marca.id=:id_marca AND estado='A'";
-            $query = $this->acceso->prepare($sql);
-            $variables = array(
-                ':id_marca' => $id_marca
-            );
-            $query->execute ($variables);
-            $this->objetos = $query->fetchAll();
-            return $this->objetos;
-        }
-        function editar($id_marca, $nombre, $desc, $img) {
-            if($img != '') {
-                $sql = "UPDATE marca SET nombre=:nombre, descripcion=:descripcion, imagen=:img
-                        WHERE id=:id_marca";
-                $query = $this->acceso->prepare($sql);
-                $variables = array(
-                    ':nombre'      => $nombre,
-                    ':descripcion' => $desc,
-                    ':img'         => $img,
-                    ':id_marca'    => $id_marca
-                );
-                $query->execute ($variables);
-            } else {
-                $sql = "UPDATE marca SET nombre=:nombre, descripcion=:descripcion
-                        WHERE id=:id_marca";
-                $query = $this->acceso->prepare($sql);
-                $variables = array(
-                    ':nombre'      => $nombre,
-                    ':descripcion' => $desc,
-                    ':id_marca'    => $id_marca
-                );
-                $query->execute ($variables);
-            }
-        }
+        
+        
         function eliminar_marca($id_marca) {
             $sql = "UPDATE marca SET estado=:estado
                     WHERE id=:id_marca";
